@@ -17,17 +17,17 @@ td {
 }
 
 .header-cell {
-  background-color: #b3d9ff; /* Light blue for headers */
+  background-color: #b3d9ff;
 }
 
 .data-cell {
-  background-color: #f0fff0; /* Light green for data cells */
+  background-color: #f0fff0;
 }
 
 tr:nth-child(odd) .data-cell {
-  background-color: #ffffcc; /* Light yellow for odd rows */
+  background-color: #ffffcc;
 }
 
 tr:nth-child(even) .data-cell {
-  background-color: #ccffcc; /* Light green for even rows */
+  background-color: #ccffcc;
 }

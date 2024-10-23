@@ -1,10 +1,10 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 
-import './table.css' // For custom table styling
-import Table from './components/Table'
-import { ItemData } from './types/response_data.type'
-import { transformData } from './lib/utils'
-import uploadApiRequest from './api/upload'
+import './table.css'
+import Table from '@/components/Table'
+import { ItemData } from '@/types/response_data.type'
+import { transformData } from '@/lib/utils'
+import uploadApiRequest from '@/api/upload'
 
 const App = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -40,7 +40,6 @@ const App = () => {
         <button type="submit">Submit</button>
       </form>
 
-      {/* Display the message */}
       {message && <h2>Message: {message}</h2>}
       {flaskResponse &&
         flaskResponse.map((item: ItemData, index: number) => {
