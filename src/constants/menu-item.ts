@@ -1,29 +1,33 @@
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react'
+import { ChartBar, History, Home, User } from 'lucide-react'
 
 export const MenuItems = [
   {
-    title: 'Home',
+    title: 'Trang chủ',
     url: '/',
     icon: Home,
+    value: 'home',
   },
   {
-    title: 'Inbox',
-    url: '/inbox',
-    icon: Inbox,
+    title: 'Phân tích',
+    url: '/analysis',
+    icon: ChartBar,
+    value: 'analysis',
   },
   {
-    title: 'Calendar',
-    url: '/calendar',
-    icon: Calendar,
+    title: 'Lịch sử',
+    url: '/history',
+    icon: History,
+    value: 'history',
   },
   {
-    title: 'Search',
-    url: '/search',
-    icon: Search,
+    title: 'Hướng dẫn',
+    url: '/tutorial',
+    icon: User,
+    value: 'tutorial',
   },
-  {
-    title: 'Settings',
-    url: '/settings',
-    icon: Settings,
-  },
+  //   {
+  //     title: 'Settings',
+  //     url: '/settings',
+  //     icon: Settings,
+  //   },
 ]
