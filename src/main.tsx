@@ -6,6 +6,7 @@ import Layout from './components/layout/index.tsx'
 import { ThemeProvider } from './components/theme-provider.tsx'
 import './index.css'
 import DashBoard from './pages/dashboard/index.tsx'
+import Analysis from './pages/analysis/index.tsx'
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/analysis',
-        element: <div>setting</div>,
+        element: <Analysis />,
       },
       {
         path: '/history',

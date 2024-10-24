@@ -17,12 +17,11 @@ export default function Layout() {
           </nav>
           <AvatarDropdown />
         </header>
-        <main>
+        <main className="grow">
           <Outlet />
         </main>
-        <footer className="flex h-16 items-center justify-center border-t bg-background">
-          {' '}
-          © 2024{' '}
+        <footer className="flex h-10 items-center justify-center border-t bg-background">
+          © 2024
         </footer>
       </div>
     </SidebarProvider>
