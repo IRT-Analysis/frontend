@@ -20,6 +20,10 @@ export default function Layout() {
         <main>
           <Outlet />
         </main>
+        <footer className="flex h-16 items-center justify-center border-t bg-background">
+          {' '}
+          © 2024{' '}
+        </footer>
       </div>
     </SidebarProvider>
   )

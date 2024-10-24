@@ -1,11 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './components/layout/index.tsx'
-import App from './pages/dashboard/index.tsx'
 import { ThemeProvider } from './components/theme-provider.tsx'
+import './index.css'
+import DashBoard from './pages/dashboard/index.tsx'
 
 const router = createBrowserRouter([
   {
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <App />,
+        element: <DashBoard />,
       },
       {
         path: '/settings',
