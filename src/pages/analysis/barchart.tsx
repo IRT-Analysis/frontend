@@ -38,6 +38,7 @@ export function Component() {
             <YAxis
               dataKey="numberOfStudent"
               tickLine={false}
+              width={30}
               tickMargin={10}
               axisLine={false}
             />

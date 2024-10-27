@@ -22,7 +22,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="h-[56px]">
+          <SidebarGroupLabel className="h-[56px] rounded-none border-b border-sidebar-border">
             Application Name
           </SidebarGroupLabel>
           <SidebarGroupContent>

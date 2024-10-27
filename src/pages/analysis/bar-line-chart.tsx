@@ -36,6 +36,7 @@ export function BarLineChart() {
               axisLine={false}
             />
             <YAxis
+              width={30}
               dataKey="numberOfStudent"
               tickLine={false}
               tickMargin={10}
@@ -56,6 +57,7 @@ export function BarLineChart() {
               dataKey="numberOfStudent"
               stroke="#8884d8"
               strokeWidth={2}
+              dot={{ r: 1.5 }}
               activeDot={{ r: 2 }}
             />
           </ComposedChart>
