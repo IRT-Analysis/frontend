@@ -13,6 +13,8 @@ export default {
         backdrop: 'var(--backdrop)',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        blueCustom: '#2563EB',
+        titleAuthor: '0F172A',
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
