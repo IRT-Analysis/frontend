@@ -11,15 +11,15 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { MenuItems } from '@/constants/menu-item'
-import { ChevronDown, LogOut, Settings } from 'lucide-react'
+import { ChevronDown, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '../../ui/collapsible'
-import { Logo } from '../../ui/logo'
+} from '@/components/ui/collapsible'
+import { Logo } from '@/components/ui/logo'
 import { DarkModeToggle } from './dark-mode-toggle'
 
 export function AppSidebar() {
@@ -40,32 +40,32 @@ export function AppSidebar() {
               <Collapsible key={item.title}>
                 <SidebarGroup className="p-0">
                   <SidebarGroupLabel className="p-0 pr-3" asChild>
-                    <CollapsibleTrigger>
-                      <SidebarMenuItem className="flex-1">
-                        <NavLink
-                          to={item.url}
-                          className={({ isActive }) => {
-                            if (isActive) setActiveLink(item.value)
-                            return ''
-                          }}
+                    <SidebarMenuItem className="flex-1">
+                      <NavLink
+                        to={item.url}
+                        className={({ isActive }) => {
+                          if (isActive) setActiveLink(item.value)
+                          return 'w-full'
+                        }}
+                      >
+                        <SidebarMenuButton
+                          className="flex h-[48px] px-[16px] font-semibold leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
+                          asChild
+                          isActive={activeLink === item.value}
                         >
-                          <SidebarMenuButton
-                            className="h-[48px] px-[16px] leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
-                            asChild
-                            isActive={activeLink === item.value}
-                          >
-                            <div>
-                              <item.icon strokeWidth={3} />
-                              <span>{item.title}</span>
-                            </div>
-                          </SidebarMenuButton>
-                        </NavLink>
-                      </SidebarMenuItem>
-                      <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                    </CollapsibleTrigger>
+                          <div>
+                            <item.icon strokeWidth={3} />
+                            <span>{item.title}</span>
+                            <CollapsibleTrigger asChild>
+                              <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                            </CollapsibleTrigger>
+                          </div>
+                        </SidebarMenuButton>
+                      </NavLink>
+                    </SidebarMenuItem>
                   </SidebarGroupLabel>
                   <CollapsibleContent>
-                    <SidebarGroupContent>
+                    <SidebarGroupContent className="flex flex-col gap-1">
                       {item.children.map((subItem, index) => (
                         <SidebarMenuItem key={index} className="flex-1">
                           <NavLink
@@ -76,7 +76,7 @@ export function AppSidebar() {
                             }}
                           >
                             <SidebarMenuButton
-                              className="h-[30px] px-[16px] pl-10 leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
+                              className="h-[40px] px-[16px] pl-10 font-semibold leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
                               asChild
                               isActive={activeLink === subItem.value}
                             >
@@ -102,7 +102,7 @@ export function AppSidebar() {
                   }}
                 >
                   <SidebarMenuButton
-                    className="h-[48px] px-[16px] leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
+                    className="h-[48px] px-[16px] font-semibold leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
                     asChild
                     isActive={activeLink === item.value}
                   >
@@ -118,7 +118,7 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <NavLink
+        {/* <NavLink
           to="/settings"
           className={({ isActive }) => {
             if (isActive) setActiveLink('settings')
@@ -126,7 +126,7 @@ export function AppSidebar() {
           }}
         >
           <SidebarMenuButton
-            className="h-[48px] px-[16px] leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
+            className="h-[48px] px-[16px] leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold font-semibold data-[active=true]:text-primary-600-base"
             asChild
             isActive={activeLink === 'settings'}
           >
@@ -135,10 +135,10 @@ export function AppSidebar() {
               <span>Settings</span>
             </div>
           </SidebarMenuButton>
-        </NavLink>
+        </NavLink> */}
         <div className="flex items-center">
           <SidebarMenuButton
-            className="h-[48px] px-[16px] leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
+            className="h-[48px] px-[16px] font-semibold leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
             asChild
           >
             <div>

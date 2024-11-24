@@ -1,5 +1,5 @@
-import http from '../lib/httpClient'
-import { ItemData } from '../types/response_data.type'
+import http from '@/lib/httpClient'
+import { ItemData } from '@/types/response_data.type'
 
 type UploadImageResType = {
   data: ItemData[]

@@ -1,4 +1,4 @@
-import { ItemData } from '../types/response_data.type'
+import { ItemData } from '@/types/response_data.type'
 
 export const MOCK_DATA: ItemData[] = [
   {

@@ -4,7 +4,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { TableData } from '../types/table_data.type'
+import { TableData } from '@/types/table_data.type'
 
 const columnHelper = createColumnHelper<TableData>()
 

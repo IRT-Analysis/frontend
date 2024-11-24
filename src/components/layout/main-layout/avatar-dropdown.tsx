@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ChevronDown } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export const AvatarDropdown = () => (
   <DropdownMenu>

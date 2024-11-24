@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/pagination'
 import { cn } from '@/lib/utils'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 interface Props {
   page: number
   pageSize: number

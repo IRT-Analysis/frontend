@@ -1,4 +1,4 @@
-import { ChartBar, History, Home, User } from 'lucide-react'
+import { ChartBar, History, Home, ListOrdered, Users } from 'lucide-react'
 
 export const MenuItems = [
   {
@@ -14,15 +14,15 @@ export const MenuItems = [
     value: 'analysis',
     children: [
       {
-        title: 'Students',
+        title: 'Thí sinh',
         url: '/students',
-        icon: ChartBar,
+        icon: Users,
         value: 'students',
       },
       {
-        title: 'Items',
+        title: 'Câu hỏi',
         url: '/items',
-        icon: ChartBar,
+        icon: ListOrdered,
         value: 'items',
       },
     ],
@@ -33,15 +33,10 @@ export const MenuItems = [
     icon: History,
     value: 'history',
   },
-  {
-    title: 'Hướng dẫn',
-    url: '/tutorial',
-    icon: User,
-    value: 'tutorial',
-  },
-  //   {
-  //     title: 'Settings',
-  //     url: '/settings',
-  //     icon: Settings,
-  //   },
+  // {
+  //   title: 'Hướng dẫn',
+  //   url: '/tutorial',
+  //   icon: User,
+  //   value: 'tutorial',
+  // },
 ]
