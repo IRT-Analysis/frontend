@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Layout from './components/main-layout/index.tsx'
+import Layout from './components/layout/main-layout/index.tsx'
 import { ThemeProvider } from './components/theme-provider.tsx'
 import './index.css'
 import Analysis from './pages/analysis/index.tsx'
@@ -12,6 +12,7 @@ import { SignUpPage } from './pages/authorization/sign-up.tsx'
 import { VerifyMailPage } from './pages/authorization/verify-mail.tsx'
 import DashBoard from './pages/dashboard/index.tsx'
 import Items from './pages/analysis/items/index.tsx'
+import Students from './pages/analysis/students/student-table/index.tsx'
 
 const mainRoutes = [
   { index: true, element: <DashBoard /> },
@@ -20,7 +21,7 @@ const mainRoutes = [
     path: 'analysis',
     element: <Analysis />,
   },
-  { path: 'analysis/students', element: <div>Students</div> },
+  { path: 'analysis/students', element: <Students /> },
   { path: 'analysis/items', element: <Items /> },
   { path: 'history', element: <div>History</div> },
 ]

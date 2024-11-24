@@ -1,4 +1,4 @@
-import { AppSidebar } from '@/components/main-layout/app-sidebar'
+import { AppSidebar } from '@/components/layout/main-layout/app-sidebar'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Outlet } from 'react-router-dom'
 import { AvatarDropdown } from './avatar-dropdown'

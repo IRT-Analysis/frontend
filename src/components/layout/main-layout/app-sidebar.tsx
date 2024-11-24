@@ -18,8 +18,8 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '../ui/collapsible'
-import { Logo } from '../ui/logo'
+} from '../../ui/collapsible'
+import { Logo } from '../../ui/logo'
 import { DarkModeToggle } from './dark-mode-toggle'
 
 export function AppSidebar() {

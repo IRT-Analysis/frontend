@@ -1,4 +1,4 @@
-import { AuthLayout } from '@/components/auth-layout'
+import { AuthLayout } from '@/components/layout/auth-layout'
 import { VerifyMail } from '@/components/ui/sign-input'
 
 export function VerifyMailPage() {
