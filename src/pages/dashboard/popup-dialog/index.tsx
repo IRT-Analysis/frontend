@@ -1,6 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -12,7 +9,18 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
+import { FileUploader } from '@/components/file-uploader'
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Select,
   SelectContent,
@@ -20,17 +28,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+
+const fileSchema = z.array(
+  z
+    .any()
+    .refine((value) => value instanceof File, { message: 'Invalid file type' })
+)
 const formSchema = z.object({
   projectName: z.string().min(1).max(255),
   numberOfChoices: z.coerce.number().gte(1).lte(10),
   numberOfGroup: z.coerce.number().gte(1).lte(10),
   groupPercentage: z.coerce.number().gte(0).lte(1),
   correlationRpbis: z.string(),
+  questionFile: fileSchema,
+  answerFile: fileSchema,
+  questionSetFile: fileSchema,
 })
 
 const correlationOptions = [
@@ -54,8 +66,8 @@ export function PopupDialog() {
     defaultValues: {
       projectName: '',
       numberOfChoices: 1,
-      numberOfGroup: 1,
-      groupPercentage: 1,
+      numberOfGroup: 5,
+      groupPercentage: 0.27,
     },
   })
 
@@ -71,39 +83,126 @@ export function PopupDialog() {
             Make changes to your profile here. Click save when you're done.
           </DialogDescription> */}
       </DialogHeader>
-      <Form {...form}>
-        <form
-          noValidate
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4"
-        >
-          <FormField
-            control={form.control}
-            name="projectName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tên Project</FormLabel>
-                <FormControl>
-                  <Input placeholder="Nhập tên dự án" {...field} />
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex gap-4">
+      <ScrollArea className="h-[600px] px-2">
+        <Form {...form}>
+          <form
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 px-1"
+          >
             <FormField
               control={form.control}
-              name="numberOfChoices"
+              name="projectName"
               render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Số lựa chọn</FormLabel>
+                <FormItem>
+                  <FormLabel>Tên Project</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Nhập tên dự án" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex gap-4">
+              <FormField
+                control={form.control}
+                name="numberOfChoices"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Số lựa chọn</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Nhập số lượng lựa chọn"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="numberOfGroup"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Số nhóm thí sinh</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Nhập số lượng nhóm thí sinh"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="groupPercentage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tỷ lệ nhóm cao, nhóm thấp</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Nhập số lượng lựa chọn"
+                      placeholder="Nhập tỉ lệ nhóm cao và nhóm thấp"
                       {...field}
+                    />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="correlationRpbis"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Hệ số tương quan câu-bài</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Vui lòng chọn loại tương quan câu - bài" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {correlationOptions.map((option) => (
+                        <SelectItem value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="questionFile"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Upload tập câu hỏi</FormLabel>
+                  <FormControl>
+                    <FileUploader
+                      maxFileCount={1}
+                      maxSize={4 * 1024 * 1024}
+                      value={field.value}
+                      onValueChange={field.onChange}
                     />
                   </FormControl>
                   <FormDescription></FormDescription>
@@ -113,15 +212,16 @@ export function PopupDialog() {
             />
             <FormField
               control={form.control}
-              name="numberOfGroup"
+              name="answerFile"
               render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Số nhóm thí sinh</FormLabel>
+                <FormItem>
+                  <FormLabel>Upload tập kết quả</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Nhập số lượng nhóm thí sinh"
-                      {...field}
+                    <FileUploader
+                      maxFileCount={1}
+                      maxSize={4 * 1024 * 1024}
+                      value={field.value}
+                      onValueChange={field.onChange}
                     />
                   </FormControl>
                   <FormDescription></FormDescription>
@@ -129,60 +229,34 @@ export function PopupDialog() {
                 </FormItem>
               )}
             />
-          </div>
-
-          <FormField
-            control={form.control}
-            name="groupPercentage"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tỷ lệ nhóm cao, nhóm thấp</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Nhập tỉ lệ nhóm cao và nhóm thấp"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="correlationRpbis"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Hệ số tương quan câu-bài</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+            <FormField
+              control={form.control}
+              name="questionSetFile"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Upload bộ câu hỏi chung</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Vui lòng chọn loại tương quan câu - bài" />
-                    </SelectTrigger>
+                    <FileUploader
+                      maxFileCount={1}
+                      maxSize={4 * 1024 * 1024}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    />
                   </FormControl>
-                  <SelectContent>
-                    {correlationOptions.map((option) => (
-                      <SelectItem value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className="w-full bg-primary-600-base">
-            Submit
-          </Button>
-        </form>
-      </Form>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* <UploadedFilesCard uploadedFiles={uploadedFiles} /> */}
+            <DialogFooter>
+              <Button type="submit" className="w-full bg-primary-600-base">
+                Submit
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </ScrollArea>
     </DialogContent>
   )
 }

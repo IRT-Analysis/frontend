@@ -5,7 +5,7 @@ import { AvatarDropdown } from './avatar-dropdown'
 
 export default function Layout() {
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <AppSidebar />
       <div className="relative flex min-h-screen w-full flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 md:px-6">
