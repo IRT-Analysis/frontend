@@ -37,7 +37,7 @@ export function AppSidebar() {
         <SidebarMenu className="gap-2">
           {MenuItems.map((item) =>
             item.children ? (
-              <Collapsible>
+              <Collapsible key={item.title}>
                 <SidebarGroup className="p-0">
                   <SidebarGroupLabel className="p-0 pr-3" asChild>
                     <CollapsibleTrigger>
@@ -66,8 +66,8 @@ export function AppSidebar() {
                   </SidebarGroupLabel>
                   <CollapsibleContent>
                     <SidebarGroupContent>
-                      {item.children.map((subItem) => (
-                        <SidebarMenuItem className="flex-1">
+                      {item.children.map((subItem, index) => (
+                        <SidebarMenuItem key={index} className="flex-1">
                           <NavLink
                             to={item.url + subItem.url}
                             className={({ isActive }) => {
