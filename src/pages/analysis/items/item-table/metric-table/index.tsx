@@ -8,58 +8,13 @@ import {
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
 
-type DataType = {
+export type DataType = {
   name: keyof typeof CellRestrain
   A: number
   B: number
   C: number
   D: number
 }[]
-
-const data: DataType = [
-  {
-    name: 'Phân cách',
-    A: 0.1,
-    B: 0.5,
-    C: 0.9,
-    D: 0.5,
-  },
-  {
-    name: 'Độ khó',
-    A: 0.3,
-    B: 0.6,
-    C: 0.9,
-    D: 0.5,
-  },
-  {
-    name: 'rpbis',
-    A: 0.1,
-    B: 0.9,
-    C: 0.9,
-    D: 0.5,
-  },
-  {
-    name: 'Tỉ lệ',
-    A: 0.1,
-    B: 0.1,
-    C: 0.7,
-    D: 0.1,
-  },
-  {
-    name: 'Nhóm cao',
-    A: 0.1,
-    B: 0.1,
-    C: 0.7,
-    D: 0.1,
-  },
-  {
-    name: 'Nhóm thấp',
-    A: 0.1,
-    B: 0.1,
-    C: 0.7,
-    D: 0.1,
-  },
-]
 
 const CellRestrain = {
   'Nhóm cao': {
@@ -102,7 +57,7 @@ const CellItem = (key: keyof typeof CellRestrain, value: number) => {
   )
 }
 
-export function MetricsTable() {
+export function MetricsTable({ data }: { data: DataType }) {
   return (
     <Table>
       <TableHeader>

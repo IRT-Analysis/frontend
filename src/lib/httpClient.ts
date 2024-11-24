@@ -10,7 +10,7 @@ import { normalizePath } from './utils'
 /**
  * Define a response type for the API calls
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T> {
   data: T
   status: number
   message?: string
@@ -82,7 +82,6 @@ export const request = async <T>(
       : { 'Content-Type': 'application/json' }
 
   try {
-    console.log('headers', baseHeaders, options?.headers)
     const response: AxiosResponse<T> = await httpClient({
       url: fullUrl,
       ...options,
@@ -115,17 +114,16 @@ const http = {
   ) {
     return request<Response>('GET', url, options)
   },
-  post<Response>(
+  post<Response, Body>(
     url: string,
-    body: any,
+    body: Body,
     options?: Omit<AxiosRequestConfig, 'method' | 'url'>
   ) {
-    console.log('body', body)
     return request<Response>('POST', url, { ...options, data: body })
   },
-  put<Response>(
+  put<Response, Body>(
     url: string,
-    body: any,
+    body: Body,
     options?: Omit<AxiosRequestConfig, 'method' | 'url'>
   ) {
     return request<Response>('PUT', url, { ...options, data: body })

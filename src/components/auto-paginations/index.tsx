@@ -47,7 +47,6 @@ export default function AutoPagination({
   isLink = true,
   onClick,
 }: Props) {
-  console.log('page', page)
   const renderPagination = () => {
     let dotAfter = false
     let dotBefore = false
