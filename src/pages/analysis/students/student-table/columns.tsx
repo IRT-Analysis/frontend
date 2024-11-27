@@ -15,8 +15,20 @@ import {
 } from '@/components/ui/hover-card'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
-import { Student } from './MOCK_DATA'
+import { MOCK_DATA, Student } from './MOCK_DATA'
 import { Checkbox } from '@/components/ui/checkbox'
+
+let groupOptionsCache: null | number[] = null
+
+const getGroupOptions = () => {
+  if (groupOptionsCache === null) {
+    console.log('getGroupOptions')
+    groupOptionsCache = [
+      ...new Set(MOCK_DATA.map((student) => student.group)),
+    ].sort()
+  }
+  return groupOptionsCache
+}
 
 export const columns: ColumnDef<Student>[] = [
   {
@@ -114,15 +126,38 @@ export const columns: ColumnDef<Student>[] = [
   },
   {
     accessorKey: 'group',
+    filterFn: 'equals',
     header: ({ column }) => {
+      const groupOptions = getGroupOptions()
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Phân nhóm
-          <ArrowUpDown />
-        </Button>
+        <div className="flex items-center justify-center">
+          <p>Phân nhóm</p>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="outline-none">
+                <ArrowUpDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-30">
+              <DropdownMenuItem
+                onClick={() => {
+                  column.setFilterValue('')
+                }}
+              >
+                <span>Tất cả</span>
+              </DropdownMenuItem>
+              {groupOptions.map((item) => (
+                <DropdownMenuItem
+                  onClick={() => {
+                    column.setFilterValue(item)
+                  }}
+                >
+                  <span>Nhóm {item}</span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       )
     },
     size: 100,

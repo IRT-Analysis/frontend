@@ -17,13 +17,13 @@ const badgeVariants = cva(
         outline: 'text-neutral-950 dark:text-neutral-50',
 
         veryEasy:
-          'border-transparent bg-[#B3E5FC] text-[#3b8ddf] hover:bg-[#B3E5FC]/80 dark:bg-[#A3D4EC] dark:text-[#2b7dcf] dark:hover:bg-[#A3D4EC]/80',
-        easy: 'border-transparent bg-[#C1ECFFC2] text-[#38BDF8] hover:bg-[#C1ECFFC2]/80 dark:bg-[#A9D8E7] dark:text-[#3098C8] dark:hover:bg-[#A9D8E7]/80',
+          'border-transparent bg-[var(--average-background)] text-[var(--average-text)] hover:bg-[var(--average-background)/80] dark:bg-[var(--dark-average-background)] dark:text-[var(--dark-average-text)] dark:hover:bg-[var(--dark-average-background)/80]',
+        easy: 'border-transparent bg-[var(--good-background)] text-[var(--good-text)] hover:bg-[var(--good-background)/80] dark:bg-[var(--dark-good-background)] dark:text-[var(--dark-good-text)] dark:hover:bg-[var(--dark-good-background)/80]',
         medium:
-          'border-transparent bg-[#E9FAEF] text-[#24D164] hover:bg-[#E9FAEF]/80 dark:bg-[#D1F2D8] dark:text-[#1CA754] dark:hover:bg-[#D1F2D8]/80',
-        hard: 'border-transparent bg-[#FFECDE] text-[#F6A723] hover:bg-[#FFECDE]/80 dark:bg-[#F4D6C5] dark:text-[#E76314] dark:hover:bg-[#F4D6C5]/80',
+          'border-transparent bg-[var(--very-good-background)] text-[var(--very-good-text)] hover:bg-[var(--very-good-background)/80] dark:bg-[var(--dark-very-good-background)] dark:text-[var(--dark-very-good-text)] dark:hover:bg-[var(--dark-very-good-background)/80]',
+        hard: 'border-transparent bg-[var(--bad-background)] text-[var(--bad-text)] hover:bg-[var(--bad-background)/80] dark:bg-[var(--dark-bad-background)] dark:text-[var(--dark-bad-text)] dark:hover:bg-[var(--dark-bad-background)/80]',
         veryHard:
-          'border-transparent bg-[#FFEAEA] text-[#EF4444] hover:bg-[#FFEAEA]/80 dark:bg-[#F2CACA] dark:text-[#D83333] dark:hover:bg-[#F2CACA]/80',
+          'border-transparent bg-[var(--very-bad-background)] text-[var(--very-bad-text)] hover:bg-[var(--very-bad-background)/80] dark:bg-[var(--dark-very-bad-background)] dark:text-[var(--dark-very-bad-text)] dark:hover:bg-[var(--dark-very-bad-background)/80]',
       },
     },
     defaultVariants: {

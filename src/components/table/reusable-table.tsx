@@ -205,8 +205,8 @@ export function ReusableTable<T>({
           <div className="flex flex-1 items-center gap-2 py-4 text-xs text-muted-foreground">
             <div>Hiển thị</div>
             <Select
-              defaultValue={(
-                table.getCoreRowModel().rows.length / Math.pow(2, 3)
+              defaultValue={Math.floor(
+                table.getPrePaginationRowModel().rows.length / Math.pow(2, 3)
               ).toString()}
               onValueChange={(e) => table.setPageSize(+e)}
             >
@@ -214,10 +214,11 @@ export function ReusableTable<T>({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {Array.from(
-                  { length: 4 },
-                  (_, index) =>
-                    table.getCoreRowModel().rows.length / Math.pow(2, index)
+                {Array.from({ length: 4 }, (_, index) =>
+                  Math.floor(
+                    table.getPrePaginationRowModel().rows.length /
+                      Math.pow(2, index)
+                  )
                 )
                   .reverse()
                   .map((value, index) => (
@@ -228,7 +229,9 @@ export function ReusableTable<T>({
               </SelectContent>
             </Select>
             <div>
-              trong <strong>{data.length}</strong> kết quả
+              trong{' '}
+              <strong>{table.getPrePaginationRowModel().rows.length}</strong>{' '}
+              kết quả
             </div>
           </div>
           <div>

@@ -4,6 +4,17 @@
 
 @layer base {
   :root {
+    --very-good-background: #e9faef;
+    --very-good-text: #24d164;
+    --good-background: #c1ecffc2;
+    --good-text: #38bdf8;
+    --average-background: #b3e5fc;
+    --average-text: #3b8ddf;
+    --bad-background: #ffecde;
+    --bad-text: #f6a723;
+    --very-bad-background: #ffeaea;
+    --very-bad-text: #ef4444;
+
     --primary-600-base: #2563eb;
     --sidebar-background: white;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -42,6 +53,17 @@
   }
 
   .dark {
+    --very-good-background: #e9faef;
+    --very-good-text: #24d164;
+    --good-background: #c1ecffc2;
+    --good-text: #38bdf8;
+    --average-background: #b3e5fc;
+    --average-text: #3b8ddf;
+    --bad-background: #ffecde;
+    --bad-text: #f6a723;
+    --very-bad-background: #ffeaea;
+    --very-bad-text: #ef4444;
+
     --backdrop: #171919;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;

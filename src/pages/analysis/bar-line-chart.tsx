@@ -5,18 +5,21 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
-import { Bar, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from 'recharts'
+import { Bar, CartesianGrid, Cell, ComposedChart, XAxis, YAxis } from 'recharts'
 import { MOCK_LINE_BARCHART_DATA } from './MOCK_DATA.ts'
+import { useNavigate } from 'react-router-dom'
 
 export const description = 'A bar chart'
 
 const chartConfig = {
   numberOfStudent: {
     label: 'numberOfStudent',
-    color: 'var(--primary-600-base)',
+    // color: 'var(--primary-600-base)',
   },
 } satisfies ChartConfig
+
 export function BarLineChart() {
+  const navigate = useNavigate()
   return (
     <Card>
       <CardHeader>
@@ -48,18 +51,32 @@ export function BarLineChart() {
             />
             <Bar
               dataKey="numberOfStudent"
-              fill="#2563EB52"
               radius={8}
-              activeBar={{ fill: 'var(--primary-600-base)' }}
-            />
-            <Line
+              // activeBar={{ fill: 'var(--primary-600-base)' }}
+              onClick={() => navigate('/analysis/line-chart')}
+            >
+              {MOCK_LINE_BARCHART_DATA.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={
+                    index < 14
+                      ? 'var(--very-good-text)'
+                      : index < 16
+                        ? 'var(--average-text)'
+                        : 'var(--bad-text'
+                  }
+                />
+              ))}
+            </Bar>
+
+            {/* <Line
               type="monotone"
               dataKey="numberOfStudent"
               stroke="#8884d8"
               strokeWidth={2}
               dot={{ r: 1.5 }}
               activeDot={{ r: 2 }}
-            />
+            /> */}
           </ComposedChart>
         </ChartContainer>
       </CardContent>
