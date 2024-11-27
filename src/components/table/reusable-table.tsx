@@ -26,6 +26,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -73,10 +74,12 @@ const MemoizedCollapsibleRow = React.memo(CollapsibleRow) as <T>(
 ) => JSX.Element
 
 export function ReusableTable<T>({
+  searchBy,
   columns,
   data,
   collapsibleContent,
 }: {
+  searchBy?: (keyof T)[]
   columns: ColumnDef<T>[]
   data: T[]
   collapsibleContent?: (_row: number) => JSX.Element
@@ -88,6 +91,15 @@ export function ReusableTable<T>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchValue = event.target.value
+    if (searchBy) {
+      searchBy.forEach((columnKey) => {
+        table.getColumn(columnKey.toString())?.setFilterValue(searchValue) // Apply filter to each column
+      })
+    }
+  }
 
   const table = useReactTable({
     data,
@@ -113,16 +125,19 @@ export function ReusableTable<T>({
     <Card className="">
       <CardContent>
         <div className="flex items-center py-4">
-          {/* <Input
-            placeholder="Filter items..."
-            value={
-              (table.getColumn('item_no')?.getFilterValue() as string) ?? ''
-            }
-            onChange={(event) =>
-              table.getColumn('item_no')?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          /> */}
+          {searchBy && (
+            <Input
+              placeholder={`Search by ${searchBy.join(', ')}...`}
+              value={searchBy
+                .map(
+                  (key) =>
+                    table.getColumn(key.toString())?.getFilterValue() as string
+                )
+                .join(' ')}
+              onChange={handleSearchChange}
+              className="max-w-sm"
+            />
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
