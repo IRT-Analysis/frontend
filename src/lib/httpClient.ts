@@ -25,7 +25,7 @@ export interface ApiError {
 }
 
 const httpClient = axios.create({
-  baseURL: envConfig.API_ENDPOINT || '',
+  baseURL: `${envConfig.API_ENDPOINT}/api`,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const request = async <T>(
   url: string,
   options?: Omit<AxiosRequestConfig, 'method' | 'url'>
 ): Promise<ApiResponse<T>> => {
-  const fullUrl = `${envConfig.API_ENDPOINT}/${normalizePath(url)}`
+  const fullUrl = normalizePath(url)
 
   // Check if the data is FormData or JSON
   const body =
