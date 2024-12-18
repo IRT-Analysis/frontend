@@ -33,6 +33,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useCTTAnalyzeMutation } from '@/queries/useAnalyze'
+import { useNavigate } from 'react-router-dom'
 
 const fileSchema = z.array(
   z
@@ -68,6 +69,7 @@ const correlationOptions = [
 ]
 
 export function PopupDialog() {
+  const navigate = useNavigate()
   const cttAnalyzeMutation = useCTTAnalyzeMutation()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -83,8 +85,8 @@ export function PopupDialog() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const res = await cttAnalyzeMutation.mutateAsync(values)
-
-    console.log(res)
+    const responseData = { analyzedData: res.data }
+    navigate('/analysis/items', { state: responseData })
   }
 
   return (

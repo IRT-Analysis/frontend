@@ -7,6 +7,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
+import { OptionDetails } from '@/services/analyzeService'
+import { useMemo } from 'react'
 
 export type DataType = {
   name: keyof typeof CellRestrain
@@ -16,35 +18,43 @@ export type DataType = {
   D: number
 }[]
 
-const CellRestrain = {
-  'Nhóm cao': {
+const CellRestrain: Partial<
+  Record<keyof OptionDetails, { label: string; first: number; second: number }>
+> = {
+  chosen_by: {
+    label: 'Chọn bởi',
     first: 0.2,
     second: 0.7,
   },
-  'Độ khó': {
+  top_selected: {
+    label: 'Nhóm cao',
     first: 0.2,
     second: 0.7,
   },
-  rpbis: {
+  ratio: {
+    label: 'Tỉ lệ',
     first: 0.2,
     second: 0.7,
   },
-  'Tỉ lệ': {
+  bottom_selected: {
+    label: 'Nhóm thấp',
     first: 0.2,
     second: 0.7,
   },
-  'Nhóm thấp': {
+  discrimination: {
+    label: 'Độ p.cách',
     first: 0.2,
     second: 0.7,
   },
-  'Phân cách': {
+  r_pbis: {
+    label: 'r_pbis',
     first: 0.2,
     second: 0.7,
   },
 } as const
 
-const CellItem = (key: keyof typeof CellRestrain, value: number) => {
-  const { first, second } = CellRestrain[key]
+const CellItem = (key: keyof OptionDetails, value: number) => {
+  const { first, second } = CellRestrain[key] ?? { first: 0, second: 0 }
   let className = ''
   if (value < first || value > second) {
     className = 'text-red-500'
@@ -57,7 +67,28 @@ const CellItem = (key: keyof typeof CellRestrain, value: number) => {
   )
 }
 
-export function MetricsTable({ data }: { data: DataType }) {
+export function MetricsTable({
+  data,
+}: {
+  data: Record<string, OptionDetails>
+}) {
+  const tranposedData = useMemo(() => {
+    const statNames = Object.keys(data['0']) as (keyof OptionDetails)[] // Get all the stat names from the first option
+    const result: DataType = []
+    statNames.forEach((stat) => {
+      const row = {
+        name: stat, // Stat name
+        A: data['0']?.[stat] ?? null, // Value for option "0"
+        B: data['1']?.[stat] ?? null, // Value for option "1"
+        C: data['2']?.[stat] ?? null, // Value for option "2"
+        D: data['3']?.[stat] ?? null, // Value for option "3"
+      }
+      result.push(row)
+    })
+
+    return result
+  }, [data])
+
   return (
     <Table>
       <TableHeader>
@@ -70,9 +101,11 @@ export function MetricsTable({ data }: { data: DataType }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((item) => (
+        {tranposedData.map((item) => (
           <TableRow key={item.name}>
-            <TableCell className="font-medium">{item.name}</TableCell>
+            <TableCell className="font-medium">
+              {CellRestrain[item.name]?.label}
+            </TableCell>
             {CellItem(item.name, item.A)}
             {CellItem(item.name, item.B)}
             {CellItem(item.name, item.C)}
