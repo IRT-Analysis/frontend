@@ -8,6 +8,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
+
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -16,6 +19,7 @@ import * as z from 'zod'
 import { FileUploader } from '@/components/file-uploader'
 import {
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -28,6 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useCTTAnalyzeMutation } from '@/queries/useAnalyze'
 
 const fileSchema = z.array(
   z
@@ -45,6 +50,8 @@ const formSchema = z.object({
   questionSetFile: fileSchema,
 })
 
+export type CTTAnalysisRequest = z.infer<typeof formSchema>
+
 const correlationOptions = [
   {
     label: 'Điểm câu so với tổng điểm bài',
@@ -61,6 +68,8 @@ const correlationOptions = [
 ]
 
 export function PopupDialog() {
+  const cttAnalyzeMutation = useCTTAnalyzeMutation()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,20 +77,25 @@ export function PopupDialog() {
       numberOfChoices: 1,
       numberOfGroup: 5,
       groupPercentage: 0.27,
+      correlationRpbis: 'item-total-correlation',
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const res = await cttAnalyzeMutation.mutateAsync(values)
+
+    console.log(res)
   }
 
   return (
     <DialogContent className="sm:max-w-[550px]">
       <DialogHeader>
         <DialogTitle>Upload</DialogTitle>
-        {/* <DialogDescription>
+        <VisuallyHidden.Root>
+          <DialogDescription>
             Make changes to your profile here. Click save when you're done.
-          </DialogDescription> */}
+          </DialogDescription>
+        </VisuallyHidden.Root>
       </DialogHeader>
       <ScrollArea className="h-[600px] px-2">
         <Form {...form}>
@@ -180,7 +194,7 @@ export function PopupDialog() {
                     </FormControl>
                     <SelectContent>
                       {correlationOptions.map((option) => (
-                        <SelectItem value={option.value}>
+                        <SelectItem value={option.value} key={option.value}>
                           {option.label}
                         </SelectItem>
                       ))}
