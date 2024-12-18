@@ -1,7 +1,7 @@
 import http, { ApiResponse } from '@/lib/httpClient'
 import { CTTAnalysisRequest } from '@/pages/dashboard/popup-dialog'
 
-interface CTTAnalysisResponse {
+export type CTTAnalysis = {
   [key: string]: {
     difficulty: number
     difficulty_category: string
@@ -14,14 +14,15 @@ interface CTTAnalysisResponse {
   }
 }
 
-interface OptionDetails {
-  correct_answer: number
+export type OptionDetails = Readonly<{
   selected_by: number
   top_selected: number
   bottom_selected: number
   ratio: number
   chosen_by: number
-}
+  discrimination: number
+  r_pbis: number
+}>
 
 export const analyzeService = {
   cttAnalysis({
@@ -33,7 +34,7 @@ export const analyzeService = {
     questionFile,
     answerFile,
     questionSetFile,
-  }: CTTAnalysisRequest): Promise<ApiResponse<CTTAnalysisResponse>> {
+  }: CTTAnalysisRequest): Promise<ApiResponse<CTTAnalysis>> {
     console.log(
       projectName,
       numberOfChoices,
@@ -47,7 +48,7 @@ export const analyzeService = {
     const formData = new FormData()
     formData.append('file', answerFile[0])
 
-    return http.post<CTTAnalysisResponse>('/upload', formData, {
+    return http.post<CTTAnalysis>('/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

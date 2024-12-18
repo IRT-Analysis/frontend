@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import { CollapsibleTrigger } from '@/components/ui/collapsible'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, ChevronDown } from 'lucide-react'
-import { Item } from './MOCK_DATA'
 import {
   HoverCard,
   HoverCardContent,
@@ -15,10 +14,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { OptionDetails } from '@/services/analyzeService'
 
-export const columns: ColumnDef<Item>[] = [
+type ColumnsType = {
+  difficulty: number
+  difficulty_category: string
+  discrimination: number
+  discrimination_category: string
+  r_pbis: number
+  options: {
+    [optionKey: string]: OptionDetails
+  }
+  id: string
+}
+
+export const columns: ColumnDef<ColumnsType>[] = [
   {
-    accessorKey: 'item_no',
+    accessorKey: 'id',
     header: ({ column }) => {
       return (
         <Button
@@ -32,19 +44,37 @@ export const columns: ColumnDef<Item>[] = [
     },
     size: 150,
     cell: ({ row }) => (
-      <div className="text-center capitalize">{row.getValue('item_no')}</div>
+      <div className="text-center capitalize">{row.getValue('id')}</div>
     ),
   },
+  // {
+  //   accessorKey: 'key',
+  //   header: 'Đáp án',
+  //   size: 150,
+  //   cell: ({ row }) => {
+  //     const options = row.original.options
+  //     const getCorrectAnswer = (
+  //       options: Record<string, OptionDetails>
+  //     ): string | null => {
+  //       for (const key in options) {
+  //         if (options[key]?.correct_answer === 1) {
+  //           return key
+  //         }
+  //       }
+  //       return null
+  //     }
+
+  //     const correctAnswerKey = getCorrectAnswer(options)
+
+  //     return (
+  //       <div className="text-center capitalize">
+  //         {correctAnswerKey !== null ? `Option ${correctAnswerKey}` : 'N/A'}
+  //       </div>
+  //     )
+  //   },
+  // },
   {
-    accessorKey: 'key',
-    header: 'Đáp án',
-    size: 150,
-    cell: ({ row }) => (
-      <div className="text-center capitalize">{row.getValue('key')}</div>
-    ),
-  },
-  {
-    accessorKey: 'p_difficulty',
+    accessorKey: 'difficulty',
     size: 200,
     header: ({ column }) => {
       return (
@@ -58,13 +88,11 @@ export const columns: ColumnDef<Item>[] = [
       )
     },
     cell: ({ row }) => (
-      <div className="text-center capitalize">
-        {row.getValue('p_difficulty')}
-      </div>
+      <div className="text-center capitalize">{row.getValue('difficulty')}</div>
     ),
   },
   {
-    accessorKey: 'p_discrimination',
+    accessorKey: 'discrimination',
     size: 200,
     header: ({ column }) => {
       return (
@@ -78,7 +106,7 @@ export const columns: ColumnDef<Item>[] = [
       )
     },
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue('p_discrimination')}</div>
+      <div className="text-center">{row.getValue('discrimination')}</div>
     ),
   },
   {
@@ -118,7 +146,7 @@ export const columns: ColumnDef<Item>[] = [
     },
     size: 200,
     cell: ({ row }) => {
-      const value = row.getValue('p_difficulty') as number
+      const value = row.getValue('difficulty') as number
       let displayValue, variant: BadgeProps['variant']
       if (value < 0.1) {
         displayValue = 'Quá dễ'
@@ -146,7 +174,7 @@ export const columns: ColumnDef<Item>[] = [
       )
     },
     filterFn: (row, _, value) => {
-      const pDifficulty = row.getValue('p_difficulty') as number
+      const pDifficulty = row.getValue('difficulty') as number
       if (!value) {
         return true // No filter, include all rows
       }
@@ -195,10 +223,10 @@ export const columns: ColumnDef<Item>[] = [
     },
     size: 200,
     cell: ({ row }) => {
-      const value = row.getValue('p_discrimination') as number
+      const value = row.getValue('discrimination') as number
       let displayValue, variant: BadgeProps['variant']
 
-      // Categorize discrimination based on the numeric value of p_discrimination
+      // Categorize discrimination based on the numeric value of discrimination
       if (value < 0.2) {
         displayValue = 'Kém'
         variant = 'veryHard'
@@ -219,14 +247,14 @@ export const columns: ColumnDef<Item>[] = [
         </HoverCard>
       )
     },
-    // Custom filter function based on p_discrimination
+    // Custom filter function based on discrimination
     filterFn: (row, _, value) => {
-      const pDiscrimination = row.getValue('p_discrimination') as number
+      const pDiscrimination = row.getValue('discrimination') as number
       if (!value) {
         return true // No filter, include all rows
       }
 
-      // If a discrimination range is selected, check if p_discrimination falls within the range
+      // If a discrimination range is selected, check if discrimination falls within the range
       if (value.min !== undefined && value.max !== undefined) {
         return pDiscrimination >= value.min && pDiscrimination < value.max
       }
