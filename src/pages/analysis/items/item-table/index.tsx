@@ -1,11 +1,11 @@
-import { ReusableTable } from '@/components/table/reusable-table'
-import { columns } from './columns'
-import { CollapsibleContent } from '@/components/ui/collapsible'
-import { MetricsTable } from './metric-table'
 import { CustomAreaChart } from '@/components/chart/area-chart'
-import { useLocation } from 'react-router-dom'
+import { ReusableTable } from '@/components/table/reusable-table'
+import { CollapsibleContent } from '@/components/ui/collapsible'
+import { useGetItemsResultQuery } from '@/queries/useAnalyze'
 import { useMemo } from 'react'
-import { CTTAnalysis } from '@/services/analyzeService'
+import { useParams } from 'react-router-dom'
+import { columns } from './columns'
+import { MetricsTable } from './metric-table'
 
 const chartData = [
   { month: 'January', desktop: 186, mobile: 80 },
@@ -17,12 +17,13 @@ const chartData = [
 ]
 
 const ItemTable = () => {
-  const location = useLocation()
-  const { analyzedData } = location.state as { analyzedData: CTTAnalysis }
+  const { id } = useParams() as { id: string }
+  const getItemsDataQuery = useGetItemsResultQuery(id)
 
+  const analyzedData = getItemsDataQuery.data?.data
   const responseArray = useMemo(
     () =>
-      Object.entries(analyzedData).map(([key, value]) => ({
+      Object.entries(analyzedData!).map(([key, value]) => ({
         id: key,
         ...value,
       })),

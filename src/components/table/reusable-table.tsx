@@ -254,7 +254,7 @@ export function ReusableTable<T>({
               page={table.getState().pagination.pageIndex + 1}
               pageSize={table.getPageCount()}
               isLink={false}
-              pathname="/analysis/items"
+              // pathname="/analysis/items"
               onClick={(pageIndex) => table.setPageIndex(pageIndex - 1)}
             />
           </div>

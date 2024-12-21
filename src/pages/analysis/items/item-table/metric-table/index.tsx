@@ -21,8 +21,8 @@ export type DataType = {
 const CellRestrain: Partial<
   Record<keyof OptionDetails, { label: string; first: number; second: number }>
 > = {
-  chosen_by: {
-    label: 'Chọn bởi',
+  selected_by: {
+    label: 'Số lượng',
     first: 0.2,
     second: 0.7,
   },
@@ -77,11 +77,11 @@ export function MetricsTable({
     const result: DataType = []
     statNames.forEach((stat) => {
       const row = {
-        name: stat, // Stat name
-        A: data['0']?.[stat] ?? null, // Value for option "0"
-        B: data['1']?.[stat] ?? null, // Value for option "1"
-        C: data['2']?.[stat] ?? null, // Value for option "2"
-        D: data['3']?.[stat] ?? null, // Value for option "3"
+        name: stat,
+        A: data['0']?.[stat] ?? null,
+        B: data['1']?.[stat] ?? null,
+        C: data['2']?.[stat] ?? null,
+        D: data['3']?.[stat] ?? null,
       }
       result.push(row)
     })

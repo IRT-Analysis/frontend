@@ -27,12 +27,9 @@ const queryClient = new QueryClient({
 const mainRoutes = [
   { index: true, element: <DashBoard /> },
   { path: 'settings', element: <div>Settings</div> },
-  {
-    path: 'analysis',
-    element: <Analysis />,
-  },
-  { path: 'analysis/students', element: <Students /> },
-  { path: 'analysis/items', element: <Items /> },
+  { path: 'analysis/:id', element: <Analysis /> },
+  { path: 'analysis/:id/students', element: <Students /> },
+  { path: 'analysis/:id/items', element: <Items /> },
   { path: 'history', element: <div>History</div> },
 ]
 
