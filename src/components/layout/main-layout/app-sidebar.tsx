@@ -13,7 +13,7 @@ import {
 import { MenuItems } from '@/constants/menu-item'
 import { ChevronDown, LogOut } from 'lucide-react'
 import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import {
   Collapsible,
   CollapsibleContent,
@@ -23,6 +23,7 @@ import { Logo } from '@/components/ui/logo'
 import { DarkModeToggle } from './dark-mode-toggle'
 
 export function AppSidebar() {
+  const { id } = useParams() // Extract the dynamic ID from the URL
   const [activeLink, setActiveLink] =
     useState<(typeof MenuItems)[number]['value']>()
   return (
@@ -42,7 +43,7 @@ export function AppSidebar() {
                   <SidebarGroupLabel className="p-0 pr-3" asChild>
                     <SidebarMenuItem className="flex-1">
                       <NavLink
-                        to={item.url}
+                        to={item.url.replace(':id', id || '')}
                         className={({ isActive }) => {
                           if (isActive) setActiveLink(item.value)
                           return 'w-full'
@@ -69,7 +70,7 @@ export function AppSidebar() {
                       {item.children.map((subItem, index) => (
                         <SidebarMenuItem key={index} className="flex-1">
                           <NavLink
-                            to={item.url + subItem.url}
+                            to={item.url.replace(':id', id || '') + subItem.url}
                             className={({ isActive }) => {
                               if (isActive) setActiveLink(subItem.value)
                               return ''
@@ -95,7 +96,7 @@ export function AppSidebar() {
             ) : (
               <SidebarMenuItem key={item.title}>
                 <NavLink
-                  to={item.url}
+                  to={item.url.replace(':id', id || '')}
                   className={({ isActive }) => {
                     if (isActive) setActiveLink(item.value)
                     return ''

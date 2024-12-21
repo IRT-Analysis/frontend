@@ -94,11 +94,12 @@ export const request = async <T>(
     })
 
     return {
-      data: response.data,
+      data: response.data.data,
       status: response.status,
-      message: 'message',
+      message: response.data.message,
     }
   } catch (error) {
+    console.error('API Error:', error)
     const apiError: ApiError = {
       message: (error as AxiosError).message,
       status: (error as AxiosError).response?.status,

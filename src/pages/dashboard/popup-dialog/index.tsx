@@ -83,11 +83,23 @@ export function PopupDialog() {
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const res = await cttAnalyzeMutation.mutateAsync(values)
-    const responseData = { analyzedData: res.data }
-    navigate('/analysis/items', { state: responseData })
-  }
+  const handleSubmit = form.handleSubmit(
+    async (values: z.infer<typeof formSchema>) => {
+      console.log('hehe')
+      if (cttAnalyzeMutation.isPending) return
+      try {
+        const res = await cttAnalyzeMutation.mutateAsync(values)
+        console.log(res)
+        const id = res.data
+        navigate(`/analysis/${id}`)
+        // toast({ title: res.payload.message })
+        // reset()
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    (error) => console.error(error)
+  )
 
   return (
     <DialogContent className="sm:max-w-[550px]">
@@ -101,11 +113,7 @@ export function PopupDialog() {
       </DialogHeader>
       <ScrollArea className="h-[600px] px-2">
         <Form {...form}>
-          <form
-            noValidate
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 px-1"
-          >
+          <form noValidate onSubmit={handleSubmit} className="space-y-4 px-1">
             <FormField
               control={form.control}
               name="projectName"

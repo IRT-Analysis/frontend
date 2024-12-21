@@ -9,7 +9,7 @@ export const MenuItems = [
   },
   {
     title: 'Phân tích',
-    url: '/analysis',
+    url: '/analysis/:id',
     icon: ChartBar,
     value: 'analysis',
     children: [

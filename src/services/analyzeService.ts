@@ -14,12 +14,17 @@ export type CTTAnalysis = {
   }
 }
 
+export type CTTGeneralDetails = Readonly<{
+  total_students: number
+  total_questions: number
+  total_option: number
+}>
+
 export type OptionDetails = Readonly<{
   selected_by: number
   top_selected: number
   bottom_selected: number
   ratio: number
-  chosen_by: number
   discrimination: number
   r_pbis: number
 }>
@@ -48,10 +53,19 @@ export const analyzeService = {
     const formData = new FormData()
     formData.append('file', answerFile[0])
 
-    return http.post<CTTAnalysis>('/upload', formData, {
+    return http.post<CTTAnalysis>('/ctt/analyze', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     })
+  },
+  getCTTAnalysisResult(id: string): Promise<ApiResponse<CTTAnalysis>> {
+    return http.get<CTTAnalysis>(`/ctt/items/${id}`)
+  },
+
+  getCTTAnalysisGeneralDetail(
+    id: string
+  ): Promise<ApiResponse<CTTGeneralDetails>> {
+    return http.get<CTTGeneralDetails>(`/ctt/general-detail/${id}`)
   },
 }
