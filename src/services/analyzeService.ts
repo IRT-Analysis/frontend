@@ -29,8 +29,15 @@ export type OptionDetails = Readonly<{
   r_pbis: number
 }>
 
-export const analyzeService = {
-  cttAnalysis({
+export type AverageDetails = Readonly<{
+  average_score: number
+  average_discrimination: number
+  average_difficulty: number
+  average_rpbis: number
+}>
+
+export const cttAnalyzeService = {
+  analyze({
     projectName,
     numberOfChoices,
     numberOfGroup,
@@ -59,13 +66,16 @@ export const analyzeService = {
       },
     })
   },
-  getCTTAnalysisResult(id: string): Promise<ApiResponse<CTTAnalysis>> {
+  getResult(id: string): Promise<ApiResponse<CTTAnalysis>> {
     return http.get<CTTAnalysis>(`/ctt/items/${id}`)
   },
 
-  getCTTAnalysisGeneralDetail(
-    id: string
-  ): Promise<ApiResponse<CTTGeneralDetails>> {
+  getGeneralDetails(id: string): Promise<ApiResponse<CTTGeneralDetails>> {
     return http.get<CTTGeneralDetails>(`/ctt/general-detail/${id}`)
+  },
+
+  getAverageDetails(id: string): Promise<ApiResponse<AverageDetails>> {
+    console.log('getAverageDetails')
+    return http.get<AverageDetails>(`/ctt/average-detail/${id}`)
   },
 }
