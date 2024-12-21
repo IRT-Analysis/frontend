@@ -18,13 +18,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function BarLineChart() {
+export function BarLineChart({ name, _data }: { name: string; _data: string }) {
   const navigate = useNavigate()
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-[16px] font-bold leading-[1.5] tracking-[0.2px]">
-          Biểu đồ phân bố điểm
+          {name}
         </CardTitle>
         {/* <CardDescription>January - June 2024</CardDescription> */}
       </CardHeader>

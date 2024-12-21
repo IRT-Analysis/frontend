@@ -74,13 +74,13 @@ const Analysis = () => {
       </div>
 
       <div className="col-span-4 rounded-lg bg-background">
-        <BarLineChart />
+        <BarLineChart name={'Biểu đồ phân bố độ phân cách'} _data={'_'} />
       </div>
       <div className="col-span-4 rounded-lg bg-background">
-        <BarLineChart />
+        <BarLineChart name={'Biểu đồ phân bố độ khó'} _data={'_'} />
       </div>
       <div className="col-span-4 rounded-lg bg-background">
-        <BarLineChart />
+        <BarLineChart name={'Biểu đồ phân bố hệ số tương quan'} _data={'_'} />
       </div>
     </div>
   )
