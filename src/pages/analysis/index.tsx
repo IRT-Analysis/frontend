@@ -2,35 +2,45 @@ import { Blocks, ChartNoAxesColumn, GraduationCap, Split } from 'lucide-react'
 import { BarLineChart } from './bar-line-chart'
 import { Component } from './barchart'
 import OverallData from './overall-data'
+import { useParams } from 'react-router-dom'
+import { useGetAverageDetalsQuery } from '@/queries/useAnalyze'
 
 const OverallStats = [
   {
     icon: <GraduationCap color="#F6A723" />,
     title: 'Điểm trung bình',
-    value: 7.333,
+    name: 'average_score',
     bgColor: '#FFFBEB',
   },
   {
     icon: <Blocks color="#007AFF" />,
     title: 'Độ khó',
-    value: 0.111,
+    name: 'average_difficulty',
     bgColor: '#EFF6FF',
   },
   {
     icon: <Split color="#ED4F9D" />,
+    name: 'average_discrimination',
     title: 'Độ phân cách',
-    value: 0.111,
     bgColor: '#FDF2F8',
   },
   {
     icon: <ChartNoAxesColumn color="#38BDF8" />,
-    title: 'Độ phân cách RPBS',
-    value: -0.164,
+    title: 'Hệ số R_PBIS',
+    name: 'average_rpbis',
     bgColor: '#F8FAFC',
   },
-]
+] as const
 
 const Analysis = () => {
+  const { id } = useParams()
+  const getAverageQuery = useGetAverageDetalsQuery(id!)
+  const averageData = getAverageQuery.data?.data || {
+    average_difficulty: 0,
+    average_discrimination: 0,
+    average_rpbis: 0,
+    average_score: 0,
+  }
   return (
     <div className="m-10 grid grid-cols-12 gap-4">
       {OverallStats.map((stat, index) => (
@@ -46,7 +56,7 @@ const Analysis = () => {
           </div>
           <div className="flex flex-col gap-1">
             <div className="text-[24px] font-bold leading-[1.25] tracking-[0.2px]">
-              {stat.value}
+              {averageData[stat.name]}
             </div>
             <div className="text-[14px] font-semibold leading-[1.6] tracking-[0.2px] text-muted-foreground">
               {stat.title}
