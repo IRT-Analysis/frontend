@@ -175,6 +175,7 @@ export const columns: ColumnDef<ColumnsType>[] = [
     },
     filterFn: (row, _, value) => {
       const pDifficulty = row.getValue('difficulty') as number
+
       if (!value) {
         return true // No filter, include all rows
       }
@@ -226,7 +227,6 @@ export const columns: ColumnDef<ColumnsType>[] = [
       const value = row.getValue('discrimination') as number
       let displayValue, variant: BadgeProps['variant']
 
-      // Categorize discrimination based on the numeric value of discrimination
       if (value < 0.2) {
         displayValue = 'Kém'
         variant = 'veryHard'
@@ -250,11 +250,11 @@ export const columns: ColumnDef<ColumnsType>[] = [
     // Custom filter function based on discrimination
     filterFn: (row, _, value) => {
       const pDiscrimination = row.getValue('discrimination') as number
+
       if (!value) {
         return true // No filter, include all rows
       }
 
-      // If a discrimination range is selected, check if discrimination falls within the range
       if (value.min !== undefined && value.max !== undefined) {
         return pDiscrimination >= value.min && pDiscrimination < value.max
       }
