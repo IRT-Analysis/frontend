@@ -1,11 +1,11 @@
 import { z } from 'zod'
 
 const configSchema = z.object({
-  API_ENDPOINT: z.string(),
+  VITE_API_ENDPOINT: z.string(),
 })
 
 const configProject = configSchema.safeParse({
-  API_ENDPOINT: process.env.API_ENDPOINT,
+  VITE_API_ENDPOINT: process.env.VITE_API_ENDPOINT,
 })
 
 if (!configProject.success) {

@@ -113,8 +113,10 @@ const CellItem = (key: keyof OptionDetails, value: number) => {
 
 export function MetricsTable({
   data,
+  correct_option,
 }: {
   data: Record<string, OptionDetails>
+  correct_option: string
 }) {
   const tranposedData = useMemo(() => {
     const statNames = Object.keys(data['0']) as (keyof OptionDetails)[] // Get all the stat names from the first option
@@ -138,10 +140,19 @@ export function MetricsTable({
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Chỉ số</TableHead>
-          <TableHead className="text-center">A</TableHead>
-          <TableHead className="text-center">B</TableHead>
-          <TableHead className="text-center">C</TableHead>
-          <TableHead className="text-center">D</TableHead>
+          {['A', 'B', 'C', 'D'].map((item) => (
+            <TableHead
+              key={item}
+              className={cn(
+                'text-center',
+                item === correct_option
+                  ? 'underline decoration-2 underline-offset-2'
+                  : ''
+              )}
+            >
+              {item}
+            </TableHead>
+          ))}
         </TableRow>
       </TableHeader>
       <TableBody>

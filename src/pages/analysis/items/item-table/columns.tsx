@@ -8,23 +8,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { OptionDetails, QuestionDetails } from '@/types/ctt-analysis.type'
+import { CTTAnalysisResult } from '@/types/ctt-analysis.type'
 import { ColumnDef } from '@tanstack/react-table'
+import { MathJax, MathJaxContext } from 'better-react-mathjax'
 import { ArrowUpDown, ChevronDown } from 'lucide-react'
-import { MathJaxContext, MathJax } from 'better-react-mathjax'
 
 type ColumnsType = {
-  content: QuestionDetails
-  difficulty: number
-  difficulty_category: string
-  discrimination: number
-  discrimination_category: string
-  r_pbis: number
-  options: {
-    [optionKey: string]: OptionDetails
-  }
-  id: string
-}
+  id: string // Unique identifier for the column
+} & CTTAnalysisResult[string] // Use the shape of a single entry in CTTAnalysisResult
 
 export const columns: ColumnDef<ColumnsType>[] = [
   {
@@ -148,10 +139,32 @@ export const columns: ColumnDef<ColumnsType>[] = [
     cell: ({ row }) => (
       <HoverCardText
         content={
-          <div>
-            Câu hỏi có hiệu số tỉ lệ thí sinh nhóm cao chọn đúng so với tỉ lệ đó
-            của nhóm thấp là{' '}
-            {Math.round(parseFloat(row.getValue('discrimination')) * 100)}%
+          <div className="w-[300px]">
+            {(() => {
+              const discrimination = parseFloat(row.getValue('discrimination'))
+              if (discrimination < 0) {
+                return (
+                  <>
+                    Câu hỏi có hiệu số tỉ lệ thí sinh nhóm cao chọn đúng so với
+                    tỉ lệ đó của nhóm thấp là{' '}
+                    <span className="font-bold text-red-500">
+                      {Math.round(discrimination * 100)}%
+                    </span>
+                    .{' '}
+                    <span className="text-red-500">
+                      Điều này có thể do lỗi trong dữ liệu hoặc câu hỏi cần được
+                      xem xét lại.
+                    </span>
+                  </>
+                )
+              }
+              return (
+                <>
+                  Câu hỏi có hiệu số tỉ lệ thí sinh nhóm cao chọn đúng so với tỉ
+                  lệ đó của nhóm thấp là {Math.round(discrimination * 100)}%.
+                </>
+              )
+            })()}
           </div>
         }
       >

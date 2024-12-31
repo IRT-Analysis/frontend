@@ -26,7 +26,7 @@ export interface ApiError {
 }
 
 const httpClient = axios.create({
-  baseURL: `${envConfig.API_ENDPOINT}/api`,
+  baseURL: `${envConfig.VITE_API_ENDPOINT}/api`,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

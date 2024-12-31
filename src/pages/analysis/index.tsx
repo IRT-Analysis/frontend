@@ -77,7 +77,7 @@ const Analysis = () => {
       <div className="col-span-4 rounded-lg bg-background">
         <BarLineChart
           isLoading={getGeneralDetails.isLoading}
-          name={'Biểu đồ phân bố hệ số tương quan'}
+          name={'Biểu đồ phân bố hệ số tương quan (R_PBIS)'}
           data={histogram.r_pbis}
           tootlTip={ChartTooltipContent.r_pbis}
           type="r_pbis"

@@ -9,6 +9,8 @@ export type CTTAnalysisResult = {
     options: {
       [optionKey: string]: OptionDetails
     }
+    group_choice_percentages: Record<string, number>[]
+    correct_index: number
   }
 }
 

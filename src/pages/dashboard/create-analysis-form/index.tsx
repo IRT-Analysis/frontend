@@ -144,7 +144,7 @@ export function CreateAnalysisForm() {
                 name="projectName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tên Project</FormLabel>
+                    <FormLabel>Tên phân tích</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Nhập tên dự án"
