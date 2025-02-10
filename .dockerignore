@@ -1,0 +1,47 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+
+# Logs
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+*.log
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Git files
+.git/
+.gitignore
+
+# Editor configurations
+.vscode/
+.idea/
+
+# Build cache and temporary files
+.cache/
+*.tsbuildinfo
+
+# Husky hooks
+.husky/
+
+# Prettier and lint configs (if not needed in Docker image)
+.prettierrc*
+
+.eslintrc*
+.eslintrc
+.eslintrc
+.lintstagedrc*
+.lintstagedrc
