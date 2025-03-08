@@ -7,7 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Answers } from '@/constants'
 import { cn } from '@/lib/utils'
+import { OptionAnalysisType } from '@/schema/analysis.schema'
 import { OptionDetails } from '@/types/ctt-analysis.type'
 import { ReactNode, useMemo } from 'react'
 
@@ -115,19 +117,24 @@ export function MetricsTable({
   data,
   correct_option,
 }: {
-  data: Record<string, OptionDetails>
+  data: OptionAnalysisType[]
   correct_option: string
 }) {
   const tranposedData = useMemo(() => {
-    const statNames = Object.keys(data['0']) as (keyof OptionDetails)[] // Get all the stat names from the first option
+    if (!data || data.length === 0) return []
+
+    const statNames = Object.keys(
+      data[0].option_analysis
+    ) as (keyof OptionAnalysisType['option_analysis'])[]
+
     const result: DataType = []
     statNames.forEach((stat) => {
       const row = {
-        name: stat,
-        A: data['0']?.[stat] ?? null,
-        B: data['1']?.[stat] ?? null,
-        C: data['2']?.[stat] ?? null,
-        D: data['3']?.[stat] ?? null,
+        name: stat as keyof typeof CellRestrain,
+        A: data[0]?.option_analysis[stat] ?? null,
+        B: data[1]?.option_analysis[stat] ?? null,
+        C: data[2]?.option_analysis[stat] ?? null,
+        D: data[3]?.option_analysis[stat] ?? null,
       }
       result.push(row)
     })
@@ -140,7 +147,7 @@ export function MetricsTable({
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Chỉ số</TableHead>
-          {['A', 'B', 'C', 'D'].map((item) => (
+          {Object.keys(Answers).map((item) => (
             <TableHead
               key={item}
               className={cn(

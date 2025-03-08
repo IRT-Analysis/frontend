@@ -8,16 +8,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { CTTAnalysisResult } from '@/types/ctt-analysis.type'
+import { QuestionAnalysisType } from '@/schema/analysis.schema'
 import { ColumnDef } from '@tanstack/react-table'
 import { MathJax, MathJaxContext } from 'better-react-mathjax'
 import { ArrowUpDown, ChevronDown } from 'lucide-react'
 
-type ColumnsType = {
-  id: string // Unique identifier for the column
-} & CTTAnalysisResult[string] // Use the shape of a single entry in CTTAnalysisResult
-
-export const columns: ColumnDef<ColumnsType>[] = [
+export const columns: ColumnDef<QuestionAnalysisType>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => {
@@ -81,20 +77,23 @@ export const columns: ColumnDef<ColumnsType>[] = [
         </div>
       )
     },
-    cell: ({ row }) => (
-      <HoverCardText
-        content={
-          <div>
-            Câu hỏi có tỉ lệ thí sinh chọn đúng là{' '}
-            {Math.round(parseFloat(row.getValue('difficulty')) * 100)}%
+    cell: ({ row }) => {
+      const difficulty = row.original.question_analysis.difficulty_index
+      return (
+        <HoverCardText
+          content={
+            <div>
+              Câu hỏi có tỉ lệ thí sinh chọn đúng là{' '}
+              {Math.round(difficulty * 100)}%
+            </div>
+          }
+        >
+          <div className="text-center capitalize">
+            {row.getValue('difficulty')}
           </div>
-        }
-      >
-        <div className="text-center capitalize">
-          {row.getValue('difficulty')}
-        </div>
-      </HoverCardText>
-    ),
+        </HoverCardText>
+      )
+    },
   },
   {
     accessorKey: 'discrimination',
@@ -136,41 +135,44 @@ export const columns: ColumnDef<ColumnsType>[] = [
         </div>
       )
     },
-    cell: ({ row }) => (
-      <HoverCardText
-        content={
-          <div className="w-[300px]">
-            {(() => {
-              const discrimination = parseFloat(row.getValue('discrimination'))
-              if (discrimination < 0) {
+    cell: ({ row }) => {
+      const discrimination = row.original.question_analysis.discrimination_index
+      return (
+        <HoverCardText
+          content={
+            <div className="w-[300px]">
+              {(() => {
+                if (discrimination < 0) {
+                  return (
+                    <>
+                      Câu hỏi có hiệu số tỉ lệ thí sinh nhóm cao chọn đúng so
+                      với tỉ lệ đó của nhóm thấp là{' '}
+                      <span className="font-bold text-red-500">
+                        {Math.round(discrimination * 100)}%
+                      </span>
+                      .{' '}
+                      <span className="text-red-500">
+                        Điều này có thể do lỗi trong dữ liệu hoặc câu hỏi cần
+                        được xem xét lại.
+                      </span>
+                    </>
+                  )
+                }
                 return (
                   <>
                     Câu hỏi có hiệu số tỉ lệ thí sinh nhóm cao chọn đúng so với
-                    tỉ lệ đó của nhóm thấp là{' '}
-                    <span className="font-bold text-red-500">
-                      {Math.round(discrimination * 100)}%
-                    </span>
-                    .{' '}
-                    <span className="text-red-500">
-                      Điều này có thể do lỗi trong dữ liệu hoặc câu hỏi cần được
-                      xem xét lại.
-                    </span>
+                    tỉ lệ đó của nhóm thấp là {Math.round(discrimination * 100)}
+                    %.
                   </>
                 )
-              }
-              return (
-                <>
-                  Câu hỏi có hiệu số tỉ lệ thí sinh nhóm cao chọn đúng so với tỉ
-                  lệ đó của nhóm thấp là {Math.round(discrimination * 100)}%.
-                </>
-              )
-            })()}
-          </div>
-        }
-      >
-        <div className="text-center">{row.getValue('discrimination')}</div>
-      </HoverCardText>
-    ),
+              })()}
+            </div>
+          }
+        >
+          <div className="text-center">{discrimination}</div>
+        </HoverCardText>
+      )
+    },
   },
   {
     accessorKey: 'difficulty_group',
@@ -247,15 +249,15 @@ export const columns: ColumnDef<ColumnsType>[] = [
     },
     size: 200,
     cell: ({ row }) => {
-      const value = row.getValue('difficulty') as number
+      const difficulty = row.original.question_analysis.difficulty_index
       let displayValue, variant: BadgeProps['variant']
-      if (value < 0.25) {
+      if (difficulty < 0.25) {
         displayValue = 'Quá Khó'
         variant = 'veryHard'
-      } else if (value < 0.5) {
+      } else if (difficulty < 0.5) {
         displayValue = 'Khó'
         variant = 'hard'
-      } else if (value < 0.75) {
+      } else if (difficulty < 0.75) {
         displayValue = 'Dễ'
         variant = 'easy'
       } else {
@@ -268,7 +270,6 @@ export const columns: ColumnDef<ColumnsType>[] = [
           content={
             <div className="w-[300px]">
               {(() => {
-                const difficulty = parseFloat(row.getValue('difficulty'))
                 if (difficulty < 0.25) {
                   return 'Chỉ một số ít thí sinh có thể trả lời đúng. Phù hợp để thử thách thí sinh giỏi, nhưng không đánh giá được năng lực của phần lớn thí sinh.'
                 } else if (difficulty < 0.5) {
@@ -373,17 +374,17 @@ export const columns: ColumnDef<ColumnsType>[] = [
     },
     size: 200,
     cell: ({ row }) => {
-      const value = row.getValue('discrimination') as number
+      const discrimination = row.original.question_analysis.discrimination_index
       let displayValue, variant: BadgeProps['variant']
 
       // Categorize discrimination based on the numeric value of discrimination
-      if (value < 0.1) {
+      if (discrimination < 0.1) {
         displayValue = 'Kém'
         variant = 'veryHard'
-      } else if (value >= 0.1 && value < 0.3) {
+      } else if (discrimination >= 0.1 && discrimination < 0.3) {
         displayValue = 'Tạm được'
         variant = 'hard'
-      } else if (value >= 0.3) {
+      } else if (discrimination >= 0.3) {
         displayValue = 'Tốt'
         variant = 'medium'
       }
@@ -393,9 +394,6 @@ export const columns: ColumnDef<ColumnsType>[] = [
           content={
             <div className="w-[300px]">
               {(() => {
-                const discrimination = parseFloat(
-                  row.getValue('discrimination')
-                )
                 if (discrimination < 0.1) {
                   return 'Câu hỏi này không phân biệt rõ giữa thí sinh giỏi và yếu. Nên xem xét cải thiện để tăng khả năng đánh giá năng lực.'
                 } else if (discrimination < 0.3) {
@@ -501,28 +499,30 @@ export const columns: ColumnDef<ColumnsType>[] = [
         </div>
       )
     },
-    cell: ({ row }) => (
-      <HoverCardText
-        content={
-          <div className="w-[300px]">
-            {(() => {
-              const r_pbis = parseFloat(row.getValue('r_pbis'))
-              if (r_pbis >= 0.4) {
-                return 'Chỉ số này cho thấy độ tương quan rất tốt. Thí sinh điểm cao sẽ có khả năng trả lời đúng rất cao, và ngược lại.'
-              } else if (r_pbis >= 0.3) {
-                return 'Chỉ số này cho thấy độ tương quan tốt. Thí sinh điểm cao sẽ có khả năng trả lời đúng cao, và ngược lại.'
-              } else if (r_pbis >= 0.2) {
-                return 'Chỉ số này cho thấy độ tương quan trung bình. Thí sinh điểm cao sẽ khả năng trả lời đúng trung bình, và ngược lại.'
-              } else {
-                return 'Chỉ số này cho thấy độ tương quan kém. Thí sinh điểm cao sẽ có khả năng trả lời đúng thấp, và ngược lại. Cần được xem xét cải thiện'
-              }
-            })()}
-          </div>
-        }
-      >
-        <div className="text-center">{row.getValue('r_pbis')}</div>
-      </HoverCardText>
-    ),
+    cell: ({ row }) => {
+      const r_pbis = row.original.question_analysis.rpbis
+      return (
+        <HoverCardText
+          content={
+            <div className="w-[300px]">
+              {(() => {
+                if (r_pbis >= 0.4) {
+                  return 'Chỉ số này cho thấy độ tương quan rất tốt. Thí sinh điểm cao sẽ có khả năng trả lời đúng rất cao, và ngược lại.'
+                } else if (r_pbis >= 0.3) {
+                  return 'Chỉ số này cho thấy độ tương quan tốt. Thí sinh điểm cao sẽ có khả năng trả lời đúng cao, và ngược lại.'
+                } else if (r_pbis >= 0.2) {
+                  return 'Chỉ số này cho thấy độ tương quan trung bình. Thí sinh điểm cao sẽ khả năng trả lời đúng trung bình, và ngược lại.'
+                } else {
+                  return 'Chỉ số này cho thấy độ tương quan kém. Thí sinh điểm cao sẽ có khả năng trả lời đúng thấp, và ngược lại. Cần được xem xét cải thiện'
+                }
+              })()}
+            </div>
+          }
+        >
+          <div className="text-center">{r_pbis}</div>
+        </HoverCardText>
+      )
+    },
   },
   {
     id: 'actions',

@@ -1,3 +1,5 @@
+import { Answers } from '@/constants'
+
 export type CTTAnalysisResult = {
   [key: string]: {
     content: QuestionDetails
@@ -67,3 +69,5 @@ export type ReviewQuestion = {
     message: string
   }[]
 }
+
+export type AnswerType = keyof typeof Answers

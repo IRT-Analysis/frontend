@@ -10,7 +10,6 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { CreateAnalysisForm } from './create-analysis-form'
 import banner from '/image.jpeg'
 import MockDescriptionImage from '/screen-01.png'
-import { useEffect } from 'react'
 
 const CardData = [
   {
@@ -39,27 +38,16 @@ const CardData = [
   },
 ]
 
-const getToken = () => {
-  const storageKey = `sb-${process.env.VITE_SUPABASE_PROJECT_ID}-auth-token`
-  const sessionDataString = localStorage.getItem(storageKey)
-  const sessionData = JSON.parse(sessionDataString || 'null')
-  const token = sessionData?.access_token
+// const getToken = () => {
+//   const storageKey = `sb-${process.env.VITE_SUPABASE_PROJECT_ID}-auth-token`
+//   const sessionDataString = localStorage.getItem(storageKey)
+//   const sessionData = JSON.parse(sessionDataString || 'null')
+//   const token = sessionData?.access_token
 
-  return token
-}
+//   return token
+// }
 
 const DashBoard = () => {
-  useEffect(() => {
-    fetch('http://localhost:3000/secret', {
-      method: 'POST',
-      headers: {
-        Authorization: getToken(),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-  }, [])
-
   return (
     <Dialog>
       <div className="flex flex-col items-center gap-[100px] p-[100px] 2xl:mx-auto 2xl:w-[1345px]">
