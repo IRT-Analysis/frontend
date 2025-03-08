@@ -1,6 +1,6 @@
 import { ChartBar, History, Home, ListOrdered, User, Users } from 'lucide-react'
 
-export const MenuItems = [
+export const MENU_ITEM = [
   {
     title: 'Trang chủ',
     url: '/',

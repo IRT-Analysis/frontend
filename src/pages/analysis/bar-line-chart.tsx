@@ -80,31 +80,31 @@ export function BarLineChart({
     }
     return data.map((obj) => {
       const [index, numberOfQuestion] = Object.entries(obj)[0]
-      const correctItem = parseFloat(index)
+      const stat = parseFloat(index)
 
       let group = ''
       if (type === 'difficulty') {
-        if (correctItem < 0.25) {
+        if (stat < 0.25) {
           group = 'Very Bad'
-        } else if (correctItem < 0.5) {
+        } else if (stat < 0.5) {
           group = 'Good'
-        } else if (correctItem < 0.75) {
+        } else if (stat < 0.75) {
           group = 'Good'
         } else {
           group = 'Very Bad'
         }
       } else if (type === 'discrimination') {
-        if (correctItem < 0.1) {
+        if (stat < 0.1) {
           group = 'Very Bad'
-        } else if (correctItem < 0.3) {
+        } else if (stat < 0.3) {
           group = 'Good'
         } else {
           group = 'Good'
         }
       } else if (type === 'r_pbis') {
-        if (correctItem < 0.2) {
+        if (stat < 0.2) {
           group = 'Very Bad'
-        } else if (correctItem <= 0.7) {
+        } else if (stat <= 0.7) {
           group = 'Good'
         } else {
           group = 'Average'
@@ -112,7 +112,7 @@ export function BarLineChart({
       }
 
       return {
-        correctItem,
+        stat,
         numberOfQuestion,
         group,
       }
@@ -135,7 +135,7 @@ export function BarLineChart({
             <ComposedChart accessibilityLayer data={transformedArray}>
               <CartesianGrid vertical={false} />
               <XAxis
-                dataKey="correctItem"
+                dataKey="stat"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}

@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { MenuItems } from '@/constants/menu-item'
+import { MENU_ITEM } from '@/constants'
 import { ChevronDown, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
@@ -30,7 +30,7 @@ export function AppSidebar() {
   const { hasCreatedAnalysis } = useApp()
 
   const [activeLink, setActiveLink] =
-    useState<(typeof MenuItems)[number]['value']>()
+    useState<(typeof MENU_ITEM)[number]['value']>()
   return (
     <Sidebar>
       <SidebarHeader className="h-[64px] items-center justify-center rounded-none border-b border-sidebar-border pb-2">
@@ -41,7 +41,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu className="gap-2">
-          {MenuItems.map((item) =>
+          {MENU_ITEM.map((item) =>
             item.children ? (
               !hasCreatedAnalysis ? null : (
                 <Collapsible key={item.title}>

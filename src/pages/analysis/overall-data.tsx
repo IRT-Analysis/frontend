@@ -18,7 +18,7 @@ const OverallDataItems = [
   },
   {
     title: 'Số lựa chọn',
-    name: 'total_option',
+    name: 'total_options',
     icon: SquareCheck,
     color: 'pink',
   },

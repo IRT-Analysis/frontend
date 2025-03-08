@@ -10,7 +10,7 @@ const placeholderData: CTTGeneralDetails = {
   general: {
     total_students: 0,
     total_questions: 0,
-    total_option: 0,
+    total_options: 0,
   },
   histogram: {
     score: [],
