@@ -14,6 +14,15 @@ export type CTTAnalysisResult = {
   }
 }
 
+export type OptionDetails = Readonly<{
+  selected_by: number
+  top_selected: number
+  bottom_selected: number
+  ratio: number
+  discrimination: number
+  r_pbis: number
+}>
+
 export type QuestionDetails = {
   question: string
   option: string[]
@@ -23,7 +32,7 @@ export type CTTGeneralDetails = Readonly<{
   general: {
     total_students: number
     total_questions: number
-    total_option: number
+    total_options: number
   }
   histogram: {
     score: Record<string, number>[]
@@ -32,15 +41,6 @@ export type CTTGeneralDetails = Readonly<{
     r_pbis: Record<string, number>[]
   }
   average: AverageDetails
-}>
-
-export type OptionDetails = Readonly<{
-  selected_by: number
-  top_selected: number
-  bottom_selected: number
-  ratio: number
-  discrimination: number
-  r_pbis: number
 }>
 
 export type AverageDetails = Readonly<{

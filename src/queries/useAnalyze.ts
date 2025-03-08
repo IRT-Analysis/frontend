@@ -9,10 +9,9 @@ export const useCTTAnalyzeMutation = () => {
 }
 
 export const useGetItemsResultQuery = (id: string) => {
-  console.log('query')
   return useQuery({
     queryKey: ['ctt-items', id],
-    queryFn: () => cttAnalyzeService.getResult(id),
+    queryFn: () => cttAnalyzeService.getAllQuestionAnalysis(id),
   })
 }
 
@@ -23,10 +22,16 @@ export const useGetGeneralDetailsQuery = (id: string) => {
   })
 }
 
-// export const useGetAverageDetalsQuery = (id: string) => {
-//   console.log('query')
-//   return useQuery({
-//     queryKey: ['ctt-average', id],
-//     queryFn: () => cttAnalyzeService.getAverageDetails(id),
-//   })
-// }
+export const useGetHistogramQuery = (id: string) => {
+  return useQuery({
+    queryKey: ['ctt-histogram', id],
+    queryFn: () => cttAnalyzeService.getHistogramDetails(id),
+  })
+}
+
+export const useGetOptionAnalysisQuery = (questionId: string) => {
+  return useQuery({
+    queryKey: ['option-analysis', questionId],
+    queryFn: () => cttAnalyzeService.getOptionAnlysis(questionId),
+  })
+}

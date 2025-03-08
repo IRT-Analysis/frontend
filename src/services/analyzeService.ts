@@ -1,7 +1,7 @@
 import http, { ApiResponse } from '@/lib/httpClient'
 import { CTTAnalysisRequest } from '@/pages/dashboard/create-analysis-form'
 import { CTTAnalysisResult, CTTGeneralDetails } from '@/types/ctt-analysis.type'
-
+import queryString from 'query-string'
 export const cttAnalyzeService = {
   analyze({
     projectName,
@@ -29,16 +29,29 @@ export const cttAnalyzeService = {
       },
     })
   },
-  getResult(id: string): Promise<ApiResponse<CTTAnalysisResult>> {
-    return http.get<CTTAnalysisResult>(`/ctt/items/${id}`)
+  getAllQuestionAnalysis(
+    projectId: string
+  ): Promise<ApiResponse<CTTAnalysisResult>> {
+    return http.get<CTTAnalysisResult>(
+      `question-analysis/?${queryString.stringify({ projectId })}`
+    )
   },
 
-  getGeneralDetails(id: string): Promise<ApiResponse<CTTGeneralDetails>> {
-    return http.get<CTTGeneralDetails>(`/ctt/general-detail/${id}`)
+  getGeneralDetails(
+    projectId: string
+  ): Promise<ApiResponse<CTTGeneralDetails>> {
+    return http.get<CTTGeneralDetails>(
+      `/general-details/?${queryString.stringify({ projectId })}`
+    )
   },
 
-  // getAverageDetails(id: string): Promise<ApiResponse<AverageDetails>> {
-  //   console.log('getAverageDetails')
-  //   return http.get<AverageDetails>(`/ctt/average-detail/${id}`)
-  // },
+  getHistogramDetails(projectId: string): Promise<unknown> {
+    return http.get(`/histogram/?${queryString.stringify({ projectId })}`)
+  },
+
+  getOptionAnlysis(questionId: string): Promise<unknown> {
+    return http.get(
+      `/option-analysis/?${queryString.stringify({ projectId: questionId })}`
+    )
+  },
 }
