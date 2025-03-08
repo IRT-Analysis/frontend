@@ -1,4 +1,4 @@
-import { cttAnalyzeService } from '@/services/analyzeService'
+import { cttAnalyzeService } from '@/services/analyze.service'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const useCTTAnalyzeMutation = () => {
@@ -8,30 +8,44 @@ export const useCTTAnalyzeMutation = () => {
   })
 }
 
-export const useGetItemsResultQuery = (id: string) => {
+export const useGetAllQuestionsAnalysisQuery = (examId: string) => {
   return useQuery({
-    queryKey: ['ctt-items', id],
-    queryFn: () => cttAnalyzeService.getAllQuestionAnalysis(id),
+    queryKey: ['ctt-items', examId],
+    queryFn: () => cttAnalyzeService.getAllQuestionAnalysis({ examId }),
   })
 }
 
-export const useGetGeneralDetailsQuery = (id: string) => {
+export const useGetQuestionAnalysisQuery = (questionId: string) => {
   return useQuery({
-    queryKey: ['ctt-general', id],
-    queryFn: () => cttAnalyzeService.getGeneralDetails(id),
+    queryKey: ['ctt-question', questionId],
+    queryFn: () => cttAnalyzeService.getQuestionAnalysis({ questionId }),
   })
 }
 
-export const useGetHistogramQuery = (id: string) => {
+export const useGetGeneralDetailsQuery = (examId: string) => {
   return useQuery({
-    queryKey: ['ctt-histogram', id],
-    queryFn: () => cttAnalyzeService.getHistogramDetails(id),
+    queryKey: ['ctt-general', examId],
+    queryFn: () => cttAnalyzeService.getGeneralDetails({ examId }),
   })
 }
 
-export const useGetOptionAnalysisQuery = (questionId: string) => {
+export const useGetHistogramQuery = (examId: string) => {
   return useQuery({
-    queryKey: ['option-analysis', questionId],
-    queryFn: () => cttAnalyzeService.getOptionAnlysis(questionId),
+    queryKey: ['ctt-histogram', examId],
+    queryFn: () => cttAnalyzeService.getHistogramDetails({ examId }),
+  })
+}
+
+export const useGetOptionAnalysisQuery = (optionId: string) => {
+  return useQuery({
+    queryKey: ['option-analysis', optionId],
+    queryFn: () => cttAnalyzeService.getOptionAnalysis({ optionId }),
+  })
+}
+
+export const useGetOptionsAnalysisQuery = (questionId: string) => {
+  return useQuery({
+    queryKey: ['options-analysis', questionId],
+    queryFn: () => cttAnalyzeService.getOptionsAnalysis({ questionId }),
   })
 }
