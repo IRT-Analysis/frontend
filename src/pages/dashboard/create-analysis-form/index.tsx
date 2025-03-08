@@ -108,10 +108,13 @@ export function CreateAnalysisForm() {
     async (values: z.infer<typeof formSchema>) => {
       if (cttAnalyzeMutation.isPending) return
       try {
-        const res = await cttAnalyzeMutation.mutateAsync(values)
-        const id = res.data
+        const res = await cttAnalyzeMutation.mutateAsync({
+          ...values,
+          type: 'CTT',
+        })
+        const projectId = res.data.projectId
         setHasCreatedAnalysis(true)
-        navigate(`/analysis/${id}`)
+        navigate(`/analysis/${projectId}`)
         toast(res.message)
         // reset()
       } catch (error) {

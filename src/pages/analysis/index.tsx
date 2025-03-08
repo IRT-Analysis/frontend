@@ -1,30 +1,32 @@
-import { useGetGeneralDetailsQuery } from '@/queries/useAnalyze'
-import { CTTGeneralDetails } from '@/types/ctt-analysis.type'
+import {
+  useGetGeneralDetailsQuery,
+  useGetHistogramQuery,
+} from '@/queries/useAnalyze'
 import { useParams } from 'react-router-dom'
 import AverageDetails from './average-details'
 import { BarLineChart } from './bar-line-chart'
 import { LargeBarChart } from './barchart'
 import OverallData from './overall-data'
 
-const placeholderData: CTTGeneralDetails = {
-  general: {
-    total_students: 0,
-    total_questions: 0,
-    total_options: 0,
-  },
-  histogram: {
-    score: [],
-    difficulty: [],
-    discrimination: [],
-    r_pbis: [],
-  },
-  average: {
-    average_score: 0,
-    average_difficulty: 0,
-    average_discrimination: 0,
-    average_rpbis: 0,
-  },
-}
+// const placeholderData: CTTGeneralDetails = {
+//   general: {
+//     total_students: 0,
+//     total_questions: 0,
+//     total_options: 0,
+//   },
+//   histogram: {
+//     score: [],
+//     difficulty: [],
+//     discrimination: [],
+//     r_pbis: [],
+//   },
+//   average: {
+//     average_score: 0,
+//     average_difficulty: 0,
+//     average_discrimination: 0,
+//     average_rpbis: 0,
+//   },
+// }
 
 const ChartTooltipContent = {
   discrimination:
@@ -36,49 +38,67 @@ const ChartTooltipContent = {
 }
 
 const Analysis = () => {
-  const { id } = useParams()
-  const getGeneralDetails = useGetGeneralDetailsQuery(id!)
+  const { projectId } = useParams()
+  const getGeneralDetailsQuery = useGetGeneralDetailsQuery(projectId!)
   const {
-    data: { general, histogram, average },
-  } = getGeneralDetails.data ?? { data: placeholderData }
+    data: {
+      avg_difficulty_index: average_difficulty,
+      // avg_score,
+      exam_id,
+      avg_discrimination_index: average_discrimination,
+      // cronbach_alpha,
+      // average_rpbis,
+      projects: { total_options, total_questions, total_students },
+    },
+  } = getGeneralDetailsQuery.data!
+
+  const histogramDataQuery = useGetHistogramQuery(exam_id)
+  const { data: histogramData } = histogramDataQuery.data!
 
   return (
     <div className="m-10 grid grid-cols-12 gap-4">
       <AverageDetails
-        average={average}
-        total_questions={general.total_questions}
+        average={{
+          average_score: 0,
+          average_difficulty,
+          average_discrimination,
+          average_rpbis: 0,
+        }}
+        total_questions={total_questions}
       />
       <div className="col-span-8 rounded-lg bg-background">
-        <LargeBarChart data={histogram.score} />
+        <LargeBarChart data={histogramData.score} />
       </div>
 
       <div className="col-span-4 rounded-lg bg-background">
-        <OverallData data={general} />
+        <OverallData
+          data={{ total_options, total_questions, total_students }}
+        />
       </div>
 
       <div className="col-span-4 rounded-lg bg-background">
         <BarLineChart
-          isLoading={getGeneralDetails.isLoading}
+          isLoading={histogramDataQuery.isLoading}
           name={'Biểu đồ phân bố độ phân cách'}
-          data={histogram.discrimination}
+          data={histogramData.discrimination}
           tootlTip={ChartTooltipContent.discrimination}
           type="discrimination"
         />
       </div>
       <div className="col-span-4 rounded-lg bg-background">
         <BarLineChart
-          isLoading={getGeneralDetails.isLoading}
+          isLoading={histogramDataQuery.isLoading}
           name={'Biểu đồ phân bố độ khó'}
-          data={histogram.difficulty}
+          data={histogramData.difficulty}
           tootlTip={ChartTooltipContent.difficulty}
           type="difficulty"
         />
       </div>
       <div className="col-span-4 rounded-lg bg-background">
         <BarLineChart
-          isLoading={getGeneralDetails.isLoading}
+          isLoading={histogramDataQuery.isLoading}
           name={'Biểu đồ phân bố hệ số tương quan (R_PBIS)'}
-          data={histogram.r_pbis}
+          data={histogramData.r_pbis}
           tootlTip={ChartTooltipContent.r_pbis}
           type="r_pbis"
         />

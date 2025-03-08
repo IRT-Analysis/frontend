@@ -46,7 +46,7 @@ import {
 type CollapsibleRowProps<T> = {
   row: Row<T>
   isSelected: boolean
-  collapsibleContent?: (rowIndex: number) => React.ReactNode
+  collapsibleContent?: (_row: Row<T>) => React.ReactNode
 }
 
 function CollapsibleRow<T>({
@@ -64,7 +64,7 @@ function CollapsibleRow<T>({
             </TableCell>
           ))}
         </TableRow>
-        {collapsibleContent && collapsibleContent(row.index)}
+        {collapsibleContent && collapsibleContent(row)}
       </>
     </Collapsible>
   )
@@ -85,7 +85,7 @@ export function ReusableTable<T>({
   columns: ColumnDef<T>[]
   data: T[]
   isPending?: boolean
-  collapsibleContent?: (_row: number) => JSX.Element
+  collapsibleContent?: (_row: Row<T>) => JSX.Element
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

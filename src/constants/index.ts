@@ -48,3 +48,10 @@ export const MENU_ITEM = [
     comingSoon: true,
   },
 ]
+
+export enum Answers {
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D',
+}

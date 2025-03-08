@@ -16,6 +16,8 @@ import {
 } from '@/components/ui/chart'
 import { Card, CardContent } from '@/components/ui/card'
 import { useMemo } from 'react'
+import { Answers } from '@/constants'
+import { AnswerType } from '@/types/ctt-analysis.type'
 
 // Chart configuration
 const chartConfig = {
@@ -94,13 +96,13 @@ export function CustomAreaChart({
               content={<ChartTooltipContent indicator="dot" />}
             />
 
-            {['A', 'B', 'C', 'D'].map((option) => (
+            {Object.keys(Answers).map((option) => (
               // Map each option to a line
               <Line
                 key={option}
                 dataKey={option}
                 type="natural"
-                stroke={chartConfig[option as 'A' | 'B' | 'C' | 'D'].color}
+                stroke={chartConfig[option as AnswerType].color}
                 strokeDasharray={option == correct_option ? '' : '5 5'} // Dotted line for differentiation
                 strokeWidth={option == correct_option ? 2 : 1.5}
                 dot={{ r: 3 }}
