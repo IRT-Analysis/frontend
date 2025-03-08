@@ -1,4 +1,4 @@
-import { uploadService } from '@/services/uploadService'
+import { uploadService } from '@/services/upload.service'
 import { useMutation } from '@tanstack/react-query'
 
 export const useUploadFiles = () => {

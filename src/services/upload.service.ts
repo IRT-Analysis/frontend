@@ -17,15 +17,11 @@ export interface UploadFileOptions {
 }
 
 export const uploadService = {
-  async uploadFiles({
-    endpoint,
-    files,
-    onUploadProgress,
-  }: UploadFileOptions): Promise<ApiResponse<UploadFileResponse>> {
+  async uploadFiles({ endpoint, files, onUploadProgress }: UploadFileOptions) {
     const formData = new FormData()
     files.forEach((file) => formData.append('files', file))
 
-    return http.post<UploadFileResponse>(endpoint, formData, {
+    return http.post<ApiResponse<UploadFileResponse>>(endpoint, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

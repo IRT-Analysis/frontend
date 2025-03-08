@@ -1,15 +1,15 @@
 import { CustomAreaChart } from '@/components/chart/area-chart'
 import { ReusableTable } from '@/components/table/reusable-table'
 import { CollapsibleContent } from '@/components/ui/collapsible'
-import { useGetItemsResultQuery } from '@/queries/useAnalyze'
 import { useParams } from 'react-router-dom'
 import { columns } from './columns'
 import { MetricsTable } from './metric-table'
 import { useMemo } from 'react'
+import { useGetAllQuestionsAnalysisQuery } from '@/queries/useAnalyze'
 
 const ItemTable = () => {
   const { id } = useParams() as { id: string }
-  const getItemsResult = useGetItemsResultQuery(id)
+  const getItemsResult = useGetAllQuestionsAnalysisQuery(id)
 
   const responseArray = useMemo(() => {
     const data = getItemsResult.data?.data || {}

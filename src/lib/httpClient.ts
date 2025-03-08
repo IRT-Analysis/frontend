@@ -65,7 +65,7 @@ export const request = async <T>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
   url: string,
   options?: Omit<AxiosRequestConfig, 'method' | 'url'>
-): Promise<ApiResponse<T>> => {
+): Promise<T> => {
   const fullUrl = normalizePath(url)
 
   // Check if the data is FormData or JSON
@@ -83,7 +83,7 @@ export const request = async <T>(
       : { 'Content-Type': 'application/json' }
 
   try {
-    const response: AxiosResponse<ApiResponse<T>> = await httpClient({
+    const response: AxiosResponse = await httpClient({
       url: fullUrl,
       ...options,
       headers: {
@@ -98,7 +98,7 @@ export const request = async <T>(
       data: response.data.data,
       code: response.data.code,
       message: response.data.message,
-    }
+    } as unknown as T
   } catch (error) {
     const AxiosError = error as AxiosError<ApiError>
     if (!AxiosError.response) {
@@ -126,7 +126,7 @@ const http = {
   },
   post<Response>(
     url: string,
-    body: unknown,
+    body?: unknown,
     options?: Omit<AxiosRequestConfig, 'method' | 'url'>
   ) {
     return request<Response>('POST', url, { ...options, data: body })
