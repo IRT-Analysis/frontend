@@ -1,20 +1,17 @@
-'use client'
-
 import {
   ColumnDef,
   ColumnFiltersState,
-  Row,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  Row,
+  SortingState,
   useReactTable,
+  VisibilityState,
 } from '@tanstack/react-table'
 import { ChevronDown } from 'lucide-react'
-import * as React from 'react'
 
 import AutoPagination from '@/components/auto-paginations'
 import { Button } from '@/components/ui/button'
@@ -43,10 +40,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { ChangeEvent, memo, ReactNode, useState } from 'react'
 type CollapsibleRowProps<T> = {
   row: Row<T>
   isSelected: boolean
-  collapsibleContent?: (_row: Row<T>) => React.ReactNode
+  collapsibleContent?: (_row: Row<T>, isDirty: boolean) => ReactNode
 }
 
 function CollapsibleRow<T>({
@@ -54,8 +52,9 @@ function CollapsibleRow<T>({
   isSelected,
   collapsibleContent,
 }: CollapsibleRowProps<T>) {
+  const [isDirty, setIsDirty] = useState(false)
   return (
-    <Collapsible asChild>
+    <Collapsible onOpenChange={() => setIsDirty(true)} asChild>
       <>
         <TableRow data-state={isSelected && 'selected'}>
           {row.getVisibleCells().map((cell) => (
@@ -64,13 +63,13 @@ function CollapsibleRow<T>({
             </TableCell>
           ))}
         </TableRow>
-        {collapsibleContent && collapsibleContent(row)}
+        {collapsibleContent && collapsibleContent(row, isDirty)}
       </>
     </Collapsible>
   )
 }
 
-const MemoizedCollapsibleRow = React.memo(CollapsibleRow) as <T>(
+const MemoizedCollapsibleRow = memo(CollapsibleRow) as <T>(
   props: CollapsibleRowProps<T>
 ) => JSX.Element
 
@@ -85,17 +84,14 @@ export function ReusableTable<T>({
   columns: ColumnDef<T>[]
   data: T[]
   isPending?: boolean
-  collapsibleContent?: (_row: Row<T>) => JSX.Element
+  collapsibleContent?: (_row: Row<T>, isDirty: boolean) => JSX.Element
 }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = useState({})
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const searchValue = event.target.value
     if (searchBy) {
       searchBy.forEach((columnKey) => {

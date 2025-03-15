@@ -88,9 +88,7 @@ export const columns: ColumnDef<QuestionAnalysisType>[] = [
             </div>
           }
         >
-          <div className="text-center capitalize">
-            {row.getValue('difficulty')}
-          </div>
+          <div className="text-center capitalize">{difficulty}</div>
         </HoverCardText>
       )
     },

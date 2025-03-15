@@ -22,10 +22,10 @@ import { CTTAnalysisRequest } from '@/pages/dashboard/create-analysis-form'
 
 export const cttAnalyzeService = {
   analyze({
-    // projectName,
-    // numberOfGroup,
-    // groupPercentage,
-    // correlationRpbis,
+    projectName,
+    numberOfGroup,
+    groupPercentage,
+    correlationRpbis,
     questionFile,
     answerFile,
     type,
@@ -33,6 +33,13 @@ export const cttAnalyzeService = {
     const formData = new FormData()
     formData.append('exam_file', questionFile[0])
     formData.append('result_file', answerFile[0])
+    if (projectName) formData.append('projectName', projectName)
+    if (numberOfGroup)
+      formData.append('numberOfGroup', numberOfGroup.toString())
+    if (groupPercentage)
+      formData.append('groupPercentage', groupPercentage.toString())
+    if (correlationRpbis)
+      formData.append('correlationRpbis', correlationRpbis.toString())
 
     return http.post<AnalyzeResType>(
       `/analyze?${queryString.stringify({ type })}`,
@@ -47,7 +54,7 @@ export const cttAnalyzeService = {
     params: GetAllQuestionAnalysisQueryType
   ): Promise<GetAllQuestionAnalysisResType> {
     return http.get<GetAllQuestionAnalysisResType>(
-      `/questions-analysis/?${queryString.stringify({ params })}`
+      `/questions-analysis/?${queryString.stringify(params)}`
     )
   },
 
@@ -55,7 +62,7 @@ export const cttAnalyzeService = {
     params: GetGeneralDetailsQueryType
   ): Promise<GetGeneralDetailsResType> {
     return http.get<GetGeneralDetailsResType>(
-      `/general-details/?${queryString.stringify({ params })}`
+      `/general-details/?${queryString.stringify(params)}`
     )
   },
 
@@ -63,7 +70,7 @@ export const cttAnalyzeService = {
     params: GetHistogramQueryType
   ): Promise<GetHistogramResType> {
     return http.get<GetHistogramResType>(
-      `/histogram/?${queryString.stringify({ params })}`
+      `/histogram/?${queryString.stringify(params)}`
     )
   },
 
@@ -71,7 +78,7 @@ export const cttAnalyzeService = {
     params: GetOptionsAnalysisQueryType
   ): Promise<GetOptionsAnalysisResType> {
     return http.get<GetOptionsAnalysisResType>(
-      `/options-analysis/?${queryString.stringify({ params })}`
+      `/options-analysis/?${queryString.stringify(params)}`
     )
   },
 
@@ -79,7 +86,7 @@ export const cttAnalyzeService = {
     params: GetOptionAnalysisQueryType
   ): Promise<GetOptionAnalysisResType> {
     return http.get<GetOptionAnalysisResType>(
-      `/option-analysis/?${queryString.stringify({ params })}`
+      `/option-analysis/?${queryString.stringify(params)}`
     )
   },
 
@@ -87,7 +94,7 @@ export const cttAnalyzeService = {
     params: GetQuestionAnalysisQueryType
   ): Promise<GetQuestionAnalysisResType> {
     return http.get<GetQuestionAnalysisResType>(
-      `/question-analysis/?${queryString.stringify({ params })}`
+      `/question-analysis/?${queryString.stringify(params)}`
     )
   },
 }

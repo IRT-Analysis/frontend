@@ -22,17 +22,17 @@ export const useGetQuestionAnalysisQuery = (questionId: string) => {
   })
 }
 
-export const useGetGeneralDetailsQuery = (examId: string) => {
+export const useGetGeneralDetailsQuery = (projectId: string) => {
   return useQuery({
-    queryKey: ['ctt-general', examId],
-    queryFn: () => cttAnalyzeService.getGeneralDetails({ examId }),
+    queryKey: ['ctt-general', projectId],
+    queryFn: () => cttAnalyzeService.getGeneralDetails({ projectId }),
   })
 }
 
-export const useGetHistogramQuery = (examId: string) => {
+export const useGetHistogramQuery = (projectId: string) => {
   return useQuery({
-    queryKey: ['ctt-histogram', examId],
-    queryFn: () => cttAnalyzeService.getHistogramDetails({ examId }),
+    queryKey: ['ctt-histogram', projectId],
+    queryFn: () => cttAnalyzeService.getHistogramDetails({ projectId }),
   })
 }
 
@@ -43,8 +43,12 @@ export const useGetOptionAnalysisQuery = (optionId: string) => {
   })
 }
 
-export const useGetOptionsAnalysisQuery = (questionId: string) => {
+export const useGetOptionsAnalysisQuery = (
+  questionId: string,
+  enabled: boolean
+) => {
   return useQuery({
+    enabled,
     queryKey: ['options-analysis', questionId],
     queryFn: () => cttAnalyzeService.getOptionsAnalysis({ questionId }),
   })
