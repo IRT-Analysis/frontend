@@ -112,7 +112,7 @@ export function CreateAnalysisForm() {
           ...values,
           type: 'CTT',
         })
-        const projectId = res.data.projectId
+        const projectId = res.data
         setHasCreatedAnalysis(true)
         navigate(`/analysis/${projectId}`)
         toast(res.message)

@@ -26,7 +26,7 @@ import { DarkModeToggle } from './dark-mode-toggle'
 import { useApp } from '@/components/context-provider'
 
 export function AppSidebar() {
-  const { id } = useParams()
+  const { projectId } = useParams()
   const { hasCreatedAnalysis } = useApp()
 
   const [activeLink, setActiveLink] =
@@ -49,7 +49,7 @@ export function AppSidebar() {
                     <SidebarGroupLabel className="p-0 pr-3" asChild>
                       <SidebarMenuItem className="flex-1">
                         <NavLink
-                          to={item.url.replace(':id', id || '')}
+                          to={item.url.replace(':projectId', projectId || '')}
                           className={({ isActive }) => {
                             if (isActive) setActiveLink(item.value)
                             return 'w-full'
@@ -79,7 +79,10 @@ export function AppSidebar() {
                           <SidebarMenuItem key={index} className="flex-1">
                             <NavLink
                               to={
-                                item.url.replace(':id', id || '') + subItem.url
+                                item.url.replace(
+                                  ':projectId',
+                                  projectId || ''
+                                ) + subItem.url
                               }
                               className={({ isActive }) => {
                                 if (isActive) setActiveLink(subItem.value)
@@ -107,7 +110,7 @@ export function AppSidebar() {
             ) : (
               <SidebarMenuItem key={item.title}>
                 <NavLink
-                  to={item.url.replace(':id', id || '')}
+                  to={item.url.replace(':projectId', projectId || '')}
                   className={({ isActive }) => {
                     if (isActive) setActiveLink(item.value)
                     return ''

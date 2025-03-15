@@ -46,7 +46,7 @@ export default function ReviewQuestionsCard({
             <div className="space-y-1">
               <h3 className="font-medium">Câu hỏi {question.id}</h3>
               {question.violatedIndices.map((item) => (
-                <HoverCard>
+                <HoverCard key={item.name}>
                   <HoverCardTrigger className="flex items-center justify-center">
                     <Badge variant="secondary" className="font-normal">
                       {getStatsLabel(item.name)} - {item.value}

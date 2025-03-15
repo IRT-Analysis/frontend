@@ -16,6 +16,7 @@ export type QuestionAnalysisType = {
     difficulty_index: number
     rpbis: number
     selection_rate: number
+    group_choice_percentages: Record<string, number>[]
   }
 }
 
@@ -43,7 +44,7 @@ export type AnalyzeResType = ApiResponse<{
 // ----------------------------------------------
 
 export type GetGeneralDetailsQueryType = {
-  examId: string
+  projectId: string
 }
 
 export type GetGeneralDetailsResType = ApiResponse<{
@@ -60,7 +61,7 @@ export type GetGeneralDetailsResType = ApiResponse<{
 // ----------------------------------------------
 
 export type GetHistogramQueryType = {
-  examId: string
+  projectId: string
 }
 
 export type GetHistogramResType = ApiResponse<{

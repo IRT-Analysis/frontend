@@ -7,6 +7,10 @@ import AverageDetails from './average-details'
 import { BarLineChart } from './bar-line-chart'
 import { LargeBarChart } from './barchart'
 import OverallData from './overall-data'
+import {
+  GetGeneralDetailsResType,
+  GetHistogramResType,
+} from '@/schema/analysis.schema'
 
 // const placeholderData: CTTGeneralDetails = {
 //   general: {
@@ -39,21 +43,37 @@ const ChartTooltipContent = {
 
 const Analysis = () => {
   const { projectId } = useParams()
+  console.log(projectId)
   const getGeneralDetailsQuery = useGetGeneralDetailsQuery(projectId!)
   const {
-    data: {
-      avg_difficulty_index: average_difficulty,
-      // avg_score,
-      exam_id,
-      avg_discrimination_index: average_discrimination,
-      // cronbach_alpha,
-      // average_rpbis,
-      projects: { total_options, total_questions, total_students },
-    },
-  } = getGeneralDetailsQuery.data!
+    avg_difficulty_index: average_difficulty,
+    // avg_score,
+    // exam_id,
+    avg_discrimination_index: average_discrimination,
+    // cronbach_alpha,
+    // average_rpbis,
+    projects: { total_options, total_questions, total_students },
+  } = getGeneralDetailsQuery.data?.data ||
+  ({
+    created_at: '',
+    exam_id: '',
+    project_id: '',
+    avg_discrimination_index: 0,
+    avg_difficulty_index: 0,
+    cronbach_alpha: 0,
+    id: '',
+    projects: {},
+  } as GetGeneralDetailsResType['data'])
 
-  const histogramDataQuery = useGetHistogramQuery(exam_id)
-  const { data: histogramData } = histogramDataQuery.data!
+  const histogramDataQuery = useGetHistogramQuery(projectId as any)
+  const { score, difficulty, discrimination, r_pbis } =
+    histogramDataQuery.data?.data ||
+    ({
+      score: [],
+      difficulty: [],
+      discrimination: [],
+      r_pbis: [],
+    } as GetHistogramResType['data'])
 
   return (
     <div className="m-10 grid grid-cols-12 gap-4">
@@ -67,7 +87,7 @@ const Analysis = () => {
         total_questions={total_questions}
       />
       <div className="col-span-8 rounded-lg bg-background">
-        <LargeBarChart data={histogramData.score} />
+        <LargeBarChart data={score} />
       </div>
 
       <div className="col-span-4 rounded-lg bg-background">
@@ -80,7 +100,7 @@ const Analysis = () => {
         <BarLineChart
           isLoading={histogramDataQuery.isLoading}
           name={'Biểu đồ phân bố độ phân cách'}
-          data={histogramData.discrimination}
+          data={discrimination}
           tootlTip={ChartTooltipContent.discrimination}
           type="discrimination"
         />
@@ -89,7 +109,7 @@ const Analysis = () => {
         <BarLineChart
           isLoading={histogramDataQuery.isLoading}
           name={'Biểu đồ phân bố độ khó'}
-          data={histogramData.difficulty}
+          data={difficulty}
           tootlTip={ChartTooltipContent.difficulty}
           type="difficulty"
         />
@@ -98,7 +118,7 @@ const Analysis = () => {
         <BarLineChart
           isLoading={histogramDataQuery.isLoading}
           name={'Biểu đồ phân bố hệ số tương quan (R_PBIS)'}
-          data={histogramData.r_pbis}
+          data={r_pbis}
           tootlTip={ChartTooltipContent.r_pbis}
           type="r_pbis"
         />

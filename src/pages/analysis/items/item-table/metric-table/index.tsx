@@ -10,7 +10,6 @@ import {
 import { Answers } from '@/constants'
 import { cn } from '@/lib/utils'
 import { OptionAnalysisType } from '@/schema/analysis.schema'
-import { OptionDetails } from '@/types/ctt-analysis.type'
 import { ReactNode, useMemo } from 'react'
 
 export type DataType = {
@@ -21,9 +20,9 @@ export type DataType = {
   D: number
 }[]
 
-const CellRestrain: Partial<
+type CellRestrainType = Partial<
   Record<
-    keyof OptionDetails,
+    keyof OptionAnalysisType['option_analysis'],
     {
       label: string
       first: number
@@ -31,25 +30,27 @@ const CellRestrain: Partial<
       tooltips: string | ReactNode
     }
   >
-> = {
-  selected_by: {
-    label: 'Số lượng',
-    tooltips: <span>Số lượng thí sinh chọn.</span>,
-    first: 0,
-    second: 1000,
-  },
-  top_selected: {
-    label: 'Nhóm cao',
-    tooltips: (
-      <div className="w-[300px]">
-        Số lượng thí sinh trong nhóm cao chọn. Đáp án sẽ được chọn nhiều hơn các
-        lựa chọn khác.
-      </div>
-    ),
-    first: 0,
-    second: 1000,
-  },
-  ratio: {
+>
+
+const CellRestrain: CellRestrainType = {
+  // selected_by: {
+  //   label: 'Số lượng',
+  //   tooltips: <span>Số lượng thí sinh chọn.</span>,
+  //   first: 0,
+  //   second: 1000,
+  // },
+  // top_selected: {
+  //   label: 'Nhóm cao',
+  //   tooltips: (
+  //     <div className="w-[300px]">
+  //       Số lượng thí sinh trong nhóm cao chọn. Đáp án sẽ được chọn nhiều hơn các
+  //       lựa chọn khác.
+  //     </div>
+  //   ),
+  //   first: 0,
+  //   second: 1000,
+  // },
+  selection_rate: {
     label: 'Tỉ lệ',
     tooltips: (
       <div className="w-[300px]">
@@ -60,18 +61,18 @@ const CellRestrain: Partial<
     first: 0.2,
     second: 0.7,
   },
-  bottom_selected: {
-    label: 'Nhóm thấp',
-    tooltips: (
-      <div className="w-[300px]">
-        Số lượng thí sinh trong nhóm thấp chọn. Đáp án sẽ được chọn nhiều hơn
-        các lựa chọn khác
-      </div>
-    ),
-    first: 0,
-    second: 1000,
-  },
-  discrimination: {
+  // bottom_selected: {
+  //   label: 'Nhóm thấp',
+  //   tooltips: (
+  //     <div className="w-[300px]">
+  //       Số lượng thí sinh trong nhóm thấp chọn. Đáp án sẽ được chọn nhiều hơn
+  //       các lựa chọn khác
+  //     </div>
+  //   ),
+  //   first: 0,
+  //   second: 1000,
+  // },
+  discrimination_index: {
     label: 'Độ p.cách',
     tooltips: (
       <div className="w-[300px]">
@@ -83,7 +84,7 @@ const CellRestrain: Partial<
     first: 0.2,
     second: 0.7,
   },
-  r_pbis: {
+  rpbis: {
     label: 'Hệ số R_PBIS',
     tooltips: (
       <div className="w-[300px]">
@@ -97,7 +98,7 @@ const CellRestrain: Partial<
   },
 } as const
 
-const CellItem = (key: keyof OptionDetails, value: number) => {
+const CellItem = (key: keyof CellRestrainType, value: number) => {
   const { first, second } = CellRestrain[key] ?? { first: 0, second: 0 }
   let className = ''
   if (value < first || value > second) {
@@ -125,7 +126,7 @@ export function MetricsTable({
 
     const statNames = Object.keys(
       data[0].option_analysis
-    ) as (keyof OptionAnalysisType['option_analysis'])[]
+    ) as (keyof CellRestrainType)[]
 
     const result: DataType = []
     statNames.forEach((stat) => {
@@ -138,7 +139,6 @@ export function MetricsTable({
       }
       result.push(row)
     })
-
     return result
   }, [data])
 
