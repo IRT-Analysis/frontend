@@ -1,8 +1,9 @@
-import { supabase } from '@/lib/supabaseClient'
 import { Button } from './button'
 import React from 'react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useGlobal } from '@/context/global-context'
+import { useSignInMutation, useSignUpMutation } from '@/queries/useAuth'
 
 interface IconInputLeadProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -33,9 +34,11 @@ const IconInputLead: React.FC<IconInputLeadProps> = ({
 }
 
 export function SignIn() {
+  const { dispatch } = useGlobal()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const signInMutation = useSignInMutation()
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -43,14 +46,20 @@ export function SignIn() {
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data } = await signInMutation.mutateAsync({
         email,
         password,
       })
 
-      if (error) {
-        setError(error.message)
-      } else {
+      if (data.user) {
+        dispatch({
+          type: 'SIGN_IN',
+          payload: {
+            id: data.user.id,
+            email: data.user.email!,
+            name: data.user.user_metadata.username,
+          },
+        })
         navigate('/')
       }
     } catch (error) {
@@ -135,6 +144,7 @@ export function SignUp() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
+  const signUpMutation = useSignUpMutation()
   const [error, setError] = useState<string | null>(null)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked)
@@ -152,13 +162,17 @@ export function SignUp() {
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      await signUpMutation.mutateAsync({
         email,
         password,
-        options: { data: { username } },
+        option: { username },
       })
+      // const { error } = await supabase.auth.signUp({
+      //   email,
+      //   password,
+      //   options: { data: { username } },
+      // })
 
-      if (error) throw error
       alert('Sign-up successful! Please check your email to confirm.')
     } catch (error: any) {
       setError(error.message)

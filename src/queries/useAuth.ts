@@ -5,8 +5,8 @@ import { SignInReqType, SignUpReqType } from '@/schema/auth.schema'
 export const useSignUpMutation = () => {
   return useMutation({
     mutationKey: ['auth-signup'],
-    mutationFn: ({ email, password }: SignUpReqType) =>
-      authService.signUp({ email, password }),
+    mutationFn: ({ email, password, option }: SignUpReqType) =>
+      authService.signUp({ email, password, option }),
   })
 }
 

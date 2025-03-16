@@ -1,9 +1,4 @@
-import axios, {
-  AxiosResponse,
-  AxiosError,
-  InternalAxiosRequestConfig,
-  AxiosRequestConfig,
-} from 'axios'
+import axios, { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios'
 import envConfig from '../../config'
 import { normalizePath } from './utils'
 
@@ -31,34 +26,36 @@ const httpClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 })
 
 /**
  * Request interceptor for adding authorization headers, etc.
  */
-httpClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token')
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error)
-  }
-)
+// httpClient.interceptors.request.use(
+//   (config: InternalAxiosRequestConfig) => {
+//     const token = Cookies.get('auth_token')
+//     if (token && config.headers) {
+//       config.headers.Authorization = `Bearer ${token}`
+//     }
+//     return config
+//   },
+//   (error: AxiosError) => {
+//     return Promise.reject(error)
+//   }
+// )
 
 /**
  * Response interceptor for handling responses globally
  */
 httpClient.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: AxiosError) => {
+  (error: AxiosError<ApiError>) => {
     if (error.response?.status === 401) {
       console.error('Unauthorized. Please log in.')
+      window.location.href = '/signin'
     }
-    return Promise.reject(error)
+    return Promise.reject(error.response?.data)
   }
 )
 export const request = async <T>(

@@ -6,9 +6,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './components/layout/main-layout/index.tsx'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { AnalysisProvider } from './components/context-provider.tsx'
 import { ThemeProvider } from './components/theme-provider.tsx'
 import { Toaster } from './components/ui/sonner.tsx'
+import { GlobalProvider } from './context/global-context.tsx'
 import './index.css'
 import Analysis from './pages/analysis/index.tsx'
 import Items from './pages/analysis/items/index.tsx'
@@ -33,8 +33,8 @@ const mainRoutes = [
   { index: true, element: <DashBoard /> },
   { path: 'settings', element: <div>Settings</div> },
   { path: 'analysis/:projectId', element: <Analysis /> },
-  { path: 'analysis/:id/students', element: <Students /> },
-  { path: 'analysis/:examId/items', element: <Items /> },
+  { path: 'analysis/:projectId/students', element: <Students /> },
+  { path: 'analysis/:projectId/items', element: <Items /> },
   { path: 'history', element: <div>History</div> },
 ]
 
@@ -59,9 +59,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <AnalysisProvider>
+        <GlobalProvider>
           <RouterProvider router={router} />
-        </AnalysisProvider>
+        </GlobalProvider>
       </ThemeProvider>
       <Toaster />
       <ReactQueryDevtools initialIsOpen={false} />

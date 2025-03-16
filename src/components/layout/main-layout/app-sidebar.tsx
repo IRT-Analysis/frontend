@@ -1,4 +1,9 @@
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
+import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -12,22 +17,31 @@ import {
 } from '@/components/ui/sidebar'
 import { MENU_ITEM } from '@/constants'
 import { ChevronDown, LogOut } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
 import { toast } from 'sonner'
 
 import { Logo } from '@/components/ui/logo'
+import { useGlobal } from '@/context/global-context'
 import { DarkModeToggle } from './dark-mode-toggle'
-import { useApp } from '@/components/context-provider'
 
 export function AppSidebar() {
-  const { projectId } = useParams()
-  const { hasCreatedAnalysis } = useApp()
+  const { projectId: projectIdParam } = useParams()
+  const {
+    state: { analysis },
+    dispatch,
+  } = useGlobal()
+
+  useEffect(() => {
+    if (projectIdParam && !analysis?.projectId) {
+      dispatch({
+        type: 'ANALYZE',
+        payload: { ...analysis, projectId: projectIdParam },
+      })
+    }
+  }, [projectIdParam, analysis, dispatch])
+
+  const projectId = analysis?.projectId || projectIdParam
 
   const [activeLink, setActiveLink] =
     useState<(typeof MENU_ITEM)[number]['value']>()
@@ -43,13 +57,17 @@ export function AppSidebar() {
         <SidebarMenu className="gap-2">
           {MENU_ITEM.map((item) =>
             item.children ? (
-              !hasCreatedAnalysis ? null : (
+              !projectId ? null : (
                 <Collapsible key={item.title}>
                   <SidebarGroup className="p-0">
                     <SidebarGroupLabel className="p-0 pr-3" asChild>
                       <SidebarMenuItem className="flex-1">
                         <NavLink
-                          to={item.url.replace(':projectId', projectId || '')}
+                          to={
+                            item.url.includes(':projectId')
+                              ? item.url.replace(':projectId', projectId || '')
+                              : item.url
+                          }
                           className={({ isActive }) => {
                             if (isActive) setActiveLink(item.value)
                             return 'w-full'
@@ -162,9 +180,9 @@ export function AppSidebar() {
             className="h-[48px] px-[16px] font-semibold leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
             asChild
           >
-            <div>
+            <div onClick={() => dispatch({ type: 'SIGN_OUT' })}>
               <LogOut />
-              <span>Logout</span>
+              <span>Sign out</span>
             </div>
           </SidebarMenuButton>
           <div>

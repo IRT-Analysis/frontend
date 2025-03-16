@@ -34,9 +34,9 @@ import {
 } from '@/components/ui/select'
 import { useCTTAnalyzeMutation } from '@/queries/useAnalyze'
 import { Link, useNavigate } from 'react-router-dom'
-import { useApp } from '@/components/context-provider'
 import { toast } from 'sonner'
 import HoverCardIcon from '@/components/reusable-hover-with-icon'
+import { useGlobal } from '@/context/global-context'
 
 const fileSchema = z.array(
   z.any().refine((value) => value instanceof File, {
@@ -91,7 +91,7 @@ const correlationOptions = [
 export function CreateAnalysisForm() {
   const navigate = useNavigate()
   const cttAnalyzeMutation = useCTTAnalyzeMutation()
-  const { setHasCreatedAnalysis } = useApp()
+  const { dispatch } = useGlobal()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -112,11 +112,13 @@ export function CreateAnalysisForm() {
           ...values,
           type: 'CTT',
         })
-        const projectId = res.data
-        setHasCreatedAnalysis(true)
-        navigate(`/analysis/${projectId}`)
+
+        dispatch({
+          type: 'ANALYZE',
+          payload: { examId: res.data.examId, projectId: res.data.projectId },
+        })
+        navigate(`/analysis/${res.data.projectId}`)
         toast(res.message)
-        // reset()
       } catch (error) {
         console.error(error)
       }

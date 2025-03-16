@@ -74,7 +74,7 @@ export type GetHistogramResType = ApiResponse<{
 // ----------------------------------------------
 
 export type GetAllQuestionAnalysisQueryType = {
-  examId: string
+  projectId: string
 }
 
 export type GetAllQuestionAnalysisResType = ApiResponse<QuestionAnalysisType[]>

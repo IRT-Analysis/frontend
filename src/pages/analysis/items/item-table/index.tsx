@@ -80,8 +80,10 @@ const CollapsibleContentComp = (
 
 const ItemTable = () => {
   // const [currentDisplayQuestion, setCurrentDisplayQuestion] = useState<OptionAnalysisType[]>([])
-  const { examId } = useParams()
-  const getAllQuestionAnalysisQuery = useGetAllQuestionsAnalysisQuery(examId!)
+  const { projectId } = useParams()
+  const getAllQuestionAnalysisQuery = useGetAllQuestionsAnalysisQuery(
+    projectId!
+  )
 
   const data = getAllQuestionAnalysisQuery.data?.data ?? [
     {
