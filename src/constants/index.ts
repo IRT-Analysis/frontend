@@ -10,7 +10,7 @@ export const MENU_ITEM = [
   },
   {
     title: 'Phân tích',
-    url: '/analysis/:id',
+    url: '/analysis/:projectId',
     icon: ChartBar,
     value: 'analysis',
     isVisible: true,

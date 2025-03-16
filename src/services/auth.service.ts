@@ -8,8 +8,8 @@ import {
 } from '@/schema/auth.schema'
 
 export const authService = {
-  signUp({ email, password }: SignUpReqType) {
-    return http.post<SignUpResType>('/auth/signup', { email, password })
+  signUp({ email, password, option }: SignUpReqType) {
+    return http.post<SignUpResType>('/auth/signup', { email, password, option })
   },
 
   signIn({ email, password }: SignInReqType) {

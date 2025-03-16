@@ -8,10 +8,10 @@ export const useCTTAnalyzeMutation = () => {
   })
 }
 
-export const useGetAllQuestionsAnalysisQuery = (examId: string) => {
+export const useGetAllQuestionsAnalysisQuery = (projectId: string) => {
   return useQuery({
-    queryKey: ['ctt-items', examId],
-    queryFn: () => cttAnalyzeService.getAllQuestionAnalysis({ examId }),
+    queryKey: ['ctt-items', projectId],
+    queryFn: () => cttAnalyzeService.getAllQuestionAnalysis({ projectId }),
   })
 }
 
