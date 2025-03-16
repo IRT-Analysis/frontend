@@ -167,11 +167,6 @@ export function SignUp() {
         password,
         option: { username },
       })
-      // const { error } = await supabase.auth.signUp({
-      //   email,
-      //   password,
-      //   options: { data: { username } },
-      // })
 
       alert('Sign-up successful! Please check your email to confirm.')
     } catch (error: any) {
