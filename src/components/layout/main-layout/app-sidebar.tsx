@@ -14,10 +14,11 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar'
 import { MENU_ITEM } from '@/constants'
 import { ChevronDown, LogOut } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -32,6 +33,8 @@ export function AppSidebar() {
     dispatch,
   } = useGlobal()
 
+  const { active, setActive } = useSidebar()
+
   useEffect(() => {
     if (projectIdParam && !analysis?.projectId) {
       dispatch({
@@ -43,8 +46,6 @@ export function AppSidebar() {
 
   const projectId = analysis?.projectId || projectIdParam
 
-  const [activeLink, setActiveLink] =
-    useState<(typeof MENU_ITEM)[number]['value']>()
   return (
     <Sidebar>
       <SidebarHeader className="h-[64px] items-center justify-center rounded-none border-b border-sidebar-border pb-2">
@@ -69,14 +70,14 @@ export function AppSidebar() {
                               : item.url
                           }
                           className={({ isActive }) => {
-                            if (isActive) setActiveLink(item.value)
+                            if (isActive) setActive(item)
                             return 'w-full'
                           }}
                         >
                           <SidebarMenuButton
                             className="flex h-[48px] px-[16px] font-semibold leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
                             asChild
-                            isActive={activeLink === item.value}
+                            isActive={active.value === item.value}
                           >
                             <div>
                               <item.icon strokeWidth={3} />
@@ -103,14 +104,14 @@ export function AppSidebar() {
                                 ) + subItem.url
                               }
                               className={({ isActive }) => {
-                                if (isActive) setActiveLink(subItem.value)
+                                if (isActive) setActive(subItem)
                                 return ''
                               }}
                             >
                               <SidebarMenuButton
                                 className="h-[40px] px-[16px] pl-10 font-semibold leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
                                 asChild
-                                isActive={activeLink === subItem.value}
+                                isActive={active.value === subItem.value}
                               >
                                 <div>
                                   <subItem.icon strokeWidth={3} />
@@ -130,7 +131,7 @@ export function AppSidebar() {
                 <NavLink
                   to={item.url.replace(':projectId', projectId || '')}
                   className={({ isActive }) => {
-                    if (isActive) setActiveLink(item.value)
+                    if (isActive) setActive(item)
                     return ''
                   }}
                   onClick={(e) => {
@@ -143,7 +144,7 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     className="h-[48px] px-[16px] font-semibold leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
                     asChild
-                    isActive={activeLink === item.value}
+                    isActive={active.value === item.value}
                   >
                     <div>
                       <item.icon strokeWidth={3} />

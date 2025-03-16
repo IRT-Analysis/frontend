@@ -1,3 +1,4 @@
+import { MENU_ITEM } from '@/constants'
 import { RelevantKeys } from '@/types/ctt-analysis.type'
 import { ItemData } from '@/types/response_data.type'
 import { TableData } from '@/types/table_data.type'
@@ -51,4 +52,18 @@ export const getStatsLabel = (name: RelevantKeys) => {
       : name === 'r_pbis'
         ? 'R_PBIS'
         : name
+}
+
+export const getActiveMenuItem = (pathname: string) => {
+  for (const item of MENU_ITEM) {
+    if (matchPath(item.url, pathname)) return item
+  }
+  return MENU_ITEM[0]
+}
+
+const matchPath = (menuUrl: string, pathname: string): boolean => {
+  const regexPattern = new RegExp(
+    '^' + menuUrl.replace(/:\w+/g, '([^/]+)') + '$'
+  )
+  return regexPattern.test(pathname)
 }

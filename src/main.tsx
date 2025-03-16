@@ -18,6 +18,7 @@ import { SignInPage } from './pages/authorization/sign-in.tsx'
 import { SignUpPage } from './pages/authorization/sign-up.tsx'
 import { VerifyMailPage } from './pages/authorization/verify-mail.tsx'
 import DashBoard from './pages/dashboard/index.tsx'
+import History from './pages/history/index.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,7 +36,7 @@ const mainRoutes = [
   { path: 'analysis/:projectId', element: <Analysis /> },
   { path: 'analysis/:projectId/students', element: <Students /> },
   { path: 'analysis/:projectId/items', element: <Items /> },
-  { path: 'history', element: <div>History</div> },
+  { path: 'history', element: <History /> },
 ]
 
 const authRoutes = [

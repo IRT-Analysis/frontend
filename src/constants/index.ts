@@ -37,7 +37,6 @@ export const MENU_ITEM = [
     icon: History,
     value: 'history',
     isVisible: true,
-    comingSoon: true,
   },
   {
     title: 'Hướng dẫn',

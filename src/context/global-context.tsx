@@ -58,31 +58,29 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const getProfileQuery = useGetProfileQuery()
   useEffect(() => {
     const checkAuth = async () => {
+      console.log('checkAuth')
       if (state.isAuthenticated) return
-      const { data } = getProfileQuery
+      const { data } = getProfileQuery.data || {}
       try {
-        console.log(data?.data)
         if (data) {
           dispatch({
             type: 'SIGN_IN',
             payload: {
-              id: data.data.id,
-              email: data.data.email!,
-              name: data.data.user_metadata.username,
+              id: data.id,
+              email: data.email!,
+              name: data.user_metadata.username,
             },
           })
         }
       } catch (error) {
         console.error(error)
-        dispatch({ type: 'SIGN_OUT' }) // Unauthorized, clear user state
+        dispatch({ type: 'SIGN_OUT' })
       }
     }
     checkAuth()
   }, [state.isAuthenticated, getProfileQuery.data])
 
-  useEffect(() => {
-    console.log('Global state:', state)
-  }, [state])
+  useEffect(() => {}, [state])
 
   return (
     <GlobalContext.Provider value={{ state, dispatch }}>
