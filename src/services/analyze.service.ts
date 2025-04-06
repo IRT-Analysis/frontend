@@ -1,24 +1,38 @@
+import http from '@/lib/httpClient'
+import { CTTAnalysisRequest } from '@/pages/dashboard/create-analysis-form'
 import {
+  AnalyzeResType,
+  GetAllQuestionAnalysisResType,
+  GetGeneralDetailsQueryType,
+  GetGeneralDetailsResType,
+  GetHistogramQueryType,
+  GetHistogramResType,
+  GetOptionAnalysisResType,
+  GetOptionsAnalysisResType,
+  GetQuestionAnalysisResType,
   AnalyzeQueryType,
   GetAllQuestionAnalysisQueryType,
   GetOptionAnalysisQueryType,
   GetOptionsAnalysisQueryType,
   GetQuestionAnalysisQueryType,
-} from './../schema/analysis.schema'
-import http from '@/lib/httpClient'
-import queryString from 'query-string'
-import {
-  AnalyzeResType,
-  GetGeneralDetailsResType,
-  GetHistogramResType,
-  GetAllQuestionAnalysisResType,
-  GetOptionsAnalysisResType,
-  GetOptionAnalysisResType,
-  GetQuestionAnalysisResType,
-  GetGeneralDetailsQueryType,
-  GetHistogramQueryType,
+  GetStudentResultQueryType,
+  GetStudentResultResType,
+  GetStudentsAnalysisQueryType,
+  GetStudentsAnalysisResType,
 } from '@/schema/analysis.schema'
-import { CTTAnalysisRequest } from '@/pages/dashboard/create-analysis-form'
+import queryString from 'query-string'
+
+const ROUTES = {
+  ANALYZE: '/analyze',
+  GENERAL_DETAILS: '/general-details',
+  HISTOGRAM: '/histogram',
+  QUESTIONS_ANALYSIS: '/questions',
+  QUESTION_ANALYSIS: '/question',
+  OPTIONS_ANALYSIS: '/options',
+  OPTION_ANALYSIS: '/option',
+  STUDENTS_ANALYSIS: '/students',
+  STUDENT_RESULT: '/student',
+}
 
 export const cttAnalyzeService = {
   analyze({
@@ -42,7 +56,7 @@ export const cttAnalyzeService = {
       formData.append('correlationRpbis', correlationRpbis.toString())
 
     return http.post<AnalyzeResType>(
-      `/analyze?${queryString.stringify({ type })}`,
+      `${ROUTES.ANALYZE}?${queryString.stringify({ type })}`,
       formData,
       {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -54,7 +68,7 @@ export const cttAnalyzeService = {
     params: GetAllQuestionAnalysisQueryType
   ): Promise<GetAllQuestionAnalysisResType> {
     return http.get<GetAllQuestionAnalysisResType>(
-      `/questions-analysis/?${queryString.stringify(params)}`
+      `${ROUTES.QUESTIONS_ANALYSIS}?${queryString.stringify(params)}`
     )
   },
 
@@ -62,7 +76,7 @@ export const cttAnalyzeService = {
     params: GetGeneralDetailsQueryType
   ): Promise<GetGeneralDetailsResType> {
     return http.get<GetGeneralDetailsResType>(
-      `/general-details/?${queryString.stringify(params)}`
+      `${ROUTES.GENERAL_DETAILS}?${queryString.stringify(params)}`
     )
   },
 
@@ -70,7 +84,7 @@ export const cttAnalyzeService = {
     params: GetHistogramQueryType
   ): Promise<GetHistogramResType> {
     return http.get<GetHistogramResType>(
-      `/histogram/?${queryString.stringify(params)}`
+      `${ROUTES.HISTOGRAM}?${queryString.stringify(params)}`
     )
   },
 
@@ -78,7 +92,7 @@ export const cttAnalyzeService = {
     params: GetOptionsAnalysisQueryType
   ): Promise<GetOptionsAnalysisResType> {
     return http.get<GetOptionsAnalysisResType>(
-      `/options-analysis/?${queryString.stringify(params)}`
+      `${ROUTES.OPTIONS_ANALYSIS}?${queryString.stringify(params)}`
     )
   },
 
@@ -86,7 +100,7 @@ export const cttAnalyzeService = {
     params: GetOptionAnalysisQueryType
   ): Promise<GetOptionAnalysisResType> {
     return http.get<GetOptionAnalysisResType>(
-      `/option-analysis/?${queryString.stringify(params)}`
+      `${ROUTES.OPTION_ANALYSIS}/${queryString.stringify(params)}`
     )
   },
 
@@ -94,7 +108,23 @@ export const cttAnalyzeService = {
     params: GetQuestionAnalysisQueryType
   ): Promise<GetQuestionAnalysisResType> {
     return http.get<GetQuestionAnalysisResType>(
-      `/question-analysis/?${queryString.stringify(params)}`
+      `${ROUTES.QUESTION_ANALYSIS}?${queryString.stringify(params)}`
+    )
+  },
+
+  getStudentResult(
+    params: GetStudentResultQueryType
+  ): Promise<GetStudentResultResType> {
+    return http.get<GetStudentResultResType>(
+      `${ROUTES.STUDENT_RESULT}?${queryString.stringify(params)}`
+    )
+  },
+
+  getStudentsAnalysis(
+    params: GetStudentsAnalysisQueryType
+  ): Promise<GetStudentsAnalysisResType> {
+    return http.get<GetStudentsAnalysisResType>(
+      `${ROUTES.STUDENTS_ANALYSIS}?${queryString.stringify(params)}`
     )
   },
 }

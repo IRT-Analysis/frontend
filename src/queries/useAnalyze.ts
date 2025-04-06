@@ -53,3 +53,25 @@ export const useGetOptionsAnalysisQuery = (
     queryFn: () => cttAnalyzeService.getOptionsAnalysis({ questionId }),
   })
 }
+
+export const useGetStudentResultQuery = (
+  studentExamId: string,
+  enabled: boolean = true
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ['student-result', studentExamId],
+    queryFn: () => cttAnalyzeService.getStudentResult({ studentExamId }),
+  })
+}
+
+export const useGetStudentsAnalysisQuery = (
+  examId: string,
+  enabled: boolean = true
+) => {
+  return useQuery({
+    enabled,
+    queryKey: ['students-analysis', examId],
+    queryFn: () => cttAnalyzeService.getStudentsAnalysis({ examId }),
+  })
+}
