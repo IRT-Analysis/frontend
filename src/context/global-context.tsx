@@ -1,4 +1,5 @@
 import { useGetProfileQuery } from '@/queries/useAccount'
+import { authRoutes } from '@/routes'
 import { UserType } from '@/schema/account.schema'
 import {
   createContext,
@@ -55,13 +56,17 @@ const GlobalContext = createContext<GlobalContextProps | undefined>(undefined)
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(globalReducer, initialState)
-  const getProfileQuery = useGetProfileQuery()
+
+  const isAuthPage = authRoutes
+    .map((route) => '/' + route.path)
+    .includes(location.pathname)
+
+  const getProfileQuery = useGetProfileQuery(!isAuthPage)
   useEffect(() => {
     const checkAuth = async () => {
-      console.log('checkAuth')
-      if (state.isAuthenticated) return
-      const { data } = getProfileQuery.data || {}
+      if (state.isAuthenticated || isAuthPage) return
       try {
+        const { data } = getProfileQuery.data || {}
         if (data) {
           dispatch({
             type: 'SIGN_IN',
@@ -75,12 +80,13 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         console.error(error)
         dispatch({ type: 'SIGN_OUT' })
+        window.location.href = '/signin'
       }
     }
     checkAuth()
-  }, [state.isAuthenticated, getProfileQuery.data])
+  }, [getProfileQuery, state.isAuthenticated])
 
-  useEffect(() => {}, [state])
+  // useEffect(() => {}, [state])
 
   return (
     <GlobalContext.Provider value={{ state, dispatch }}>
