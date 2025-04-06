@@ -105,3 +105,65 @@ export type GetOptionAnalysisQueryType = {
 export type GetOptionAnalysisResType = ApiResponse<OptionAnalysisType>
 
 // ----------------------------------------------
+
+export type StudentAnswerResultType = {
+  question_id: string
+  question_content: string
+  correct_option_id: string
+  correct_option_content: string
+  is_correct: boolean
+  selected_option: {
+    id: string
+    content: string
+  }
+}
+
+export type StudentResultType = StudentExam & {
+  answers: StudentAnswerResultType[]
+}
+
+export type GetStudentResultQueryType = {
+  studentExamId: string
+}
+
+export type GetStudentResultResType = ApiResponse<StudentResultType>
+
+export type SupabaseStudentAnswerRaw = {
+  is_correct: boolean
+  selected_option: {
+    id: string
+    content: string
+  }
+  question: {
+    id: string
+    content: string
+    correct_option: {
+      id: string
+      content: string
+    }
+  }
+}
+
+export type SupabaseStudentExamRaw = Omit<StudentExam, 'student_examId'> & {
+  id: string
+  answers: SupabaseStudentAnswerRaw[]
+}
+
+// ----------------------------------------------
+
+export type StudentExam = {
+  first_name: string
+  middle_name: string
+  last_name: string
+  student_exam_id: string
+  total_score: number | null
+  exam_id: string
+  grade: number | null
+  student_id: string
+}
+
+export type GetStudentsAnalysisQueryType = {
+  examId: string
+}
+
+export type GetStudentsAnalysisResType = ApiResponse<StudentExam[]>

@@ -1,11 +1,10 @@
 import { Badge, BadgeProps } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -13,23 +12,16 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card'
+import { StudentExam } from '@/schema/analysis.schema'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
-import { MOCK_DATA, Student } from './MOCK_DATA'
-import { Checkbox } from '@/components/ui/checkbox'
+import { ArrowUpDown, BarChart2, Eye } from 'lucide-react'
+import { assignGroupFromScore } from '.'
 
-let groupOptionsCache: null | number[] = null
-
-const getGroupOptions = () => {
-  if (groupOptionsCache === null) {
-    groupOptionsCache = [
-      ...new Set(MOCK_DATA.map((student) => student.group)),
-    ].sort()
-  }
-  return groupOptionsCache
-}
-
-export const columns: ColumnDef<Student>[] = [
+export const getStudentTableColumns = (
+  handleViewExam: (studentId: string) => void,
+  handleViewKidmap: (studentId: string) => void,
+  groupOptions: number[]
+): ColumnDef<StudentExam>[] => [
   {
     id: 'select',
     size: 50,
@@ -75,39 +67,56 @@ export const columns: ColumnDef<Student>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Mã số thí sinh
+          Mã số sinh viên
           <ArrowUpDown />
         </Button>
       )
     },
-    size: 150,
+    size: 100,
     cell: ({ row }) => (
       <div className="text-center capitalize">{row.getValue('student_id')}</div>
     ),
   },
   {
-    accessorKey: 'correct_count',
+    id: 'last_name',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Số câu đúng
+          Họ
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    size: 100,
+    cell: ({ row }) => {
+      const { last_name } = row.original
+      return <div className="text-center">{last_name}</div>
+    },
+  },
+  {
+    id: 'first_name',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Tên
           <ArrowUpDown />
         </Button>
       )
     },
     size: 150,
-    cell: ({ row }) => (
-      <div className="text-center capitalize">
-        {row.getValue('correct_count')}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const { first_name } = row.original
+      return <div className="text-center">{first_name}</div>
+    },
   },
   {
-    accessorKey: 'score',
-    size: 100,
+    accessorKey: 'total_score', // % based
     header: ({ column }) => {
       return (
         <Button
@@ -119,21 +128,25 @@ export const columns: ColumnDef<Student>[] = [
         </Button>
       )
     },
+    size: 100,
     cell: ({ row }) => (
-      <div className="text-center capitalize">{row.getValue('score')}</div>
+      <div className="text-center">{row.getValue('total_score') ?? '-'}</div>
     ),
   },
   {
     accessorKey: 'group',
     filterFn: 'equals',
+    accessorFn: (row) => assignGroupFromScore(row.total_score),
     header: ({ column }) => {
-      const groupOptions = getGroupOptions()
       return (
         <div className="flex items-center justify-center">
           <p>Phân nhóm</p>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="outline-none">
+              <Button
+                variant="ghost"
+                className="outline-none focus:outline-none"
+              >
                 <ArrowUpDown />
               </Button>
             </DropdownMenuTrigger>
@@ -159,7 +172,7 @@ export const columns: ColumnDef<Student>[] = [
         </div>
       )
     },
-    size: 100,
+    size: 150,
     cell: ({ row }) => {
       const value = row.getValue('group') as number
       const displayValue = `Nhóm ${value}`
@@ -186,39 +199,31 @@ export const columns: ColumnDef<Student>[] = [
     },
   },
   {
-    header: 'Bài làm',
-    size: 100,
-    cell: () => {
-      return <div className="text-center">Xem</div>
-    },
-  },
-  {
     id: 'actions',
-    enableHiding: false,
-    size: 50,
+    header: 'Actions',
+    size: 150,
     cell: ({ row }) => {
       const student = row.original
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(student.student_id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex justify-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleViewExam(student.student_exam_id)}
+            className="h-8 px-2"
+          >
+            <Eye className="mr-1 h-4 w-4" /> Exam
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleViewKidmap(student.student_exam_id)}
+            className="h-8 px-2"
+          >
+            <BarChart2 className="mr-1 h-4 w-4" /> KIDMAP
+          </Button>
+        </div>
       )
     },
   },
