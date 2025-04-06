@@ -47,11 +47,11 @@ const Analysis = () => {
   const getGeneralDetailsQuery = useGetGeneralDetailsQuery(projectId!)
   const {
     avg_difficulty_index: average_difficulty,
-    // avg_score,
+    avg_score: average_score,
     // exam_id,
     avg_discrimination_index: average_discrimination,
     // cronbach_alpha,
-    // average_rpbis,
+    avg_rpbis: average_rpbis,
     projects: { total_options, total_questions, total_students },
   } = getGeneralDetailsQuery.data?.data ||
   ({
@@ -59,7 +59,9 @@ const Analysis = () => {
     exam_id: '',
     project_id: '',
     avg_discrimination_index: 0,
+    avg_score: 0,
     avg_difficulty_index: 0,
+    avg_rpbis: 0,
     cronbach_alpha: 0,
     id: '',
     projects: {},
@@ -79,10 +81,10 @@ const Analysis = () => {
     <div className="m-10 grid grid-cols-12 gap-4">
       <AverageDetails
         average={{
-          average_score: 0,
+          average_score,
           average_difficulty,
           average_discrimination,
-          average_rpbis: 0,
+          average_rpbis,
         }}
         total_questions={total_questions}
       />

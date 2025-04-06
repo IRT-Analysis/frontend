@@ -1,10 +1,11 @@
 import { accountService } from '@/services/account.service'
 import { useQuery } from '@tanstack/react-query'
 
-export const useGetProfileQuery = () => {
+export const useGetProfileQuery = (enabled: boolean) => {
   return useQuery({
     queryKey: ['auth-profile'],
     queryFn: () => accountService.getProfile(),
+    enabled,
   })
 }
 

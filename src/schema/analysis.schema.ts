@@ -27,6 +27,9 @@ export type OptionAnalysisType = {
     discrimination_index: number
     rpbis: number
     selection_rate: number
+    selected_by: number
+    top_selected: number
+    bottom_selected: number
   }
 }
 
@@ -52,8 +55,10 @@ export type GetGeneralDetailsResType = ApiResponse<{
   exam_id: string
   project_id: string
   avg_discrimination_index: number
+  avg_rpbis: number
   avg_difficulty_index: number
   cronbach_alpha: number
+  avg_score: number
   id: string
   projects: ProjectDetailsType
 }>

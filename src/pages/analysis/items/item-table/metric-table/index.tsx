@@ -33,23 +33,23 @@ type CellRestrainType = Partial<
 >
 
 const CellRestrain: CellRestrainType = {
-  // selected_by: {
-  //   label: 'Số lượng',
-  //   tooltips: <span>Số lượng thí sinh chọn.</span>,
-  //   first: 0,
-  //   second: 1000,
-  // },
-  // top_selected: {
-  //   label: 'Nhóm cao',
-  //   tooltips: (
-  //     <div className="w-[300px]">
-  //       Số lượng thí sinh trong nhóm cao chọn. Đáp án sẽ được chọn nhiều hơn các
-  //       lựa chọn khác.
-  //     </div>
-  //   ),
-  //   first: 0,
-  //   second: 1000,
-  // },
+  selected_by: {
+    label: 'Số lượng',
+    tooltips: <span>Số lượng thí sinh chọn.</span>,
+    first: 0,
+    second: 1000,
+  },
+  top_selected: {
+    label: 'Nhóm cao',
+    tooltips: (
+      <div className="w-[300px]">
+        Số lượng thí sinh trong nhóm cao chọn. Đáp án sẽ được chọn nhiều hơn các
+        lựa chọn khác.
+      </div>
+    ),
+    first: 0,
+    second: 1000,
+  },
   selection_rate: {
     label: 'Tỉ lệ',
     tooltips: (
@@ -61,17 +61,17 @@ const CellRestrain: CellRestrainType = {
     first: 0.2,
     second: 0.7,
   },
-  // bottom_selected: {
-  //   label: 'Nhóm thấp',
-  //   tooltips: (
-  //     <div className="w-[300px]">
-  //       Số lượng thí sinh trong nhóm thấp chọn. Đáp án sẽ được chọn nhiều hơn
-  //       các lựa chọn khác
-  //     </div>
-  //   ),
-  //   first: 0,
-  //   second: 1000,
-  // },
+  bottom_selected: {
+    label: 'Nhóm thấp',
+    tooltips: (
+      <div className="w-[300px]">
+        Số lượng thí sinh trong nhóm thấp chọn. Đáp án sẽ được chọn nhiều hơn
+        các lựa chọn khác
+      </div>
+    ),
+    first: 0,
+    second: 1000,
+  },
   discrimination_index: {
     label: 'Độ p.cách',
     tooltips: (
