@@ -67,3 +67,12 @@ const matchPath = (menuUrl: string, pathname: string): boolean => {
   )
   return regexPattern.test(pathname)
 }
+
+export const assignGroupFromScore = (score: number | null): number => {
+  if (score === null) return 0 // ungrouped or unknown
+  if (score >= 80) return 5
+  if (score >= 65) return 4
+  if (score >= 50) return 3
+  if (score >= 35) return 2
+  return 1
+}

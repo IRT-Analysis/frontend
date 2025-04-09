@@ -85,21 +85,19 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
       <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
         <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl">{'Exam Name'} Results</DialogTitle>
+            <DialogTitle className="text-xl">Kết quả bài làm</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-6 py-4">
             <div className="flex flex-col items-start justify-between gap-4 rounded-lg bg-muted p-4 sm:flex-row sm:items-center">
               <div>
                 <h3 className="font-medium">
-                  {`${examData.last_name} ${examData.middle_name} ${examData.first_name}`}{' '}
-                  (ID: {examData.student_id})
+                  {`${examData.first_name} ${examData.last_name}`} (Mã số sinh
+                  viên: {examData.student_id})
                 </h3>
-
-                <p className="text-sm text-muted-foreground">Exam Date: TBD</p>
               </div>
               <div className="flex items-center gap-3">
-                <div className="text-sm text-muted-foreground">Score:</div>
+                <div className="text-sm text-muted-foreground">Điểm:</div>
                 <div className="text-2xl font-bold">{score}%</div>
                 <Progress className="h-2 w-24" value={score} />
               </div>
@@ -110,17 +108,17 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
                 <div className="space-y-6">
                   <div className="flex flex-col items-center justify-between gap-4 rounded-lg bg-muted p-4 sm:flex-row">
                     <div>
-                      <h3 className="font-medium">Overall Performance</h3>
+                      <h3 className="font-medium">Đánh giá chung</h3>
                       <p className="text-sm text-muted-foreground">
-                        Answered {correctAnswers} out of {totalQuestions}{' '}
-                        questions correctly
+                        Trả lời đúng {correctAnswers} trên {totalQuestions} câu
+                        hỏi
                       </p>
                     </div>
                     <div className="text-3xl font-bold">{score}%</div>
                   </div>
 
                   <div>
-                    <h3 className="mb-4 font-medium">Questions</h3>
+                    <h3 className="mb-4 font-medium">Câu hỏi</h3>
                     <div className="space-y-3">
                       {paginatedQuestions.map((question, index) => {
                         const questionNumber =
@@ -179,7 +177,7 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
                                 <div className="space-y-4">
                                   <div>
                                     <h3 className="mb-2 font-medium">
-                                      Question:
+                                      Câu hỏi:
                                     </h3>
                                     <p className="rounded-md bg-muted p-3">
                                       {question.question_content}
@@ -195,7 +193,7 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
                                       }`}
                                     >
                                       <h3 className="mb-2 flex items-center font-medium">
-                                        Student Answer
+                                        Lựa chọn
                                         {question.is_correct ? (
                                           <Check className="ml-2 h-4 w-4 text-green-600" />
                                         ) : (
@@ -207,7 +205,7 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
 
                                     <div className="rounded-md border border-green-200 bg-green-50 p-4">
                                       <h3 className="mb-2 flex items-center font-medium">
-                                        Correct Answer
+                                        Đáp án
                                         <Check className="ml-2 h-4 w-4 text-green-600" />
                                       </h3>
                                       <p>{question.correct_option_content}</p>
@@ -235,7 +233,7 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
                           <ChevronLeft className="h-4 w-4" />
                         </Button>
                         <div className="text-sm">
-                          Page {currentPage + 1} of {totalPages}
+                          Trang {currentPage + 1} trên {totalPages}
                         </div>
                         <Button
                           variant="outline"

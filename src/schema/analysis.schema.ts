@@ -163,7 +163,7 @@ export type StudentExam = {
 }
 
 export type GetStudentsAnalysisQueryType = {
-  examId: string
+  projectId: string
 }
 
 export type GetStudentsAnalysisResType = ApiResponse<StudentExam[]>

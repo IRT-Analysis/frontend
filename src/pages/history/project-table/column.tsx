@@ -22,11 +22,21 @@ export const columns: ColumnDef<ProjectType>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         className="flex items-center justify-center"
       >
-        ID
+        STT
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="text-center">{row.getValue('id')}</div>,
+    cell: ({ row, table }) => {
+      const sortedIndex = table
+        .getSortedRowModel()
+        ?.flatRows?.findIndex((r) => r.id === row.id)
+
+      return (
+        <div className="text-center">
+          {(sortedIndex !== -1 ? sortedIndex : 0) + 1}
+        </div>
+      )
+    },
     size: 100,
   },
   {
@@ -87,15 +97,15 @@ export const columns: ColumnDef<ProjectType>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>Hành động</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(project.id)}
             >
-              Copy Project ID
+              Sao chép ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link to={`/analysis/${project.id}`}>View Project Details</Link>
+              <Link to={`/analysis/${project.id}`}>Xem phân tích chi tiết</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -121,7 +121,7 @@ export function ReusableTable<T>({
   })
 
   return isPending ? (
-    <Card className="flex h-full items-center justify-center">
+    <Card className="flex h-[80vh] items-center justify-center">
       <CardContent>
         <Spinner />
       </CardContent>

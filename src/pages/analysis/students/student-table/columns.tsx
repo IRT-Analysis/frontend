@@ -1,6 +1,5 @@
 import { Badge, BadgeProps } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,41 +11,16 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card'
+import { assignGroupFromScore } from '@/lib/utils'
 import { StudentExam } from '@/schema/analysis.schema'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, BarChart2, Eye } from 'lucide-react'
-import { assignGroupFromScore } from '.'
 
 export const getStudentTableColumns = (
   handleViewExam: (studentId: string) => void,
   handleViewKidmap: (studentId: string) => void,
   groupOptions: number[]
 ): ColumnDef<StudentExam>[] => [
-  {
-    id: 'select',
-    size: 50,
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     id: 'index',
     header: 'STT',
@@ -78,7 +52,7 @@ export const getStudentTableColumns = (
     ),
   },
   {
-    id: 'last_name',
+    id: 'first_name',
     header: ({ column }) => {
       return (
         <Button
@@ -92,12 +66,12 @@ export const getStudentTableColumns = (
     },
     size: 100,
     cell: ({ row }) => {
-      const { last_name } = row.original
-      return <div className="text-center">{last_name}</div>
+      const { first_name } = row.original
+      return <div className="text-center">{first_name}</div>
     },
   },
   {
-    id: 'first_name',
+    id: 'last_name',
     header: ({ column }) => {
       return (
         <Button
@@ -111,8 +85,8 @@ export const getStudentTableColumns = (
     },
     size: 150,
     cell: ({ row }) => {
-      const { first_name } = row.original
-      return <div className="text-center">{first_name}</div>
+      const { last_name } = row.original
+      return <div className="text-center">{last_name}</div>
     },
   },
   {
@@ -200,7 +174,7 @@ export const getStudentTableColumns = (
   },
   {
     id: 'actions',
-    header: 'Actions',
+    header: '',
     size: 150,
     cell: ({ row }) => {
       const student = row.original
@@ -213,7 +187,8 @@ export const getStudentTableColumns = (
             onClick={() => handleViewExam(student.student_exam_id)}
             className="h-8 px-2"
           >
-            <Eye className="mr-1 h-4 w-4" /> Exam
+            <Eye className="mr-1 h-4 w-4" />
+            Bài làm
           </Button>
           <Button
             variant="outline"

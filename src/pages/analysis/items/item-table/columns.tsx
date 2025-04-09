@@ -13,28 +13,28 @@ import { ColumnDef } from '@tanstack/react-table'
 import { MathJax, MathJaxContext } from 'better-react-mathjax'
 import { ArrowUpDown, ChevronDown } from 'lucide-react'
 
-export const columns: ColumnDef<QuestionAnalysisType>[] = [
+export const columns: ColumnDef<
+  QuestionAnalysisType & { questionNumber: number }
+>[] = [
   {
-    accessorKey: 'id',
-    header: ({ column }) => {
-      return (
-        <div className="flex items-center justify-center">
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            className="relative flex items-center justify-center"
-          >
-            <span className="absolute -right-2 flex items-center">
-              <ArrowUpDown />
-            </span>
-            Câu
-          </Button>
-        </div>
-      )
-    },
+    accessorKey: 'questionNumber', // now it's sortable!
+    header: ({ column }) => (
+      <div className="flex items-center justify-center">
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="relative flex items-center justify-center"
+        >
+          <span className="absolute -right-2 flex items-center">
+            <ArrowUpDown />
+          </span>
+          Câu
+        </Button>
+      </div>
+    ),
     size: 100,
     cell: ({ row }) => (
-      <div className="text-center capitalize">{row.getValue('id')}</div>
+      <div className="text-center">{row.original.questionNumber}</div>
     ),
   },
   {
