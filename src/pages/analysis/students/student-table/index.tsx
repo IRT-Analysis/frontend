@@ -1,40 +1,35 @@
 import { ReusableTable } from '@/components/table/reusable-table'
+import { assignGroupFromScore } from '@/lib/utils'
+import { useGetStudentsAnalysisQuery } from '@/queries/useAnalyze'
+import {
+  GetStudentsAnalysisQueryType,
+  StudentExam,
+} from '@/schema/analysis.schema'
 import { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { getStudentTableColumns } from './columns'
 import ExamResultsDialog from './exam-results-dialog'
-import { useGetStudentsAnalysisQuery } from '@/queries/useAnalyze'
-import { StudentExam } from '@/schema/analysis.schema'
-
-export const assignGroupFromScore = (score: number | null): number => {
-  if (score === null) return 0 // ungrouped or unknown
-  if (score >= 80) return 5
-  if (score >= 65) return 4
-  if (score >= 50) return 3
-  if (score >= 35) return 2
-  return 1
-}
+import { KidmapDialog } from './kidmap-dialog'
 
 const StudentTable = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
-
-  const searchParams = new URLSearchParams(location.search)
-  const examId = searchParams.get('examId')
+  const { projectId } = useParams<GetStudentsAnalysisQueryType>()
+  console.log(projectId)
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isExamDialogOpen, setIsExamDialogOpen] = useState(false)
+  const [isKidmapDialogOpen, setIsKidmapDialogOpen] = useState(false)
 
   const { data, isLoading } = useGetStudentsAnalysisQuery(
-    examId ?? 'd3b7dfa5-2802-4bfb-ad92-6d4ea544d3e9'
+    projectId ?? 'd3b7dfa5-2802-4bfb-ad92-6d4ea544d3e9'
   )
 
   const handleViewExam = (studentId: string) => {
     setSelectedStudent(studentId)
-    setIsDialogOpen(true)
+    setIsExamDialogOpen(true)
   }
 
   const handleViewKidmap = (studentId: string) => {
-    navigate(`/student-analysis/kidmap/${studentId}`)
+    setSelectedStudent(studentId)
+    setIsKidmapDialogOpen(true)
   }
 
   const getGroupOptions = (students: StudentExam[]) => {
@@ -58,8 +53,14 @@ const StudentTable = () => {
         searchBy={['student_id']}
       />
       <ExamResultsDialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
+        isOpen={isExamDialogOpen}
+        onClose={() => setIsExamDialogOpen(false)}
+        studentId={selectedStudent}
+      />
+
+      <KidmapDialog
+        isOpen={isKidmapDialogOpen}
+        onClose={() => setIsKidmapDialogOpen(false)}
         studentId={selectedStudent}
       />
     </div>

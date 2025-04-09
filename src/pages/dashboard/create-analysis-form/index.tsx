@@ -37,6 +37,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import HoverCardIcon from '@/components/reusable-hover-with-icon'
 import { useGlobal } from '@/context/global-context'
+import Spinner from '@/components/ui/spinner'
 
 const fileSchema = z.array(
   z.any().refine((value) => value instanceof File, {
@@ -346,7 +347,14 @@ export function CreateAnalysisForm() {
                 className="w-full bg-primary-600-base font-semibold"
                 disabled={cttAnalyzeMutation.isPending}
               >
-                {cttAnalyzeMutation.isPending ? 'Vui lòng chờ...' : 'Phân tích'}
+                {cttAnalyzeMutation.isPending ? (
+                  <div className="flex items-center gap-2">
+                    <p>Vui lòng chờ</p>
+                    <Spinner />
+                  </div>
+                ) : (
+                  'Phân tích'
+                )}
               </Button>
             </DialogFooter>
           </form>

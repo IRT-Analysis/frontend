@@ -66,12 +66,12 @@ export const useGetStudentResultQuery = (
 }
 
 export const useGetStudentsAnalysisQuery = (
-  examId: string,
+  projectId: string,
   enabled: boolean = true
 ) => {
   return useQuery({
     enabled,
-    queryKey: ['students-analysis', examId],
-    queryFn: () => cttAnalyzeService.getStudentsAnalysis({ examId }),
+    queryKey: ['students-analysis', projectId],
+    queryFn: () => cttAnalyzeService.getStudentsAnalysis({ projectId }),
   })
 }

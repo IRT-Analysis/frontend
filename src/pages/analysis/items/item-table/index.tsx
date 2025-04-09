@@ -85,11 +85,15 @@ const ItemTable = () => {
     projectId!
   )
 
-  const data = getAllQuestionAnalysisQuery.data?.data ?? [
+  const data = getAllQuestionAnalysisQuery.data?.data?.map((item, index) => ({
+    ...item,
+    questionNumber: index + 1,
+  })) ?? [
     {
       id: '',
       exam_id: '',
       content: '',
+      questionNumber: 1,
       question_analysis: {
         discrimination_index: 0,
         difficulty_index: 0,
@@ -101,7 +105,7 @@ const ItemTable = () => {
   ]
 
   return (
-    <ReusableTable<QuestionAnalysisType>
+    <ReusableTable<QuestionAnalysisType & { questionNumber: number }>
       key={data.length}
       columns={columns}
       data={data}
