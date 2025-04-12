@@ -1,45 +1,45 @@
-import { cttAnalyzeService } from '@/services/analyze.service'
+import { analyzeService } from '@/services/analyze.service'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const useCTTAnalyzeMutation = () => {
   return useMutation({
     mutationKey: ['ctt-analyze'],
-    mutationFn: cttAnalyzeService.analyze,
+    mutationFn: analyzeService.analyze,
   })
 }
 
 export const useGetAllQuestionsAnalysisQuery = (projectId: string) => {
   return useQuery({
     queryKey: ['ctt-items', projectId],
-    queryFn: () => cttAnalyzeService.getAllQuestionAnalysis({ projectId }),
+    queryFn: () => analyzeService.getAllQuestionAnalysis({ projectId }),
   })
 }
 
 export const useGetQuestionAnalysisQuery = (questionId: string) => {
   return useQuery({
     queryKey: ['ctt-question', questionId],
-    queryFn: () => cttAnalyzeService.getQuestionAnalysis({ questionId }),
+    queryFn: () => analyzeService.getQuestionAnalysis({ questionId }),
   })
 }
 
 export const useGetGeneralDetailsQuery = (projectId: string) => {
   return useQuery({
     queryKey: ['ctt-general', projectId],
-    queryFn: () => cttAnalyzeService.getGeneralDetails({ projectId }),
+    queryFn: () => analyzeService.getGeneralDetails({ projectId }),
   })
 }
 
 export const useGetHistogramQuery = (projectId: string) => {
   return useQuery({
     queryKey: ['ctt-histogram', projectId],
-    queryFn: () => cttAnalyzeService.getHistogramDetails({ projectId }),
+    queryFn: () => analyzeService.getHistogramDetails({ projectId }),
   })
 }
 
 export const useGetOptionAnalysisQuery = (optionId: string) => {
   return useQuery({
     queryKey: ['option-analysis', optionId],
-    queryFn: () => cttAnalyzeService.getOptionAnalysis({ optionId }),
+    queryFn: () => analyzeService.getOptionAnalysis({ optionId }),
   })
 }
 
@@ -50,7 +50,7 @@ export const useGetOptionsAnalysisQuery = (
   return useQuery({
     enabled,
     queryKey: ['options-analysis', questionId],
-    queryFn: () => cttAnalyzeService.getOptionsAnalysis({ questionId }),
+    queryFn: () => analyzeService.getOptionsAnalysis({ questionId }),
   })
 }
 
@@ -61,7 +61,7 @@ export const useGetStudentResultQuery = (
   return useQuery({
     enabled,
     queryKey: ['student-result', studentExamId],
-    queryFn: () => cttAnalyzeService.getStudentResult({ studentExamId }),
+    queryFn: () => analyzeService.getStudentResult({ studentExamId }),
   })
 }
 
@@ -72,6 +72,14 @@ export const useGetStudentsAnalysisQuery = (
   return useQuery({
     enabled,
     queryKey: ['students-analysis', projectId],
-    queryFn: () => cttAnalyzeService.getStudentsAnalysis({ projectId }),
+    queryFn: () => analyzeService.getStudentsAnalysis({ projectId }),
+  })
+}
+
+export const useGetRaschAnalysisQuery = (projectId: string, enabled = true) => {
+  return useQuery({
+    enabled,
+    queryKey: ['rasch-analysis', projectId],
+    queryFn: () => analyzeService.getRaschAnalysis({ projectId }),
   })
 }

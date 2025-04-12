@@ -19,6 +19,8 @@ import {
   GetStudentResultResType,
   GetStudentsAnalysisQueryType,
   GetStudentsAnalysisResType,
+  GetRaschAnalysisQueryType,
+  GetRaschAnalysisResType,
 } from '@/schema/analysis.schema'
 import queryString from 'query-string'
 
@@ -26,6 +28,7 @@ const ROUTES = {
   ANALYZE: '/analyze',
   GENERAL_DETAILS: '/general-details',
   HISTOGRAM: '/histogram',
+  RASCH_ANALYSIS: '/rasch-analysis',
   QUESTIONS_ANALYSIS: '/questions',
   QUESTION_ANALYSIS: '/question',
   OPTIONS_ANALYSIS: '/options',
@@ -34,7 +37,7 @@ const ROUTES = {
   STUDENT_RESULT: '/student',
 }
 
-export const cttAnalyzeService = {
+export const analyzeService = {
   analyze({
     projectName,
     numberOfGroup,
@@ -125,6 +128,14 @@ export const cttAnalyzeService = {
   ): Promise<GetStudentsAnalysisResType> {
     return http.get<GetStudentsAnalysisResType>(
       `${ROUTES.STUDENTS_ANALYSIS}?${queryString.stringify(params)}`
+    )
+  },
+
+  getRaschAnalysis(
+    params: GetRaschAnalysisQueryType
+  ): Promise<GetRaschAnalysisResType> {
+    return http.get<GetRaschAnalysisResType>(
+      `${ROUTES.RASCH_ANALYSIS}?${queryString.stringify(params)}`
     )
   },
 }
