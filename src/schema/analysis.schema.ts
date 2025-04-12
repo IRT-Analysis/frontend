@@ -167,3 +167,36 @@ export type GetStudentsAnalysisQueryType = {
 }
 
 export type GetStudentsAnalysisResType = ApiResponse<StudentExam[]>
+
+// ----------------------------------------------
+
+export type RaschQuestionAnalysisType = {
+  id: string
+  question_analysis_id?: string
+  difficulty: number
+  discrimination: number
+  logit: number
+  infit: number
+  outfit: number
+  reliability: number
+  question_content: string
+  questionNumber?: number
+  options?: RaschOptionAnalysisType[]
+}
+
+export type RaschOptionAnalysisType = {
+  id: string
+  rpbis: number
+  content: string
+  selected_by: number
+  top_selected: number
+  selection_rate: number
+  bottom_selected: number
+  discrimination_index: number
+}
+
+export type GetRaschAnalysisQueryType = {
+  projectId: string
+}
+
+export type GetRaschAnalysisResType = ApiResponse<RaschQuestionAnalysisType[]>
