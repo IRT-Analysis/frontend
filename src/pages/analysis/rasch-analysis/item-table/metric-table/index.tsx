@@ -160,20 +160,17 @@ const raschMetrics: Record<string, MetricInfo> = {
   },
 }
 
-export function RaschMetricsTable({
-  item,
-}: {
-  item: RaschQuestionAnalysisType
-}) {
+const RaschMetricsTable = ({ item }: { item: RaschQuestionAnalysisType }) => {
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[180px]">Chỉ số</TableHead>
-          <TableHead>Giá trị</TableHead>
-          <TableHead>Đánh giá</TableHead>
+          <TableHead className="w-[150px] text-center">Chỉ số</TableHead>
+          <TableHead className="text-center">Giá trị</TableHead>
+          <TableHead className="w-[95px] text-center">Đánh giá</TableHead>
         </TableRow>
       </TableHeader>
+
       <TableBody>
         {Object.entries(raschMetrics).map(([key, info]) => {
           const value = item[key as keyof RaschQuestionAnalysisType] as number
@@ -198,15 +195,15 @@ export function RaschMetricsTable({
 
           return (
             <TableRow key={key}>
-              <TableCell className="font-medium">
+              <TableCell className="text-center font-medium">
                 <HoverCardText content={info.tooltipContent}>
                   {info.label}
                 </HoverCardText>
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 {typeof value === 'number' ? value.toFixed(4) : value}
               </TableCell>
-              <TableCell className={cn('font-medium', textColor)}>
+              <TableCell className={cn('text-center font-medium', textColor)}>
                 {assessment}
               </TableCell>
             </TableRow>
@@ -216,3 +213,5 @@ export function RaschMetricsTable({
     </Table>
   )
 }
+
+export default RaschMetricsTable

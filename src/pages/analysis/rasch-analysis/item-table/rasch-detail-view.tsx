@@ -1,7 +1,6 @@
 import { RaschQuestionAnalysisType } from '@/schema/analysis.schema'
-import { RaschMetricsTable } from './metric-table'
+import RaschMetricsTable from './metric-table'
 import { RaschItemChart } from './rasch-item-chart'
-import { RaschItemFitChart } from './rasch-item-fit-chart'
 
 const RaschItemDetailView = ({ item }: { item: RaschQuestionAnalysisType }) => {
   return (
@@ -28,22 +27,18 @@ const RaschItemDetailView = ({ item }: { item: RaschQuestionAnalysisType }) => {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-[35%_65%] gap-6">
         <div className="rounded-md border p-4">
           <h3 className="mb-4 text-lg font-semibold">Thông số Rasch</h3>
           <RaschMetricsTable item={item} />
         </div>
-        <div className="rounded-md border p-4">
-          <h3 className="mb-4 text-lg font-semibold">Biểu đồ Infit - Outfit</h3>
-          <RaschItemFitChart item={item} />
-        </div>
-      </div>
 
-      <div className="rounded-md border p-4">
-        <h3 className="mb-4 text-lg font-semibold">
-          Đường đặc trưng câu hỏi (ICC)
-        </h3>
-        <RaschItemChart item={item} />
+        <div className="rounded-md border p-4">
+          <h3 className="mb-4 text-lg font-semibold">
+            Đường đặc trưng câu hỏi (ICC)
+          </h3>
+          <RaschItemChart item={item} />
+        </div>
       </div>
     </div>
   )

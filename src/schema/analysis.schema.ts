@@ -1,10 +1,12 @@
 import { ApiResponse } from '@/lib/httpClient'
+import { AnalyzeType } from '@/types/ctt-analysis.type'
 
 type ProjectDetailsType = {
   name: string
   total_options: number
   total_students: number
   total_questions: number
+  type: AnalyzeType
 }
 
 export type QuestionAnalysisType = {
@@ -160,6 +162,7 @@ export type StudentExam = {
   exam_id: string
   grade: number | null
   student_id: string
+  ability: number | null
 }
 
 export type GetStudentsAnalysisQueryType = {

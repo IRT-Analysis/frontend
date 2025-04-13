@@ -10,9 +10,12 @@ import { useParams } from 'react-router-dom'
 import { getStudentTableColumns } from './columns'
 import ExamResultsDialog from './exam-results-dialog'
 import { KidmapDialog } from './kidmap-dialog'
+import { AnalyzeType } from '@/types/ctt-analysis.type'
 
 const StudentTable = () => {
-  const { projectId } = useParams<GetStudentsAnalysisQueryType>()
+  const { projectId, analysisType } = useParams<
+    GetStudentsAnalysisQueryType & { analysisType: AnalyzeType }
+  >()
   console.log(projectId)
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null)
   const [isExamDialogOpen, setIsExamDialogOpen] = useState(false)
@@ -46,6 +49,7 @@ const StudentTable = () => {
         columns={getStudentTableColumns(
           handleViewExam,
           handleViewKidmap,
+          analysisType!,
           groupOptions
         )}
         data={data?.data ?? []}

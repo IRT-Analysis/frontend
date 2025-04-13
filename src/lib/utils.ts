@@ -76,3 +76,15 @@ export const assignGroupFromScore = (score: number | null): number => {
   if (score >= 35) return 2
   return 1
 }
+
+export const buildPath = (
+  baseUrl: string,
+  subUrl: string = '',
+  params: Record<string, string>
+) => {
+  let full = baseUrl + subUrl
+  for (const [key, value] of Object.entries(params)) {
+    full = full.replace(`:${key}`, value)
+  }
+  return full
+}

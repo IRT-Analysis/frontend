@@ -9,21 +9,21 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          'border-transparent bg-neutral-900 text-neutral-50 shadow hover:bg-neutral-900/80 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:bg-neutral-50/80',
+          'border-transparent bg-neutral-900 text-neutral-50 shadow hover:brightness-90 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:brightness-90',
         secondary:
-          'border-transparent bg-neutral-100 text-neutral-900 hover:bg-neutral-100/80 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:bg-neutral-800/80',
+          'border-transparent bg-neutral-100 text-neutral-900 hover:brightness-90 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:brightness-90',
         destructive:
-          'border-transparent bg-red-500 text-neutral-50 shadow hover:bg-red-500/80 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/80',
+          'border-transparent bg-red-500 text-neutral-50 shadow hover:brightness-90 dark:bg-red-900 dark:text-neutral-50 dark:hover:brightness-90',
         outline: 'text-neutral-950 dark:text-neutral-50',
 
         veryEasy:
-          'border-transparent bg-[var(--average-background)] text-[var(--average-text)] hover:bg-[var(--average-background)/80] dark:bg-[var(--dark-average-background)] dark:text-[var(--dark-average-text)] dark:hover:bg-[var(--dark-average-background)/80]',
-        easy: 'border-transparent bg-[var(--good-background)] text-[var(--good-text)] hover:bg-[var(--good-background)/80] dark:bg-[var(--dark-good-background)] dark:text-[var(--dark-good-text)] dark:hover:bg-[var(--dark-good-background)/80]',
+          'border-transparent bg-[var(--average-background)] text-[var(--average-text)] hover:brightness-90 dark:bg-[var(--dark-average-background)] dark:text-[var(--dark-average-text)] dark:hover:brightness-90',
+        easy: 'border-transparent bg-[var(--good-background)] text-[var(--good-text)] hover:brightness-90 dark:bg-[var(--dark-good-background)] dark:text-[var(--dark-good-text)] dark:hover:brightness-90',
         medium:
-          'border-transparent bg-[var(--very-good-background)] text-[var(--very-good-text)] hover:bg-[var(--very-good-background)/80] dark:bg-[var(--dark-very-good-background)] dark:text-[var(--dark-very-good-text)] dark:hover:bg-[var(--dark-very-good-background)/80]',
-        hard: 'border-transparent bg-[var(--bad-background)] text-[var(--bad-text)] hover:bg-[var(--bad-background)/80] dark:bg-[var(--dark-bad-background)] dark:text-[var(--dark-bad-text)] dark:hover:bg-[var(--dark-bad-background)/80]',
+          'border-transparent bg-[var(--very-good-background)] text-[var(--very-good-text)] hover:brightness-90 dark:bg-[var(--dark-very-good-background)] dark:text-[var(--dark-very-good-text)] dark:hover:brightness-90',
+        hard: 'border-transparent bg-[var(--bad-background)] text-[var(--bad-text)] hover:brightness-90 dark:bg-[var(--dark-bad-background)] dark:text-[var(--dark-bad-text)] dark:hover:brightness-90',
         veryHard:
-          'border-transparent bg-[var(--very-bad-background)] text-[var(--very-bad-text)] hover:bg-[var(--very-bad-background)/80] dark:bg-[var(--dark-very-bad-background)] dark:text-[var(--dark-very-bad-text)] dark:hover:bg-[var(--dark-very-bad-background)/80]',
+          'border-transparent bg-[var(--very-bad-background)] text-[var(--very-bad-text)] hover:brightness-90 dark:bg-[var(--dark-very-bad-background)] dark:text-[var(--dark-very-bad-text)] dark:hover:brightness-90',
       },
     },
     defaultVariants: {

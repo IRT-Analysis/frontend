@@ -38,6 +38,7 @@ import { toast } from 'sonner'
 import HoverCardIcon from '@/components/reusable-hover-with-icon'
 import { useGlobal } from '@/context/global-context'
 import Spinner from '@/components/ui/spinner'
+import { AnalyzeType } from '@/types/ctt-analysis.type'
 
 const fileSchema = z.array(
   z.any().refine((value) => value instanceof File, {
@@ -89,7 +90,7 @@ const correlationOptions = [
   },
 ]
 
-export function CreateAnalysisForm() {
+export function CreateAnalysisForm({ type }: { type: AnalyzeType }) {
   const navigate = useNavigate()
   const cttAnalyzeMutation = useCTTAnalyzeMutation()
   const { dispatch } = useGlobal()
@@ -111,14 +112,14 @@ export function CreateAnalysisForm() {
       try {
         const res = await cttAnalyzeMutation.mutateAsync({
           ...values,
-          type: 'CTT',
+          type,
         })
 
         dispatch({
           type: 'ANALYZE',
           payload: { examId: res.data.examId, projectId: res.data.projectId },
         })
-        navigate(`/analysis/${res.data.projectId}`)
+        navigate(`/analysis/${type}/${res.data.projectId}`)
         toast(res.message)
       } catch (error) {
         console.error(error)
