@@ -170,8 +170,8 @@ export function KidmapVisualization({
   // Get quadrant explanation
   const getQuadrantInfo = (
     quadrant: number,
-    difficulty: number,
-    correct: boolean,
+    _difficulty: number,
+    _correct: boolean,
     expected: boolean
   ) => {
     const explanations = {
