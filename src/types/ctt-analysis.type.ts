@@ -71,3 +71,9 @@ export type ReviewQuestion = {
 }
 
 export type AnswerType = keyof typeof Answers
+
+export enum AnalyzeType {
+  RASCH = 'Rasch',
+  CTT = 'CTT',
+  IRT = 'IRT',
+}

@@ -1,4 +1,5 @@
 import { ApiResponse } from '@/lib/httpClient'
+import { AnalyzeType } from '@/types/ctt-analysis.type'
 import { User } from '@supabase/supabase-js'
 
 export type UserType = {
@@ -10,6 +11,7 @@ export type UserType = {
 
 export type ProjectType = {
   created_at: string
+  type: AnalyzeType
   user_id: string
   name: string
   id: string

@@ -4,31 +4,50 @@ import {
   LineChart,
   ResponsiveContainer,
   Tooltip,
+  TooltipProps,
   XAxis,
   YAxis,
 } from 'recharts'
 
-// ICC (Item Characteristic Curve) data generator
-function generateICCData(difficulty: number, discrimination: number) {
-  const data = []
-  // Generate ability levels from -4 to 4 logits
-  for (let ability = -4; ability <= 4; ability += 0.25) {
-    // Calculate probability using the Rasch model formula
-    // P(θ) = e^(θ-b) / (1 + e^(θ-b))
-    // where θ is ability and b is difficulty
-    const exponent = discrimination * (ability - difficulty)
-    const probability = Math.exp(exponent) / (1 + Math.exp(exponent))
+import {
+  NameType,
+  ValueType,
+} from 'recharts/types/component/DefaultTooltipContent'
 
-    data.push({
-      ability,
-      probability: probability,
-    })
+const CustomTooltip = ({
+  active,
+  payload,
+}: TooltipProps<ValueType, NameType>) => {
+  if (active && payload && payload.length) {
+    const { ability, probability } = payload[0].payload
+    return (
+      <div className="rounded border bg-white px-3 py-2 text-sm text-gray-800 shadow-md">
+        <p>
+          Năng lực: <strong>{ability.toFixed(2)}</strong>
+        </p>
+        <p>
+          Xác suất trả lời đúng: <strong>{probability.toFixed(4)}</strong>
+        </p>
+      </div>
+    )
   }
+  return null
+}
+
+// ICC (Item Characteristic Curve) data generator
+function generateICCData(logit: number) {
+  const data = []
+  for (let ability = -4; ability <= 4; ability += 0.05) {
+    const exponent = 1 * (ability - logit)
+    const probability = Math.exp(exponent) / (1 + Math.exp(exponent))
+    data.push({ ability, probability })
+  }
+
   return data
 }
 
 export function RaschItemChart({ item }: { item: RaschQuestionAnalysisType }) {
-  const iccData = generateICCData(item.difficulty, item.discrimination || 1)
+  const iccData = generateICCData(item.logit)
 
   return (
     <div className="h-[300px] w-full">
@@ -39,23 +58,22 @@ export function RaschItemChart({ item }: { item: RaschQuestionAnalysisType }) {
         >
           <XAxis
             dataKey="ability"
-            label={{ value: 'Năng lực (logit)', position: 'bottom', offset: 0 }}
+            type="number"
             domain={[-4, 4]}
             ticks={[-4, -3, -2, -1, 0, 1, 2, 3, 4]}
+            label={{ value: 'Năng lực (logit)', position: 'bottom' }}
           />
           <YAxis
+            domain={[0, 1]}
+            ticks={[0, 0.2, 0.4, 0.6, 0.8, 1]}
             label={{
               value: 'Xác suất trả lời đúng',
               angle: -90,
               position: 'left',
+              dy: -60, // this centers it vertically; tweak if needed
             }}
-            domain={[0, 1]}
-            ticks={[0, 0.2, 0.4, 0.6, 0.8, 1.0]}
           />
-          <Tooltip
-            formatter={(value: number) => [value.toFixed(4), 'Xác suất']}
-            labelFormatter={(value) => `Năng lực: ${value} logit`}
-          />
+          <Tooltip content={<CustomTooltip />} />
           <Line
             type="monotone"
             dataKey="probability"
@@ -63,37 +81,26 @@ export function RaschItemChart({ item }: { item: RaschQuestionAnalysisType }) {
             strokeWidth={2}
             dot={false}
           />
-          {/* Add a horizontal line at P=0.5 */}
+          {/* Horizontal line at 0.5 */}
           <Line
             data={[
               { ability: -4, threshold: 0.5 },
               { ability: 4, threshold: 0.5 },
             ]}
-            type="monotone"
+            type="linear"
             dataKey="threshold"
             stroke="#d1d5db"
             strokeDasharray="3 3"
             dot={false}
           />
-          {/* Add a vertical line at the item difficulty */}
+          {/* Vertical line at logit */}
           <Line
             data={[
-              { ability: item.difficulty, min: 0 },
-              { ability: item.difficulty, max: 1 },
+              { ability: item.logit, bound: 0 },
+              { ability: item.logit, bound: 1 },
             ]}
-            type="monotone"
-            dataKey="min"
-            stroke="#d1d5db"
-            strokeDasharray="3 3"
-            dot={false}
-          />
-          <Line
-            data={[
-              { ability: item.difficulty, min: 0 },
-              { ability: item.difficulty, max: 1 },
-            ]}
-            type="monotone"
-            dataKey="max"
+            type="linear"
+            dataKey="bound"
             stroke="#d1d5db"
             strokeDasharray="3 3"
             dot={false}

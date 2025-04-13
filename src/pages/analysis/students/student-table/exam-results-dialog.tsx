@@ -146,10 +146,10 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
                             >
                               <div className="flex items-center">
                                 <div
-                                  className={`mr-3 flex h-8 w-8 items-center justify-center rounded-full ${
+                                  className={`mr-3 flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
                                     question.is_correct
-                                      ? 'bg-green-100 text-green-800'
-                                      : 'bg-red-100 text-red-800'
+                                      ? 'bg-[var(--very-good-background)] text-[var(--very-good-text)]'
+                                      : 'bg-[var(--very-bad-background)] text-[var(--very-bad-text)]'
                                   }`}
                                 >
                                   {questionNumber}
@@ -160,9 +160,9 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
                               </div>
                               <div className="flex items-center">
                                 {question.is_correct ? (
-                                  <Check className="mr-2 h-5 w-5 text-green-600" />
+                                  <Check className="mr-2 h-5 w-5 text-[var(--very-good-text)]" />
                                 ) : (
-                                  <X className="mr-2 h-5 w-5 text-red-600" />
+                                  <X className="mr-2 h-5 w-5 text-[var(--very-bad-text)]" />
                                 )}
                                 {isSelected ? (
                                   <ChevronUp className="h-5 w-5" />
@@ -188,25 +188,25 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
                                     <div
                                       className={`rounded-md border p-4 ${
                                         question.is_correct
-                                          ? 'border-green-200 bg-green-50'
-                                          : 'border-red-200 bg-red-50'
+                                          ? 'border-[var(--very-good-text)] bg-[var(--very-good-background)]'
+                                          : 'border-[var(--very-bad-text)] bg-[var(--very-bad-background)]'
                                       }`}
                                     >
                                       <h3 className="mb-2 flex items-center font-medium">
-                                        Lựa chọn
+                                        Bài làm
                                         {question.is_correct ? (
-                                          <Check className="ml-2 h-4 w-4 text-green-600" />
+                                          <Check className="ml-2 h-4 w-4 text-[var(--very-good-text)]" />
                                         ) : (
-                                          <X className="ml-2 h-4 w-4 text-red-600" />
+                                          <X className="ml-2 h-4 w-4 text-[var(--very-bad-text)]" />
                                         )}
                                       </h3>
                                       <p>{question.selected_option.content}</p>
                                     </div>
 
-                                    <div className="rounded-md border border-green-200 bg-green-50 p-4">
+                                    <div className="rounded-md border border-[var(--very-good-text)] bg-[var(--very-good-background)] p-4">
                                       <h3 className="mb-2 flex items-center font-medium">
                                         Đáp án
-                                        <Check className="ml-2 h-4 w-4 text-green-600" />
+                                        <Check className="ml-2 h-4 w-4 text-[var(--very-good-text)]" />
                                       </h3>
                                       <p>{question.correct_option_content}</p>
                                     </div>

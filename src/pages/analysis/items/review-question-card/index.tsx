@@ -1,8 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card'
 import { ReviewQuestion } from '@/types/ctt-analysis.type'
-import { HoverCard } from '@radix-ui/react-hover-card'
 import { Badge } from '@/components/ui/badge'
 import { getStatsLabel } from '@/lib/utils'
 

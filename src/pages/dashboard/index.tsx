@@ -10,44 +10,30 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { CreateAnalysisForm } from './create-analysis-form'
 import banner from '/image.jpeg'
 import MockDescriptionImage from '/screen-01.png'
+import { useState } from 'react'
+import { AnalyzeType } from '@/types/ctt-analysis.type'
 
 const CardData = [
   {
-    title: 'CTT',
+    title: AnalyzeType.CTT,
     content:
       'Phân tích dựa trên lý thuyết trắc nghiệm cổ điển, tập trung vào đánh giá độ khó và độ phân cách của câu hỏi để đưa ra phân tích hiệu quả.',
-    action: () => {
-      console.log('CTT analysis started')
-    },
   },
   {
-    title: 'Rasch',
+    title: AnalyzeType.RASCH,
     content:
       'Phân tích theo mô hình Rasch, đơn giản hơn IRT, chỉ xét mối quan hệ giữa năng lực và độ khó, không có các yếu tố đoán mò hay độ phân cách.',
-    action: () => {
-      console.log('Rasch analysis started')
-    },
   },
   {
-    title: 'IRT',
+    title: AnalyzeType.IRT,
     content:
       'Phân tích dựa trên lý thuyết trắc nghiệm hiện đại, tập trung vào đánh giá mối quan hệ giữa năng lực thí sinh và độ khó của câu hỏi.',
-    action: () => {
-      console.log('IRT analysis started')
-    },
   },
-]
-
-// const getToken = () => {
-//   const storageKey = `sb-${process.env.VITE_SUPABASE_PROJECT_ID}-auth-token`
-//   const sessionDataString = localStorage.getItem(storageKey)
-//   const sessionData = JSON.parse(sessionDataString || 'null')
-//   const token = sessionData?.access_token
-
-//   return token
-// }
+] as const
 
 const DashBoard = () => {
+  const [selectedType, setSelectedType] =
+    useState<(typeof CardData)[number]['title']>()
   return (
     <Dialog>
       <div className="flex flex-col items-center gap-[100px] p-[100px] 2xl:mx-auto 2xl:w-[1345px]">
@@ -95,7 +81,10 @@ const DashBoard = () => {
                 </CardContent>
                 <CardFooter>
                   <DialogTrigger asChild>
-                    <Button className="rounded-3 w-full bg-primary-600-base">
+                    <Button
+                      className="rounded-3 w-full bg-primary-600-base"
+                      onClick={() => setSelectedType(card.title)}
+                    >
                       Phân tích
                     </Button>
                   </DialogTrigger>
@@ -155,7 +144,7 @@ const DashBoard = () => {
           </div>
         </div>
       </div>
-      <CreateAnalysisForm />
+      {selectedType && <CreateAnalysisForm type={selectedType} />}
     </Dialog>
   )
 }

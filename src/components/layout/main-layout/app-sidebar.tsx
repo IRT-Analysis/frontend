@@ -25,9 +25,15 @@ import { toast } from 'sonner'
 import { Logo } from '@/components/ui/logo'
 import { useGlobal } from '@/context/global-context'
 import { DarkModeToggle } from './dark-mode-toggle'
+import { AnalyzeType } from '@/types/ctt-analysis.type'
+
+type Params = {
+  projectId: string
+  analysisType: AnalyzeType
+}
 
 export function AppSidebar() {
-  const { projectId: projectIdParam } = useParams()
+  const { projectId: projectIdParam, analysisType } = useParams<Params>()
   const {
     state: { analysis },
     dispatch,
@@ -66,7 +72,9 @@ export function AppSidebar() {
                         <NavLink
                           to={
                             item.url.includes(':projectId')
-                              ? item.url.replace(':projectId', projectId || '')
+                              ? item.url
+                                  .replace(':analysisType', analysisType || '')
+                                  .replace(':projectId', projectId || '')
                               : item.url
                           }
                           className={({ isActive }) => {
@@ -92,16 +100,22 @@ export function AppSidebar() {
                         </NavLink>
                       </SidebarMenuItem>
                     </SidebarGroupLabel>
+
                     <CollapsibleContent>
                       <SidebarGroupContent className="flex flex-col gap-1">
                         {item.children.map((subItem, index) => (
                           <SidebarMenuItem key={index} className="flex-1">
                             <NavLink
                               to={
-                                item.url.replace(
-                                  ':projectId',
-                                  projectId || ''
-                                ) + subItem.url
+                                item.url.includes(':projectId')
+                                  ? item.url
+                                      .replace(
+                                        ':analysisType',
+                                        analysisType || ''
+                                      )
+                                      .replace(':projectId', projectId || '') +
+                                    subItem.url
+                                  : item.url + subItem.url
                               }
                               className={({ isActive }) => {
                                 if (isActive) setActive(subItem)
@@ -129,7 +143,13 @@ export function AppSidebar() {
             ) : (
               <SidebarMenuItem key={item.title}>
                 <NavLink
-                  to={item.url.replace(':projectId', projectId || '')}
+                  to={
+                    item.url.includes(':projectId')
+                      ? item.url
+                          .replace(':analysisType', analysisType || '')
+                          .replace(':projectId', projectId || '')
+                      : item.url
+                  }
                   className={({ isActive }) => {
                     if (isActive) setActive(item)
                     return ''

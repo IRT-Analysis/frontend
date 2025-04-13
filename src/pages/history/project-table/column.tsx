@@ -1,3 +1,4 @@
+import { Badge, BadgeProps } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -8,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ProjectType } from '@/schema/account.schema'
+import { AnalyzeType } from '@/types/ctt-analysis.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
@@ -85,9 +87,29 @@ export const columns: ColumnDef<ProjectType>[] = [
     size: 150,
   },
   {
+    accessorKey: 'type',
+    header: 'Loại phân tích',
+    cell: ({ row }) => {
+      const type = row.getValue('type') as string
+
+      const variant = ({
+        CTT: 'easy',
+        Rasch: 'medium',
+        IRT: 'veryEasy',
+      }[type as AnalyzeType] ?? 'outline') as BadgeProps['variant']
+
+      return (
+        <div className="flex justify-center">
+          <Badge variant={variant}>{type}</Badge>
+        </div>
+      )
+    },
+    size: 150,
+  },
+  {
     id: 'actions',
     cell: ({ row }) => {
-      const project = row.original
+      const { id, type } = row.original
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -98,14 +120,12 @@ export const columns: ColumnDef<ProjectType>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Hành động</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(project.id)}
-            >
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>
               Sao chép ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link to={`/analysis/${project.id}`}>Xem phân tích chi tiết</Link>
+              <Link to={`/analysis/${type}/${id}`}>Xem phân tích chi tiết</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
