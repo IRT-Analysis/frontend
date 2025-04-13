@@ -13,7 +13,12 @@ dist-ssr
 *.local
 *.tsbuildinfo
 
+# Ignore all .env files
 .env
+.env.*
+
+# Except the example template
+!.env.example
 
 # Editor directories and files
 .vscode/*
