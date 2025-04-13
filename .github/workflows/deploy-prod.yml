@@ -30,12 +30,29 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push Docker Image
+      - name: Create .env.prod file
+        run: echo "${{ secrets.ENV_PRODUCTION }}" > .env
+
+      - name: Build Docker Image
         run: |
           docker build -f Dockerfile.prod -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ env.IMAGE_TAG }} .
+        # This step is critical — if this fails, the next step triggers
+
+      - name: Telegram - Build Failed
+        if: failure()
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d text="❌ *Build failed* for frontend!" \
+            -d parse_mode=Markdown
+
+      - name: Push Docker Image
+        if: success()
+        run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ env.IMAGE_TAG }}
 
       - name: Telegram - Push Success
+        if: success()
         run: |
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
             -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
@@ -63,8 +80,8 @@ jobs:
           port: ${{ secrets.PORT_PRODUCTION }}
           script: |
             cd /home/longtr/projects
-            docker compose pull frontend
-            docker compose up -d frontend
+            sudo docker compose pull frontend
+            sudo docker compose up -d frontend
 
       - name: Telegram - Deploy Success
         if: success()

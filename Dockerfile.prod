@@ -2,17 +2,30 @@
 FROM node:20-slim AS builder
 
 WORKDIR /app
+
+# Install dependencies
 COPY package*.json ./
 RUN npm install
+
+# Copy app source and environment file
 COPY . .
+COPY .env .env
+
+# Build the Vite app (Vite will automatically load .env.production)
 RUN npm run build
 
 # Stage 2: Serve the built files
 FROM node:20-slim
 
 WORKDIR /app
+
+# Install lightweight HTTP server
 RUN npm install -g serve
+
+# Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 4173
+
+# Serve the built app
 CMD ["serve", "-s", "dist", "-l", "4173"]
