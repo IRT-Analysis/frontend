@@ -65,7 +65,7 @@ export type ReviewQuestion = {
   questionNo: number
   id: string
   violatedIndices: {
-    name: RelevantKeys
+    name: RelevantKeys | 'infit' | 'outfit' | 'reliability'
     value: ValueType<RelevantKeys>
     message: string
   }[]
