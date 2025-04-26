@@ -4,6 +4,7 @@ import { ItemData } from '@/types/response_data.type'
 import { TableData } from '@/types/table_data.type'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { RaschQuestionAnalysisType } from '@/schema/analysis.schema'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -44,7 +45,9 @@ export function formatBytes(
   }`
 }
 
-export const getStatsLabel = (name: RelevantKeys) => {
+export const getStatsLabel = (
+  name: RelevantKeys | 'infit' | 'outfit' | 'reliability'
+) => {
   return name === 'difficulty'
     ? 'Độ khó'
     : name === 'discrimination'
@@ -87,4 +90,43 @@ export const buildPath = (
     full = full.replace(`:${key}`, value)
   }
   return full
+}
+
+export function getViolatedIndices(item: RaschQuestionAnalysisType): {
+  name: RelevantKeys | 'infit' | 'outfit' | 'reliability'
+  value: number
+  message: string
+}[] {
+  const violated: {
+    name: RelevantKeys | 'infit' | 'outfit' | 'reliability'
+    value: number
+    message: string
+  }[] = []
+
+  if (item.infit < 0.7 || item.infit > 1.3) {
+    violated.push({
+      name: 'infit',
+      value: item.infit,
+      message: 'Giá trị infit nằm ngoài khoảng [0.7–1.3], cần xem xét.',
+    })
+  }
+
+  if (item.outfit < 0.7 || item.outfit > 1.3) {
+    violated.push({
+      name: 'outfit',
+      value: item.outfit,
+      message: 'Giá trị outfit nằm ngoài khoảng [0.7–1.3], cần xem xét.',
+    })
+  }
+
+  if (item.reliability < 0.6) {
+    violated.push({
+      name: 'reliability',
+      value: item.reliability,
+      message:
+        'Độ tin cậy thấp dưới 0.6, cho thấy tính ổn định thấp của câu hỏi.',
+    })
+  }
+
+  return violated
 }
