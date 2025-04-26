@@ -1,6 +1,7 @@
 import { useGetProfileQuery } from '@/queries/useAccount'
 import { authRoutes } from '@/routes'
 import { UserType } from '@/schema/account.schema'
+import { AnalyzeType } from '@/types/ctt-analysis.type'
 import {
   createContext,
   Dispatch,
@@ -15,6 +16,7 @@ type UserStateType = Pick<UserType, 'email' | 'name' | 'id'>
 type AnalysisStateType = {
   projectId: string
   examId?: string[]
+  type: AnalyzeType | null
 }
 
 interface State {

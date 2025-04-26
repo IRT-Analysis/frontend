@@ -43,6 +43,7 @@ import {
 import { ChangeEvent, memo, ReactNode, useState } from 'react'
 type CollapsibleRowProps<T> = {
   row: Row<T>
+  onClick?: () => void
   isSelected: boolean
   collapsibleContent?: (_row: Row<T>, isDirty: boolean) => ReactNode
 }
@@ -51,12 +52,13 @@ function CollapsibleRow<T>({
   row,
   isSelected,
   collapsibleContent,
+  onClick,
 }: CollapsibleRowProps<T>) {
   const [isDirty, setIsDirty] = useState(false)
   return (
     <Collapsible onOpenChange={() => setIsDirty(true)} asChild>
       <>
-        <TableRow data-state={isSelected && 'selected'}>
+        <TableRow onClick={onClick} data-state={isSelected && 'selected'}>
           {row.getVisibleCells().map((cell) => (
             <TableCell key={cell.id}>
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -79,11 +81,13 @@ export function ReusableTable<T>({
   data,
   collapsibleContent,
   isPending,
+  onClick,
 }: {
   searchBy?: (keyof T)[]
   columns: ColumnDef<T>[]
   data: T[]
   isPending?: boolean
+  onClick?: (row: T) => void
   collapsibleContent?: (_row: Row<T>, isDirty: boolean) => JSX.Element
 }) {
   const [sorting, setSorting] = useState<SortingState>([])
@@ -132,7 +136,7 @@ export function ReusableTable<T>({
         <div className="flex items-center py-4">
           {searchBy && (
             <Input
-              placeholder={`Search by ${searchBy.join(', ')}...`}
+              placeholder={`Tìm kiếm bằng ${searchBy.join(', ')}...`}
               value={searchBy
                 .map(
                   (key) =>
@@ -146,7 +150,7 @@ export function ReusableTable<T>({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown />
+                Cột <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -198,16 +202,19 @@ export function ReusableTable<T>({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table
-                  .getRowModel()
-                  .rows.map((row) => (
-                    <MemoizedCollapsibleRow<T>
-                      key={row.id}
-                      row={row}
-                      isSelected={row.getIsSelected()}
-                      collapsibleContent={collapsibleContent}
-                    />
-                  ))
+                table.getRowModel().rows.map((row) => (
+                  <MemoizedCollapsibleRow<T>
+                    key={row.id}
+                    row={row}
+                    isSelected={row.getIsSelected()}
+                    collapsibleContent={collapsibleContent}
+                    onClick={() => {
+                      if (onClick) {
+                        onClick(row.original)
+                      }
+                    }}
+                  />
+                ))
               ) : (
                 <TableRow>
                   <TableCell
