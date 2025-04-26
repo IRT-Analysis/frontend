@@ -117,7 +117,11 @@ export function CreateAnalysisForm({ type }: { type: AnalyzeType }) {
 
         dispatch({
           type: 'ANALYZE',
-          payload: { examId: res.data.examId, projectId: res.data.projectId },
+          payload: {
+            examId: res.data.examId,
+            projectId: res.data.projectId,
+            type,
+          },
         })
         navigate(`/analysis/${type}/${res.data.projectId}`)
         toast(res.message)

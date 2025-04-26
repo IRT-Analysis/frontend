@@ -19,13 +19,15 @@ import {
 import { MENU_ITEM } from '@/constants'
 import { ChevronDown, LogOut } from 'lucide-react'
 import { useEffect } from 'react'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import { Logo } from '@/components/ui/logo'
 import { useGlobal } from '@/context/global-context'
 import { DarkModeToggle } from './dark-mode-toggle'
 import { AnalyzeType } from '@/types/ctt-analysis.type'
+import { useSignOutMutation } from '@/queries/useAuth'
+import { Button } from '@/components/ui/button'
 
 type Params = {
   projectId: string
@@ -39,18 +41,39 @@ export function AppSidebar() {
     dispatch,
   } = useGlobal()
 
+  const navigate = useNavigate()
+
   const { active, setActive } = useSidebar()
+  const signOutMutation = useSignOutMutation()
 
   useEffect(() => {
-    if (projectIdParam && !analysis?.projectId) {
+    if (projectIdParam && !analysis?.projectId && analysisType) {
       dispatch({
         type: 'ANALYZE',
-        payload: { ...analysis, projectId: projectIdParam },
+        payload: {
+          ...analysis,
+          projectId: projectIdParam,
+          type: analysisType,
+        },
       })
     }
-  }, [projectIdParam, analysis, dispatch])
+  }, [projectIdParam, analysis, analysisType, dispatch])
 
   const projectId = analysis?.projectId || projectIdParam
+
+  const signOutHandler = () => {
+    if (signOutMutation.isPending) return
+    signOutMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast('Đăng xuất thành công!')
+        dispatch({ type: 'SIGN_OUT' })
+        navigate('/signin')
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    })
+  }
 
   return (
     <Sidebar>
@@ -73,7 +96,10 @@ export function AppSidebar() {
                           to={
                             item.url.includes(':projectId')
                               ? item.url
-                                  .replace(':analysisType', analysisType || '')
+                                  .replace(
+                                    ':analysisType',
+                                    analysisType || analysis?.type || ''
+                                  )
                                   .replace(':projectId', projectId || '')
                               : item.url
                           }
@@ -111,7 +137,7 @@ export function AppSidebar() {
                                   ? item.url
                                       .replace(
                                         ':analysisType',
-                                        analysisType || ''
+                                        analysisType || analysis?.type || ''
                                       )
                                       .replace(':projectId', projectId || '') +
                                     subItem.url
@@ -146,7 +172,10 @@ export function AppSidebar() {
                   to={
                     item.url.includes(':projectId')
                       ? item.url
-                          .replace(':analysisType', analysisType || '')
+                          .replace(
+                            ':analysisType',
+                            analysisType || analysis?.type || ''
+                          )
                           .replace(':projectId', projectId || '')
                       : item.url
                   }
@@ -178,33 +207,15 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        {/* <NavLink
-          to="/settings"
-          className={({ isActive }) => {
-            if (isActive) setActiveLink('settings')
-            return 'w-full'
-          }}
-        >
-          <SidebarMenuButton
-            className="h-[48px] px-[16px] leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold font-semibold data-[active=true]:text-primary-600-base"
-            asChild
-            isActive={activeLink === 'settings'}
-          >
-            <div>
-              <Settings />
-              <span>Settings</span>
-            </div>
-          </SidebarMenuButton>
-        </NavLink> */}
         <div className="flex items-center">
           <SidebarMenuButton
             className="h-[48px] px-[16px] font-semibold leading-[160%] text-[#64748B] hover:text-[#64748B] active:text-primary-600-base data-[active=true]:font-bold data-[active=true]:text-primary-600-base"
             asChild
           >
-            <div onClick={() => dispatch({ type: 'SIGN_OUT' })}>
+            <Button onClick={signOutHandler}>
               <LogOut />
-              <span>Sign out</span>
-            </div>
+              <span>Đăng xuất</span>
+            </Button>
           </SidebarMenuButton>
           <div>
             <DarkModeToggle />

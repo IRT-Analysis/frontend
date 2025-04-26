@@ -1,7 +1,6 @@
 import HoverCardText from '@/components/reuseable-hover-card'
 import { Badge, BadgeProps } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { CollapsibleTrigger } from '@/components/ui/collapsible'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +10,8 @@ import {
 import { QuestionAnalysisType } from '@/schema/analysis.schema'
 import { ColumnDef } from '@tanstack/react-table'
 import { MathJax, MathJaxContext } from 'better-react-mathjax'
-import { ArrowUpDown, ChevronDown } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
+import { ActionsCell } from './action-cell'
 
 export const columns: ColumnDef<
   QuestionAnalysisType & { questionNumber: number }
@@ -523,18 +523,109 @@ export const columns: ColumnDef<
     },
   },
   {
+    accessorKey: 'item_assessment',
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-center">
+          <HoverCardText
+            content={
+              <div className="w-[300px]">
+                <p>
+                  Đánh giá tổng thể về chất lượng câu hỏi dựa trên độ khó và độ
+                  phân cách:
+                </p>
+                <ul className="mt-2 list-disc pl-4 text-sm">
+                  <li>
+                    <strong>Phù hợp:</strong> Độ khó từ 0.3 đến 0.7 và độ phân
+                    cách ≥ 0.3
+                  </li>
+                  <li>
+                    <strong>Cần xem xét:</strong> Độ khó từ 0.25 đến 0.75 và độ
+                    phân cách ≥ 0.1
+                  </li>
+                  <li>
+                    <strong>Không phù hợp:</strong> Độ khó &lt; 0.25 hoặc &gt;
+                    0.75 hoặc độ phân cách &lt; 0.1
+                  </li>
+                </ul>
+              </div>
+            }
+          >
+            <Button
+              variant="ghost"
+              className="relative flex items-center justify-center"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === 'asc')
+              }
+            >
+              Đánh giá
+              <span className="absolute -right-2 flex items-center">
+                <ArrowUpDown />
+              </span>
+            </Button>
+          </HoverCardText>
+        </div>
+      )
+    },
+    size: 250,
+    cell: ({ row }) => {
+      const difficulty = row.original.question_analysis.difficulty_index
+      const discrimination = row.original.question_analysis.discrimination_index
+
+      let category: string
+      let variant: BadgeProps['variant']
+      let tooltip: string
+
+      if (difficulty >= 0.3 && difficulty <= 0.7 && discrimination >= 0.3) {
+        category = 'Phù hợp'
+        variant = 'medium'
+        tooltip =
+          'Câu hỏi có độ khó và độ phân cách phù hợp, rất tốt để đánh giá năng lực thí sinh.'
+      } else if (
+        difficulty >= 0.25 &&
+        difficulty <= 0.75 &&
+        discrimination >= 0.1
+      ) {
+        category = 'Cần xem xét'
+        variant = 'hard'
+        tooltip =
+          'Câu hỏi có thể sử dụng được nhưng cần xem xét cải thiện để tăng hiệu quả đánh giá.'
+      } else {
+        category = 'Không phù hợp'
+        variant = 'veryHard'
+        tooltip =
+          'Câu hỏi có độ khó quá cao/thấp hoặc độ phân cách kém, không hiệu quả trong việc đánh giá năng lực thí sinh.'
+      }
+
+      return (
+        <HoverCardText
+          content={<div className="w-[300px]">{tooltip}</div>}
+          className="flex items-center justify-center"
+        >
+          <Badge variant={variant}>{category}</Badge>
+        </HoverCardText>
+      )
+    },
+  },
+  // {
+  //   id: 'actions',
+  //   enableHiding: false,
+  //   size: 50,
+  //   cell: () => {
+  //     return (
+  //       <CollapsibleTrigger asChild>
+  //         <Button variant="ghost" size="sm" className="w-9 p-0">
+  //           <ChevronDown className="h-4 w-4" />
+  //           <span className="sr-only">Toggle</span>
+  //         </Button>
+  //       </CollapsibleTrigger>
+  //     )
+  //   },
+  // },
+  {
     id: 'actions',
     enableHiding: false,
     size: 50,
-    cell: () => {
-      return (
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" className="w-9 p-0">
-            <ChevronDown className="h-4 w-4" />
-            <span className="sr-only">Toggle</span>
-          </Button>
-        </CollapsibleTrigger>
-      )
-    },
+    cell: ({ row }) => <ActionsCell row={row} />,
   },
 ]

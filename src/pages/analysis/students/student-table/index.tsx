@@ -41,7 +41,7 @@ const StudentTable = () => {
     return [...groups].sort((a, b) => b - a)
   }
 
-  const groupOptions = getGroupOptions(data?.data ?? [])
+  const groupOptions = getGroupOptions(data?.data.students ?? [])
 
   return (
     <div className="p-5">
@@ -52,7 +52,7 @@ const StudentTable = () => {
           analysisType!,
           groupOptions
         )}
-        data={data?.data ?? []}
+        data={data?.data.students ?? []}
         isPending={isLoading}
         searchBy={['student_id']}
       />
@@ -65,7 +65,12 @@ const StudentTable = () => {
       <KidmapDialog
         isOpen={isKidmapDialogOpen}
         onClose={() => setIsKidmapDialogOpen(false)}
-        studentId={selectedStudent}
+        student={
+          data?.data.students.find(
+            (s) => s.student_exam_id === selectedStudent
+          ) ?? null
+        }
+        questions={data?.data.questions ?? []}
       />
     </div>
   )

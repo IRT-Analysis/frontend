@@ -12,60 +12,48 @@ import {
   KidmapData,
   KidmapVisualization,
 } from '@/components/kidmap/kidmap-visualization'
-
-const getMockKidmapData = (studentId: string) => {
-  const studentAbility =
-    {
-      S12345: 0.2448,
-      S12346: 1.2,
-      S12347: 1.8,
-      S12348: -0.5,
-      S12349: 0.8,
-    }[studentId] || 0.5
-
-  const items = Array.from({ length: 60 }, (_, i) => {
-    const id = i + 1
-    const difficulty = Math.random() * 6 - 3
-
-    const probabilityCorrect =
-      1 / (1 + Math.exp(-(studentAbility - difficulty)))
-    const correct = Math.random() < probabilityCorrect
-
-    return {
-      id,
-      difficulty,
-      correct,
-    }
-  })
-
-  return {
-    studentId,
-    ability: studentAbility,
-    items,
-  }
-}
+import { StudentExam } from '@/schema/analysis.schema'
 
 interface KidmapDialogProps {
   isOpen: boolean
   onClose: () => void
-  studentId: string | null
+  student: StudentExam | null
+  questions: { question_id: string; logit: number }[]
 }
 
 export function KidmapDialog({
   isOpen,
   onClose,
-  studentId,
+  student,
+  questions,
 }: KidmapDialogProps) {
   const [kidmapData, setKidmapData] = useState<KidmapData | null>(null)
 
   useEffect(() => {
-    if (studentId) {
-      const data = getMockKidmapData(studentId)
-      setKidmapData(data)
-    }
-  }, [studentId])
+    if (student && questions.length > 0) {
+      const studentAbility = student.ability!
 
-  if (!kidmapData && studentId) {
+      const items = questions.map((q, index) => {
+        const probabilityCorrect =
+          1 / (1 + Math.exp(-(studentAbility - q.logit)))
+        const correct = Math.random() < probabilityCorrect
+
+        return {
+          id: index + 1, // Question number (incremental 1, 2, 3...)
+          difficulty: q.logit,
+          correct,
+        }
+      })
+
+      setKidmapData({
+        studentId: student.student_id,
+        ability: studentAbility,
+        items,
+      })
+    }
+  }, [student, questions])
+
+  if (!kidmapData && student) {
     return null
   }
 

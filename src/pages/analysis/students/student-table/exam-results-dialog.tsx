@@ -154,7 +154,7 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
                                 >
                                   {questionNumber}
                                 </div>
-                                <div className="max-w-md truncate">
+                                <div className="max-w-2xl truncate">
                                   {question.question_content}
                                 </div>
                               </div>

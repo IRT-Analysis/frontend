@@ -62,6 +62,7 @@ type ValueType<Key extends RelevantKeys> =
   CTTAnalysisResult[keyof CTTAnalysisResult][Key]
 
 export type ReviewQuestion = {
+  questionNo: number
   id: string
   violatedIndices: {
     name: RelevantKeys

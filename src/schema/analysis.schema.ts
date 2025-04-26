@@ -155,7 +155,6 @@ export type SupabaseStudentExamRaw = Omit<StudentExam, 'student_examId'> & {
 
 export type StudentExam = {
   first_name: string
-  middle_name: string
   last_name: string
   student_exam_id: string
   total_score: number | null
@@ -169,7 +168,15 @@ export type GetStudentsAnalysisQueryType = {
   projectId: string
 }
 
-export type GetStudentsAnalysisResType = ApiResponse<StudentExam[]>
+export type GetStudentsAnalysisType = {
+  students: StudentExam[]
+  questions: {
+    question_id: string
+    logit: number
+  }[]
+}
+
+export type GetStudentsAnalysisResType = ApiResponse<GetStudentsAnalysisType>
 
 // ----------------------------------------------
 

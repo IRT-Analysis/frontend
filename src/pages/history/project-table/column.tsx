@@ -13,7 +13,6 @@ import { AnalyzeType } from '@/types/ctt-analysis.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
-import { Link } from 'react-router-dom'
 
 export const columns: ColumnDef<ProjectType>[] = [
   {
@@ -109,7 +108,7 @@ export const columns: ColumnDef<ProjectType>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const { id, type } = row.original
+      const { id } = row.original
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -124,9 +123,9 @@ export const columns: ColumnDef<ProjectType>[] = [
               Sao chép ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            {/* <DropdownMenuItem>
               <Link to={`/analysis/${type}/${id}`}>Xem phân tích chi tiết</Link>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       )

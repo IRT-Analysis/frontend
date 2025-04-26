@@ -16,16 +16,19 @@ import { AnalyzeType } from '@/types/ctt-analysis.type'
 const CardData = [
   {
     title: AnalyzeType.CTT,
+    comingSoon: false,
     content:
       'Phân tích dựa trên lý thuyết trắc nghiệm cổ điển, tập trung vào đánh giá độ khó và độ phân cách của câu hỏi để đưa ra phân tích hiệu quả.',
   },
   {
     title: AnalyzeType.RASCH,
+    comingSoon: false,
     content:
       'Phân tích theo mô hình Rasch, đơn giản hơn IRT, chỉ xét mối quan hệ giữa năng lực và độ khó, không có các yếu tố đoán mò hay độ phân cách.',
   },
   {
     title: AnalyzeType.IRT,
+    comingSoon: true,
     content:
       'Phân tích dựa trên lý thuyết trắc nghiệm hiện đại, tập trung vào đánh giá mối quan hệ giữa năng lực thí sinh và độ khó của câu hỏi.',
   },
@@ -81,12 +84,21 @@ const DashBoard = () => {
                 </CardContent>
                 <CardFooter>
                   <DialogTrigger asChild>
-                    <Button
-                      className="rounded-3 w-full bg-primary-600-base"
-                      onClick={() => setSelectedType(card.title)}
-                    >
-                      Phân tích
-                    </Button>
+                    {card.comingSoon ? (
+                      <Button
+                        className="rounded-3 w-full bg-primary-600-base"
+                        disabled={card.comingSoon}
+                      >
+                        Sắp ra mắt
+                      </Button>
+                    ) : (
+                      <Button
+                        className="rounded-3 w-full bg-primary-600-base"
+                        onClick={() => setSelectedType(card.title)}
+                      >
+                        Phân tích
+                      </Button>
+                    )}
                   </DialogTrigger>
                 </CardFooter>
               </Card>

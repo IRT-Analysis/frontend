@@ -26,7 +26,7 @@ const IconInputLead: React.FC<IconInputLeadProps> = ({
       </span>
       <input
         {...props}
-        className="h-15 w-full rounded-md border py-2 pl-10 pr-4 text-background focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="h-15 w-full rounded-md border py-2 pl-10 pr-4 text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
         required
       />
     </div>
