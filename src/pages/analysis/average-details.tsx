@@ -1,12 +1,24 @@
 import HoverCardIcon from '@/components/reusable-hover-with-icon'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import { CTTGeneralDetails } from '@/types/ctt-analysis.type'
 import { MathJax, MathJaxContext } from 'better-react-mathjax'
 import { Blocks, ChartNoAxesColumn, GraduationCap, Split } from 'lucide-react'
 import { useState } from 'react'
 
-const OverallStats = [
-  {
+type OverallStatsType = {
+  icon: React.ReactNode
+  title: string
+  tootlTip: React.ReactNode
+  name: keyof CTTGeneralDetails['average']
+  bgColor: string
+}
+
+const OverallStats: Record<
+  keyof CTTGeneralDetails['average'],
+  OverallStatsType
+> = {
+  average_score: {
     icon: <GraduationCap color="#F6A723" />,
     title: 'Điểm trung bình',
     tootlTip:
@@ -14,7 +26,31 @@ const OverallStats = [
     name: 'average_score',
     bgColor: '#FFFBEB',
   },
-  {
+  average_infit: {
+    icon: <ChartNoAxesColumn color="#4ADE80" />,
+    title: 'Trung bình Infit',
+    tootlTip:
+      'Giá trị Infit trung bình trên toàn bộ câu hỏi. Infit đo mức độ phù hợp của dữ liệu với mô hình — giá trị gần 1 là lý tưởng.',
+    name: 'average_infit',
+    bgColor: '#ECFDF5',
+  },
+  average_outfit: {
+    icon: <ChartNoAxesColumn color="#F87171" />,
+    title: 'Trung bình Outfit',
+    tootlTip:
+      'Giá trị Outfit trung bình trên toàn bộ câu hỏi. Outfit nhạy cảm với giá trị ngoại lai — giá trị gần 1 là lý tưởng.',
+    name: 'average_outfit',
+    bgColor: '#FEF2F2',
+  },
+  average_reliability: {
+    icon: <ChartNoAxesColumn color="#A78BFA" />,
+    title: 'Độ tin cậy trung bình',
+    tootlTip:
+      'Chỉ số độ tin cậy trung bình phản ánh mức độ nhất quán của kết quả đánh giá giữa các câu hỏi trong bài kiểm tra.',
+    name: 'average_reliability',
+    bgColor: '#F5F3FF',
+  },
+  average_difficulty: {
     icon: <Blocks color="#007AFF" />,
     title: 'Độ khó',
     tootlTip: (
@@ -41,7 +77,7 @@ const OverallStats = [
     name: 'average_difficulty',
     bgColor: '#EFF6FF',
   },
-  {
+  average_discrimination: {
     icon: <Split color="#ED4F9D" />,
     name: 'average_discrimination',
     tootlTip: (
@@ -68,7 +104,7 @@ const OverallStats = [
     title: 'Độ phân cách',
     bgColor: '#FDF2F8',
   },
-  {
+  average_rpbis: {
     icon: <ChartNoAxesColumn color="#38BDF8" />,
     title: 'Hệ số R_PBIS',
     tootlTip: (
@@ -123,7 +159,7 @@ const OverallStats = [
     name: 'average_rpbis',
     bgColor: '#F8FAFC',
   },
-] as const
+}
 
 const AverageDetails = ({
   average,
@@ -142,43 +178,50 @@ const AverageDetails = ({
     }
     return value.toFixed(3)
   }
+
   return (
     <>
-      {OverallStats.map((stat, index) => (
-        <div
-          key={index}
-          className="col-span-3 flex items-center justify-center gap-5 rounded-lg border border-neutral-200 bg-background py-6 text-neutral-950 shadow dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50"
-        >
+      {Object.entries(average).map(([key, value]: any, index: number) => {
+        const stat = OverallStats[key as keyof CTTGeneralDetails['average']]
+        return (
           <div
-            className={`flex size-[48px] items-center justify-center rounded-lg`}
-            style={{ backgroundColor: stat.bgColor }}
+            key={index}
+            className={cn(
+              'flex items-center justify-center gap-5 rounded-lg border border-neutral-200 bg-background py-6 text-neutral-950 shadow dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50',
+              Object.entries(average).length === 4 ? 'col-span-3' : 'col-span-4'
+            )}
           >
-            {stat.icon}
-          </div>
-          <div className="flex flex-col gap-1">
-            <div className="flex gap-1 text-[24px] font-bold leading-[1.25] tracking-[0.2px]">
-              {calculateScore(average[stat.name], stat.name)}
-              {stat.name === 'average_score' && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2 text-xs"
-                  onClick={() => setShowOutOfTen(!showOutOfTen)}
-                >
-                  {showOutOfTen ? '/ 10' : `/ ${total_questions}`}
-                </Button>
-              )}
-              {/* <HoverCardIcon className="">{stat.tootlTip}</HoverCardIcon> */}
+            <div
+              className={`flex size-[48px] items-center justify-center rounded-lg`}
+              style={{ backgroundColor: stat.bgColor }}
+            >
+              {stat.icon}
             </div>
-            <div className="flex gap-1 text-[14px] font-semibold leading-[1.6] tracking-[0.2px] text-muted-foreground">
-              {stat.title}
-              <HoverCardIcon size={11} className="w-fit max-w-[500px]">
-                {stat.tootlTip}
-              </HoverCardIcon>
+            <div className="flex flex-col gap-1">
+              <div className="flex gap-1 text-[24px] font-bold leading-[1.25] tracking-[0.2px]">
+                {calculateScore(value ?? 0, stat.name)}
+                {stat.name === 'average_score' && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2 text-xs"
+                    onClick={() => setShowOutOfTen(!showOutOfTen)}
+                  >
+                    {showOutOfTen ? '/ 10' : `/ ${total_questions}`}
+                  </Button>
+                )}
+                {/* <HoverCardIcon className="">{stat.tootlTip}</HoverCardIcon> */}
+              </div>
+              <div className="flex gap-1 text-[14px] font-semibold leading-[1.6] tracking-[0.2px] text-muted-foreground">
+                {stat.title}
+                <HoverCardIcon size={11} className="w-fit max-w-[500px]">
+                  {stat.tootlTip}
+                </HoverCardIcon>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </>
   )
 }

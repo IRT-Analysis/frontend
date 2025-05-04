@@ -59,6 +59,9 @@ export type GetGeneralDetailsResType = ApiResponse<{
   avg_discrimination_index: number
   avg_rpbis: number
   avg_difficulty_index: number
+  avg_infit: number
+  avg_outfit: number
+  avg_reliability: number
   cronbach_alpha: number
   avg_score: number
   id: string
@@ -76,6 +79,7 @@ export type GetHistogramResType = ApiResponse<{
   difficulty: Record<string, number>[]
   discrimination: Record<string, number>[]
   r_pbis: Record<string, number>[]
+  infit_outfit: { questionNo: number; infit: number; outfit: number }[]
 }>
 
 // ----------------------------------------------

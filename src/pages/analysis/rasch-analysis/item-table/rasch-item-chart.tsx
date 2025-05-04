@@ -1,38 +1,14 @@
 import { RaschQuestionAnalysisType } from '@/schema/analysis.schema'
+import { useRef, useState } from 'react'
 import {
   Line,
   LineChart,
   ResponsiveContainer,
-  Tooltip,
-  TooltipProps,
+  // Tooltip,
+  // TooltipProps,
   XAxis,
   YAxis,
 } from 'recharts'
-
-import {
-  NameType,
-  ValueType,
-} from 'recharts/types/component/DefaultTooltipContent'
-
-const CustomTooltip = ({
-  active,
-  payload,
-}: TooltipProps<ValueType, NameType>) => {
-  if (active && payload && payload.length) {
-    const { ability, probability } = payload[0].payload
-    return (
-      <div className="rounded border bg-white px-3 py-2 text-sm text-gray-800 shadow-md">
-        <p>
-          Năng lực: <strong>{ability.toFixed(2)}</strong>
-        </p>
-        <p>
-          Xác suất trả lời đúng: <strong>{probability.toFixed(4)}</strong>
-        </p>
-      </div>
-    )
-  }
-  return null
-}
 
 // ICC (Item Characteristic Curve) data generator
 function generateICCData(logit: number) {
@@ -48,9 +24,43 @@ function generateICCData(logit: number) {
 
 export function RaschItemChart({ item }: { item: RaschQuestionAnalysisType }) {
   const iccData = generateICCData(item.logit)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [hoverData, setHoverData] = useState<{
+    x: number
+    y: number
+    ability: number
+    probability: number
+  } | null>(null)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const usableWidth = rect.width - 50 // estimate padding
+    const ability = (x / usableWidth) * (4 - -4) + -4
+
+    const closest = iccData.reduce((prev, curr) =>
+      Math.abs(curr.ability - ability) < Math.abs(prev.ability - ability)
+        ? curr
+        : prev
+    )
+
+    setHoverData({
+      x,
+      y,
+      ability,
+      probability: closest.probability,
+    })
+  }
 
   return (
-    <div className="h-[300px] w-full">
+    <div
+      ref={containerRef}
+      className="relative h-[300px] w-full"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => setHoverData(null)}
+    >
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={iccData}
@@ -73,7 +83,6 @@ export function RaschItemChart({ item }: { item: RaschQuestionAnalysisType }) {
               dy: -60, // this centers it vertically; tweak if needed
             }}
           />
-          <Tooltip content={<CustomTooltip />} />
           <Line
             type="monotone"
             dataKey="probability"
@@ -107,6 +116,25 @@ export function RaschItemChart({ item }: { item: RaschQuestionAnalysisType }) {
           />
         </LineChart>
       </ResponsiveContainer>
+      {hoverData && (
+        <>
+          <div
+            className="absolute bottom-[30px] top-[20px] w-[1px] bg-gray-400/70"
+            style={{ left: hoverData.x }}
+          />
+          <div
+            className="absolute z-10 rounded border bg-white px-3 py-2 text-sm text-gray-800 shadow-md"
+            style={{ left: hoverData.x - 180, top: hoverData.y + 10 }}
+          >
+            <p>
+              Năng lực: <strong>{hoverData.ability.toFixed(2)}</strong>
+            </p>
+            <p>
+              Xác suất đúng: <strong>{hoverData.probability.toFixed(4)}</strong>
+            </p>
+          </div>
+        </>
+      )}
     </div>
   )
 }

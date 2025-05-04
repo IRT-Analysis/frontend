@@ -58,7 +58,11 @@ function CollapsibleRow<T>({
   return (
     <Collapsible onOpenChange={() => setIsDirty(true)} asChild>
       <>
-        <TableRow onClick={onClick} data-state={isSelected && 'selected'}>
+        <TableRow
+          onClick={onClick}
+          className="hover:cursor-pointer"
+          data-state={isSelected && 'selected'}
+        >
           {row.getVisibleCells().map((cell) => (
             <TableCell key={cell.id}>
               {flexRender(cell.column.columnDef.cell, cell.getContext())}

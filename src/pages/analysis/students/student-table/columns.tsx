@@ -218,7 +218,7 @@ export const getStudentTableColumns = (
         <div className="flex items-center justify-center">
           <HoverCard>
             <HoverCardTrigger>
-              <span>Khả năng</span>
+              <span>Năng lực</span>
             </HoverCardTrigger>
             <HoverCardContent className="w-[300px]">
               <MathJaxContext>
@@ -270,14 +270,16 @@ export const getStudentTableColumns = (
             <Eye className="mr-1 h-4 w-4" />
             Bài làm
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleViewKidmap(student.student_exam_id)}
-            className="h-8 px-2"
-          >
-            <BarChart2 className="mr-1 h-4 w-4" /> KIDMAP
-          </Button>
+          {type === AnalyzeType.RASCH && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleViewKidmap(student.student_exam_id)}
+              className="h-8 px-2"
+            >
+              <BarChart2 className="mr-1 h-4 w-4" /> KIDMAP
+            </Button>
+          )}
         </div>
       )
     },
