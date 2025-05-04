@@ -120,10 +120,26 @@ export function BarLineChart({
   }, [data, type])
 
   if (isLoading) {
-    return <Skeleton className="h-[20px] w-[100px] rounded-full" />
+    return (
+      <Card className="h-full">
+        <CardHeader>
+          <CardTitle className="flex gap-1 text-[16px] font-bold leading-[1.5] tracking-[0.2px]">
+            {name}
+            <HoverCardIcon size={12}>{tootlTip}</HoverCardIcon>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="h-[210px]">
+          <Skeleton className="mt-4 h-[20px] w-[100px] rounded-full" />
+          <Skeleton className="mt-4 h-[20px] w-[200px] rounded-full" />
+          <Skeleton className="mt-4 h-[20px] w-[100px] rounded-full" />
+          <Skeleton className="mt-4 h-[20px] w-[200px] rounded-full" />
+          <Skeleton className="mt-4 h-[20px] w-[100px] rounded-full" />
+        </CardContent>
+      </Card>
+    )
   } else {
     return (
-      <Card>
+      <Card className="h-full">
         <CardHeader>
           <CardTitle className="flex gap-1 text-[16px] font-bold leading-[1.5] tracking-[0.2px]">
             {name}
@@ -131,7 +147,7 @@ export function BarLineChart({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="h-[200px] w-full">
+          <ChartContainer config={chartConfig} className="h-[210px] w-full">
             <ComposedChart accessibilityLayer data={transformedArray}>
               <CartesianGrid vertical={false} />
               <XAxis

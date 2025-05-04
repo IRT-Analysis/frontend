@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dialog'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
 import { useGetStudentResultQuery } from '@/queries/useAnalyze'
 import {
   Check,
@@ -96,13 +97,7 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
                   viên: {examData.student_id})
                 </h3>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="text-sm text-muted-foreground">Điểm:</div>
-                <div className="text-2xl font-bold">{score}%</div>
-                <Progress className="h-2 w-24" value={score} />
-              </div>
             </div>
-
             <Card>
               <CardContent className="pt-6">
                 <div className="space-y-6">
@@ -114,7 +109,22 @@ const ExamResultsDialog = ({ isOpen, onClose, studentId }: Props) => {
                         hỏi
                       </p>
                     </div>
-                    <div className="text-3xl font-bold">{score}%</div>
+                    <div className="flex items-center gap-3">
+                      <div className="text-m text-muted-foreground">Điểm:</div>
+                      <div
+                        className={cn(
+                          'text-3xl font-bold',
+                          score >= 80
+                            ? 'text-green-600'
+                            : score >= 50
+                              ? 'text-primary-600-base'
+                              : 'text-red-500'
+                        )}
+                      >
+                        {score}%
+                      </div>
+                      <Progress className="h-2 w-28" value={score} />
+                    </div>
                   </div>
 
                   <div>

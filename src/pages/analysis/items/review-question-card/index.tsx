@@ -25,7 +25,7 @@ export default function ReviewQuestionsCard({
           Câu hỏi cần xem xét
         </CardTitle>
       </CardHeader>
-      <CardContent className="grid gap-3">
+      <CardContent className="grid max-h-96 gap-3 overflow-y-auto">
         {questions.map((question) => (
           <div
             key={question.questionNo}

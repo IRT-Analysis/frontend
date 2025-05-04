@@ -101,7 +101,7 @@ export function CustomAreaChart({
               <Line
                 key={option}
                 dataKey={option}
-                type="natural"
+                type="linear"
                 stroke={chartConfig[option as AnswerType].color}
                 strokeDasharray={option == correct_option ? '' : '5 5'} // Dotted line for differentiation
                 strokeWidth={option == correct_option ? 2 : 1.5}

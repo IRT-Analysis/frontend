@@ -26,12 +26,12 @@ const CardData = [
     content:
       'Phân tích theo mô hình Rasch, đơn giản hơn IRT, chỉ xét mối quan hệ giữa năng lực và độ khó, không có các yếu tố đoán mò hay độ phân cách.',
   },
-  {
-    title: AnalyzeType.IRT,
-    comingSoon: true,
-    content:
-      'Phân tích dựa trên lý thuyết trắc nghiệm hiện đại, tập trung vào đánh giá mối quan hệ giữa năng lực thí sinh và độ khó của câu hỏi.',
-  },
+  // {
+  //   title: AnalyzeType.IRT,
+  //   comingSoon: true,
+  //   content:
+  //     'Phân tích dựa trên lý thuyết trắc nghiệm hiện đại, tập trung vào đánh giá mối quan hệ giữa năng lực thí sinh và độ khó của câu hỏi.',
+  // },
 ] as const
 
 const DashBoard = () => {

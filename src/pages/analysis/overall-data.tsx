@@ -1,7 +1,7 @@
 import HoverCardIcon from '@/components/reusable-hover-with-icon'
 import { CTTGeneralDetails } from '@/types/ctt-analysis.type'
 import { MathJax, MathJaxContext } from 'better-react-mathjax'
-import { Ellipsis, NotebookText, SquareCheck, User } from 'lucide-react'
+import { NotebookText, SquareCheck, User } from 'lucide-react'
 
 const OverallDataItems = [
   {
@@ -31,7 +31,6 @@ const OverallData = ({ data }: { data: CTTGeneralDetails['general'] }) => {
         <h1 className="text-[16px] font-bold leading-[1.5] tracking-[0.2px]">
           Tổng quan
         </h1>
-        <Ellipsis />
       </div>
 
       <div className="flex flex-col items-center gap-1">
@@ -108,7 +107,7 @@ const OverallData = ({ data }: { data: CTTGeneralDetails['general'] }) => {
         {OverallDataItems.map((item, index) => (
           <div
             key={index}
-            className="flex flex-1 flex-col items-center gap-2 rounded-lg py-5 text-background"
+            className="flex flex-1 flex-col items-center gap-2 self-center rounded-lg py-5 text-background"
             style={{ backgroundColor: item.color }}
           >
             <div className="rounded-full border p-3">

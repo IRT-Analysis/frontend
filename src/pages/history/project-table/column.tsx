@@ -94,7 +94,7 @@ export const columns: ColumnDef<ProjectType>[] = [
       const variant = ({
         CTT: 'easy',
         Rasch: 'medium',
-        IRT: 'veryEasy',
+        // IRT: 'veryEasy',
       }[type as AnalyzeType] ?? 'outline') as BadgeProps['variant']
 
       return (

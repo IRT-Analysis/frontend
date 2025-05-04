@@ -49,7 +49,10 @@ export type AverageDetails = Readonly<{
   average_score: number
   average_discrimination: number
   average_difficulty: number
-  average_rpbis: number
+  average_rpbis?: number
+  average_infit?: number
+  average_outfit?: number
+  average_reliability?: number
 }>
 
 export type RelevantKeys = Extract<
@@ -76,5 +79,5 @@ export type AnswerType = keyof typeof Answers
 export enum AnalyzeType {
   RASCH = 'Rasch',
   CTT = 'CTT',
-  IRT = 'IRT',
+  // IRT = 'IRT',
 }
