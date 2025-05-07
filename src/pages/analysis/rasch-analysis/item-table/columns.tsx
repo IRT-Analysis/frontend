@@ -7,8 +7,15 @@ import { ColumnDef } from '@tanstack/react-table'
 import { MathJax, MathJaxContext } from 'better-react-mathjax'
 import { ArrowUpDown, Info } from 'lucide-react'
 import RaschItemDetailView from './rasch-detail-view'
-
-// Define the Rasch analysis data type
+import {
+  evaluateOutfit,
+  evaluateRaschItemFit,
+  evaluateReliabilityCategory,
+  FitLabelEnum,
+  FitLabelText,
+  getCategoryText,
+} from '@/lib/utils'
+import { FitStatCategoryText, ReliabilityCategoryText } from '@/constants'
 
 export const raschColumns: ColumnDef<
   RaschQuestionAnalysisType & { questionNumber: number }
@@ -163,38 +170,16 @@ export const raschColumns: ColumnDef<
     size: 120,
     cell: ({ row }) => {
       const infit = row.original.infit
-      let textColor = 'text-green-600'
-
-      if (infit < 0.7 || infit > 1.3) {
-        textColor = 'text-red-600'
-      } else if (infit < 0.8 || infit > 1.2) {
-        textColor = 'text-yellow-600'
-      }
+      const category = evaluateOutfit(infit)
+      const { evaluation, color } = getCategoryText(
+        category,
+        FitStatCategoryText
+      )
 
       return (
-        <HoverCardText
-          content={
-            <div className="w-[300px]">
-              {infit < 0.7 ? (
-                <span>
-                  Giá trị infit quá thấp, cho thấy câu hỏi có thể quá dễ đoán
-                  hoặc phụ thuộc vào câu hỏi khác.
-                </span>
-              ) : infit > 1.3 ? (
-                <span>
-                  Giá trị infit quá cao, cho thấy câu hỏi có thể không phù hợp
-                  với mô hình hoặc đo lường một khái niệm khác.
-                </span>
-              ) : (
-                <span>
-                  Giá trị infit nằm trong khoảng chấp nhận được (0.7-1.3).
-                </span>
-              )}
-            </div>
-          }
-        >
-          <div className={`text-center ${textColor} font-medium`}>
-            {infit.toFixed(4)}
+        <HoverCardText content={<div className="w-[300px]">{evaluation}</div>}>
+          <div className={`text-center font-medium`} style={{ color }}>
+            {infit.toFixed(6)}
           </div>
         </HoverCardText>
       )
@@ -237,38 +222,16 @@ export const raschColumns: ColumnDef<
     size: 120,
     cell: ({ row }) => {
       const outfit = row.original.outfit
-      let textColor = 'text-green-600'
-
-      if (outfit < 0.7 || outfit > 1.3) {
-        textColor = 'text-red-600'
-      } else if (outfit < 0.8 || outfit > 1.2) {
-        textColor = 'text-yellow-600'
-      }
+      const category = evaluateOutfit(outfit)
+      const { evaluation, color } = getCategoryText(
+        category,
+        FitStatCategoryText
+      )
 
       return (
-        <HoverCardText
-          content={
-            <div className="w-[300px]">
-              {outfit < 0.7 ? (
-                <span>
-                  Giá trị outfit quá thấp, cho thấy câu hỏi có thể quá dễ đoán
-                  hoặc phụ thuộc vào câu hỏi khác.
-                </span>
-              ) : outfit > 1.3 ? (
-                <span>
-                  Giá trị outfit quá cao, cho thấy câu hỏi có thể không phù hợp
-                  với mô hình hoặc có các phản hồi bất thường.
-                </span>
-              ) : (
-                <span>
-                  Giá trị outfit nằm trong khoảng chấp nhận được (0.7-1.3).
-                </span>
-              )}
-            </div>
-          }
-        >
-          <div className={`text-center ${textColor} font-medium`}>
-            {outfit.toFixed(4)}
+        <HoverCardText content={<div className="w-[300px]">{evaluation}</div>}>
+          <div className={`text-center font-medium`} style={{ color }}>
+            {outfit.toFixed(6)}
           </div>
         </HoverCardText>
       )
@@ -305,32 +268,15 @@ export const raschColumns: ColumnDef<
     size: 120,
     cell: ({ row }) => {
       const reliability = row.original.reliability
-      let textColor = 'text-green-600'
-
-      if (reliability < 0.6) {
-        textColor = 'text-red-600'
-      } else if (reliability < 0.7) {
-        textColor = 'text-yellow-600'
-      }
+      const category = evaluateReliabilityCategory(reliability)
+      const { evaluation, color } = getCategoryText(
+        category,
+        ReliabilityCategoryText
+      )
 
       return (
-        <HoverCardText
-          content={
-            <div className="w-[300px]">
-              {reliability < 0.6 ? (
-                <span>Độ tin cậy thấp, câu hỏi có thể không ổn định.</span>
-              ) : reliability < 0.7 ? (
-                <span>
-                  Độ tin cậy trung bình, có thể chấp nhận được trong một số
-                  trường hợp.
-                </span>
-              ) : (
-                <span>Độ tin cậy tốt, câu hỏi có tính ổn định cao.</span>
-              )}
-            </div>
-          }
-        >
-          <div className={`text-center ${textColor} font-medium`}>
+        <HoverCardText content={<div className="w-[300px]">{evaluation}</div>}>
+          <div className={`text-center font-medium`} style={{ color }}>
             {reliability.toFixed(6)}
           </div>
         </HoverCardText>
@@ -382,34 +328,46 @@ export const raschColumns: ColumnDef<
     cell: ({ row }) => {
       const infit = row.original.infit
       const outfit = row.original.outfit
+      const ability = row.original.logit ?? 0
+      const reliability = row.original.reliability ?? 0
 
-      let category: string
+      const { fit, violatedCategories } = evaluateRaschItemFit({
+        infit,
+        outfit,
+        ability,
+        reliability,
+      })
+
       let variant: BadgeProps['variant']
-      let tooltip: string
+      let tooltip = FitLabelText[fit].evaluation
 
-      if (infit < 0.7 || infit > 1.3 || outfit < 0.7 || outfit > 1.3) {
-        category = 'Không phù hợp'
-        variant = 'veryHard'
-        tooltip =
-          'Giá trị infit hoặc outfit nằm ngoài khoảng [0.7–1.3], cho thấy câu hỏi có thể không phù hợp với mô hình hoặc chứa phản hồi bất thường.'
-      } else if (infit < 0.8 || infit > 1.2 || outfit < 0.8 || outfit > 1.2) {
-        category = 'Cần xem xét'
-        variant = 'hard'
-        tooltip =
-          'Giá trị infit hoặc outfit nằm ngoài khoảng lý tưởng [0.8–1.2], cần xem xét kỹ hơn để đánh giá độ phù hợp.'
-      } else {
-        category = 'Phù hợp'
-        variant = 'medium'
-        tooltip =
-          'Giá trị infit và outfit nằm trong khoảng [0.8–1.2], cho thấy câu hỏi phù hợp với mô hình Rasch.'
+      switch (fit) {
+        case FitLabelEnum.Fit:
+          variant = 'medium'
+          break
+        case FitLabelEnum.Considerable:
+          variant = 'hard'
+          if (violatedCategories.length) {
+            tooltip += `\nChỉ số cần cải thiện: ${violatedCategories.join(', ')}.`
+          }
+          break
+        case FitLabelEnum.NotFit:
+        default:
+          variant = 'veryHard'
+          if (violatedCategories.length) {
+            tooltip += `\nChỉ số vi phạm: ${violatedCategories.join(', ')}.`
+          }
+          break
       }
 
       return (
         <HoverCardText
-          content={<div className="w-[300px]">{tooltip}</div>}
+          content={
+            <div className="w-[300px] whitespace-pre-line">{tooltip}</div>
+          }
           className="flex justify-center"
         >
-          <Badge variant={variant}>{category}</Badge>
+          <Badge variant={variant}>{FitLabelText[fit].label}</Badge>
         </HoverCardText>
       )
     },

@@ -59,6 +59,7 @@ const RaschAnalysis = () => {
       discrimination: [],
       r_pbis: [],
       infit_outfit: [],
+      scatter: [],
     } as GetHistogramResType['data'])
 
   return (

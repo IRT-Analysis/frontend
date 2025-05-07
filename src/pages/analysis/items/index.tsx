@@ -7,6 +7,15 @@ import ItemTable from './item-table'
 import ReviewQuestionsCard from './review-question-card'
 import { QuestionDialog } from './item-table/question-dialog'
 import { ReviewQuestion } from '@/types/ctt-analysis.type'
+import { evaluateCTTItemFit } from '@/lib/utils'
+import {
+  DifficultyCategory,
+  DifficultyCategoryText,
+  DiscriminationCategory,
+  DiscriminationCategoryText,
+  RpbisCategory,
+  RpbisCategoryText,
+} from '@/constants'
 
 const Items = () => {
   const { projectId } = useParams()
@@ -25,18 +34,19 @@ const Items = () => {
           exam_id: '',
           content: '',
           questionNumber: 1,
+          correct_option_id: '',
           question_analysis: {
             discrimination_index: 0,
             difficulty_index: 0,
             rpbis: 0,
             selection_rate: 0,
             group_choice_percentages: [],
+            evaluation: '',
           },
         },
       ]
     )
   }, [getAllQuestionAnalysisQuery.data])
-
   const getReviewQuestions = (
     questions: (QuestionAnalysisType & { questionNumber: number })[]
   ): ReviewQuestion[] => {
@@ -44,46 +54,56 @@ const Items = () => {
       .map((q) => {
         const violations = []
 
-        const { difficulty_index, discrimination_index } = q.question_analysis
+        const { difficulty_index, discrimination_index, rpbis } =
+          q.question_analysis
 
-        if (
-          difficulty_index < 0.25 ||
-          difficulty_index > 0.75 ||
-          discrimination_index < 0.1
-        ) {
-          if (difficulty_index < 0.25 || difficulty_index > 0.75) {
-            violations.push({
-              name: 'difficulty',
-              value: difficulty_index,
-              message: 'Độ khó nằm ngoài khoảng cho phép',
-            })
-          }
-          if (discrimination_index < 0.1) {
+        const { violatedCategories } = evaluateCTTItemFit({
+          difficulty: difficulty_index,
+          discrimination: discrimination_index,
+          rpbis,
+        })
+
+        for (const category of violatedCategories) {
+          if (
+            Object.values(DiscriminationCategory).includes(
+              category as DiscriminationCategory
+            )
+          ) {
             violations.push({
               name: 'discrimination',
               value: discrimination_index,
-              message: 'Độ phân cách quá thấp',
+              message:
+                DiscriminationCategoryText[category as DiscriminationCategory]
+                  .evaluation,
             })
           }
-          return {
-            id: q.id,
-            questionNo: q.questionNumber,
-            violatedIndices: violations,
+
+          if (
+            Object.values(DifficultyCategory).includes(
+              category as DifficultyCategory
+            )
+          ) {
+            violations.push({
+              name: 'difficulty',
+              value: difficulty_index,
+              message:
+                DifficultyCategoryText[category as DifficultyCategory]
+                  .evaluation,
+            })
+          }
+
+          if (
+            Object.values(RpbisCategory).includes(category as RpbisCategory)
+          ) {
+            violations.push({
+              name: 'R-pbis',
+              value: rpbis,
+              message: RpbisCategoryText[category as RpbisCategory].evaluation,
+            })
           }
         }
 
-        // Optional: add "Cần xem xét" if moderately concerning
-        if (
-          difficulty_index >= 0.25 &&
-          difficulty_index <= 0.75 &&
-          discrimination_index >= 0.1 &&
-          discrimination_index < 0.3
-        ) {
-          violations.push({
-            name: 'discrimination',
-            value: discrimination_index,
-            message: 'Độ phân cách ở mức trung bình',
-          })
+        if (violations.length > 0) {
           return {
             id: q.id,
             questionNo: q.questionNumber,

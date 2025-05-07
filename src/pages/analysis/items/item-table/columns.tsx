@@ -12,6 +12,19 @@ import { ColumnDef } from '@tanstack/react-table'
 import { MathJax, MathJaxContext } from 'better-react-mathjax'
 import { ArrowUpDown } from 'lucide-react'
 import { ActionsCell } from './action-cell'
+import {
+  evaluateCTTItemFit,
+  evaluateDifficultyCategory,
+  evaluateDiscriminationCategory,
+  evaluateRpbisCategory,
+  FitLabelEnum,
+  FitLabelText,
+} from '@/lib/utils'
+import {
+  DifficultyCategoryText,
+  DiscriminationCategoryText,
+  RpbisCategoryText,
+} from '@/constants'
 
 export const columns: ColumnDef<
   QuestionAnalysisType & { questionNumber: number }
@@ -248,41 +261,15 @@ export const columns: ColumnDef<
     size: 200,
     cell: ({ row }) => {
       const difficulty = row.original.question_analysis.difficulty_index
-      let displayValue, variant: BadgeProps['variant']
-      if (difficulty < 0.25) {
-        displayValue = 'Quá Khó'
-        variant = 'veryHard'
-      } else if (difficulty < 0.5) {
-        displayValue = 'Khó'
-        variant = 'hard'
-      } else if (difficulty < 0.75) {
-        displayValue = 'Dễ'
-        variant = 'easy'
-      } else {
-        displayValue = 'Quá Dễ'
-        variant = 'veryEasy'
-      }
+      const catergory = evaluateDifficultyCategory(difficulty)
+      const { evaluation, label, variant } = DifficultyCategoryText[catergory]
 
       return (
         <HoverCardText
-          content={
-            <div className="w-[300px]">
-              {(() => {
-                if (difficulty < 0.25) {
-                  return 'Chỉ một số ít thí sinh có thể trả lời đúng. Phù hợp để thử thách thí sinh giỏi, nhưng không đánh giá được năng lực của phần lớn thí sinh.'
-                } else if (difficulty < 0.5) {
-                  return 'Phần lớn thí sinh không trả lời đúng. Phù hợp để phân biệt rõ ràng giữa thí sinh yếu và giỏi.'
-                } else if (difficulty < 0.75) {
-                  return 'Đa số thí sinh có thể trả lời đúng. Phù hợp để kiểm tra kiến thức cơ bản cho thí sinh.'
-                } else {
-                  return 'Hầu hết thí sinh đều trả lời đúng. Phù hợp cho các câu hỏi khởi động nhưng không hiệu quả trong việc đánh giá hoặc phân biệt năng lực.'
-                }
-              })()}
-            </div>
-          }
+          content={<div className="w-[300px]">{evaluation}</div>}
           className="flex items-center justify-center"
         >
-          <Badge variant={variant}>{displayValue}</Badge>
+          <Badge variant={variant}>{label}</Badge>
         </HoverCardText>
       )
     },
@@ -309,7 +296,6 @@ export const columns: ColumnDef<
         { label: 'Kém', value: { min: -5, max: 0.1 } },
         { label: 'Tạm được', value: { min: 0.1, max: 0.3 } },
         { label: 'Tốt', value: { min: 0.3, max: 1 } },
-        // { label: 'Tạm được', value: { min: 0.7, max: 1 } },
       ]
 
       return (
@@ -373,38 +359,18 @@ export const columns: ColumnDef<
     size: 200,
     cell: ({ row }) => {
       const discrimination = row.original.question_analysis.discrimination_index
-      let displayValue, variant: BadgeProps['variant']
+      const catergory = evaluateDiscriminationCategory(discrimination)
+      const { evaluation, label, variant } =
+        DiscriminationCategoryText[catergory]
 
       // Categorize discrimination based on the numeric value of discrimination
-      if (discrimination < 0.1) {
-        displayValue = 'Kém'
-        variant = 'veryHard'
-      } else if (discrimination >= 0.1 && discrimination < 0.3) {
-        displayValue = 'Tạm được'
-        variant = 'hard'
-      } else if (discrimination >= 0.3) {
-        displayValue = 'Tốt'
-        variant = 'medium'
-      }
 
       return (
         <HoverCardText
-          content={
-            <div className="w-[300px]">
-              {(() => {
-                if (discrimination < 0.1) {
-                  return 'Câu hỏi này không phân biệt rõ giữa thí sinh giỏi và yếu. Nên xem xét cải thiện để tăng khả năng đánh giá năng lực.'
-                } else if (discrimination < 0.3) {
-                  return 'Câu hỏi này phân biệt ở mức trung bình. Có thể chấp nhận được nhưng vẫn còn có thể cải thiện.'
-                } else {
-                  return 'Câu hỏi này phân biệt rõ ràng giữa thí sinh giỏi và yếu, rất phù hợp để đánh giá năng lực.'
-                }
-              })()}
-            </div>
-          }
+          content={<div className="w-[300px]">{evaluation}</div>}
           className="flex items-center justify-center"
         >
-          <Badge variant={variant}>{displayValue}</Badge>
+          <Badge variant={variant}>{label}</Badge>
         </HoverCardText>
       )
     },
@@ -499,24 +465,10 @@ export const columns: ColumnDef<
     },
     cell: ({ row }) => {
       const r_pbis = row.original.question_analysis.rpbis
+      const r_pbisCategory = evaluateRpbisCategory(r_pbis)
+      const { evaluation } = RpbisCategoryText[r_pbisCategory]
       return (
-        <HoverCardText
-          content={
-            <div className="w-[300px]">
-              {(() => {
-                if (r_pbis >= 0.4) {
-                  return 'Chỉ số này cho thấy độ tương quan rất tốt. Thí sinh điểm cao sẽ có khả năng trả lời đúng rất cao, và ngược lại.'
-                } else if (r_pbis >= 0.3) {
-                  return 'Chỉ số này cho thấy độ tương quan tốt. Thí sinh điểm cao sẽ có khả năng trả lời đúng cao, và ngược lại.'
-                } else if (r_pbis >= 0.2) {
-                  return 'Chỉ số này cho thấy độ tương quan trung bình. Thí sinh điểm cao sẽ khả năng trả lời đúng trung bình, và ngược lại.'
-                } else {
-                  return 'Chỉ số này cho thấy độ tương quan kém. Thí sinh điểm cao sẽ có khả năng trả lời đúng thấp, và ngược lại. Cần được xem xét cải thiện'
-                }
-              })()}
-            </div>
-          }
-        >
+        <HoverCardText content={<div className="w-[300px]">{evaluation}</div>}>
           <div className="text-center">{r_pbis}</div>
         </HoverCardText>
       )
@@ -571,57 +523,48 @@ export const columns: ColumnDef<
     cell: ({ row }) => {
       const difficulty = row.original.question_analysis.difficulty_index
       const discrimination = row.original.question_analysis.discrimination_index
+      const rpbis = row.original.question_analysis.rpbis
 
-      let category: string
+      const { fit, violatedCategories } = evaluateCTTItemFit({
+        difficulty,
+        discrimination,
+        rpbis,
+      })
+
       let variant: BadgeProps['variant']
-      let tooltip: string
+      let tooltip = FitLabelText[fit].evaluation
 
-      if (difficulty >= 0.3 && difficulty <= 0.7 && discrimination >= 0.3) {
-        category = 'Phù hợp'
-        variant = 'medium'
-        tooltip =
-          'Câu hỏi có độ khó và độ phân cách phù hợp, rất tốt để đánh giá năng lực thí sinh.'
-      } else if (
-        difficulty >= 0.25 &&
-        difficulty <= 0.75 &&
-        discrimination >= 0.1
-      ) {
-        category = 'Cần xem xét'
-        variant = 'hard'
-        tooltip =
-          'Câu hỏi có thể sử dụng được nhưng cần xem xét cải thiện để tăng hiệu quả đánh giá.'
-      } else {
-        category = 'Không phù hợp'
-        variant = 'veryHard'
-        tooltip =
-          'Câu hỏi có độ khó quá cao/thấp hoặc độ phân cách kém, không hiệu quả trong việc đánh giá năng lực thí sinh.'
+      switch (fit) {
+        case FitLabelEnum.Fit:
+          variant = 'medium'
+          break
+        case FitLabelEnum.Considerable:
+          variant = 'hard'
+          if (violatedCategories.length) {
+            tooltip += `\nChỉ số cần cải thiện: ${violatedCategories.join(', ')}.`
+          }
+          break
+        case FitLabelEnum.NotFit:
+        default:
+          variant = 'veryHard'
+          if (violatedCategories.length) {
+            tooltip += `\nChỉ số vi phạm: ${violatedCategories.join(', ')}.`
+          }
+          break
       }
 
       return (
         <HoverCardText
-          content={<div className="w-[300px]">{tooltip}</div>}
+          content={
+            <div className="w-[300px] whitespace-pre-line">{tooltip}</div>
+          }
           className="flex items-center justify-center"
         >
-          <Badge variant={variant}>{category}</Badge>
+          <Badge variant={variant}>{FitLabelText[fit].label}</Badge>
         </HoverCardText>
       )
     },
   },
-  // {
-  //   id: 'actions',
-  //   enableHiding: false,
-  //   size: 50,
-  //   cell: () => {
-  //     return (
-  //       <CollapsibleTrigger asChild>
-  //         <Button variant="ghost" size="sm" className="w-9 p-0">
-  //           <ChevronDown className="h-4 w-4" />
-  //           <span className="sr-only">Toggle</span>
-  //         </Button>
-  //       </CollapsibleTrigger>
-  //     )
-  //   },
-  // },
   {
     id: 'actions',
     enableHiding: false,

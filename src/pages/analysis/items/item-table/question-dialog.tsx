@@ -34,7 +34,8 @@ export const QuestionDialog = ({
   const {
     id: questionId,
     content,
-    question_analysis: { group_choice_percentages },
+    correct_option_id,
+    question_analysis: { group_choice_percentages, evaluation },
   } = row.original
 
   const getOptionsAnalysisQuery = useGetOptionsAnalysisQuery(
@@ -44,6 +45,14 @@ export const QuestionDialog = ({
   const optionsData = getOptionsAnalysisQuery.data?.data
   const isLoading =
     getOptionsAnalysisQuery.isLoading || getOptionsAnalysisQuery.isFetching
+  const correctOptionLetter =
+    optionsData && correct_option_id
+      ? Answers[
+          optionsData
+            .findIndex((opt) => opt.id === correct_option_id)
+            .toString() as keyof typeof Answers
+        ]
+      : undefined
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -86,10 +95,20 @@ export const QuestionDialog = ({
                 <CustomAreaChart
                   groupChoicePercentages={group_choice_percentages}
                   optionLabels={Object.keys(Answers)}
-                  correct_option={Answers.A}
+                  correct_option={correctOptionLetter ?? Answers.A}
                 />
               </div>
             </div>
+            {evaluation && (
+              <div className="rounded-xl border border-gray-300 bg-gray-50 p-4 shadow-sm">
+                <h4 className="mb-2 text-base font-semibold text-gray-700">
+                  Đánh giá
+                </h4>
+                <p className="whitespace-pre-line text-sm text-gray-700">
+                  {evaluation}
+                </p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center text-muted-foreground">
