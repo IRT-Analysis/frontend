@@ -13,12 +13,14 @@ export type QuestionAnalysisType = {
   id: string
   exam_id: string
   content: string
+  correct_option_id: string
   question_analysis: {
     discrimination_index: number
     difficulty_index: number
     rpbis: number
     selection_rate: number
     group_choice_percentages: Record<string, number>[]
+    evaluation: string
   }
 }
 
@@ -80,6 +82,11 @@ export type GetHistogramResType = ApiResponse<{
   discrimination: Record<string, number>[]
   r_pbis: Record<string, number>[]
   infit_outfit: { questionNo: number; infit: number; outfit: number }[]
+  scatter: {
+    difficulty: number
+    discrimination: number
+    question_id: number
+  }[]
 }>
 
 // ----------------------------------------------
@@ -195,6 +202,7 @@ export type RaschQuestionAnalysisType = {
   reliability: number
   question_content: string
   questionNumber?: number
+  evaluation: string
   options?: RaschOptionAnalysisType[]
 }
 

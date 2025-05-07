@@ -71,10 +71,11 @@ export function SignIn() {
       <div className="flex h-screen min-h-full flex-1 flex-col items-center justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mb-1 mt-10 text-left text-2xl/9 font-bold tracking-tight text-titleAuthor">
-            Sign In to your account
+            Đăng nhập để truy cập vào các tính năng và dữ liệu của bạn.
           </h2>
           <h4 className="text-l/9 mt-2 text-left tracking-tight text-gray-400">
-            Welcome back!
+            Chào mừng bạn quay lại! Hãy đăng nhập để tiếp tục hành trình của
+            bạn.
           </h4>
         </div>
 
@@ -109,7 +110,7 @@ export function SignIn() {
                     to="/forgot-password"
                     className="hover:text-blueCustom-500 text-left font-semibold text-blueCustom"
                   >
-                    Forgot password?
+                    Quên mật khẩu?
                   </Link>
                 </div>
               </div>
@@ -120,14 +121,13 @@ export function SignIn() {
                 type="submit"
                 className="hover:bg-blueCustom-500 focus-visible:outline-blueCustom-600 flex h-12 w-full justify-center rounded-md bg-blueCustom px-3 py-1.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
-                Sign in
+                Đăng nhập
               </Button>
               <h4 className="mt-3 text-center text-gray-600">
-                Don't have any accounts?
+                Chưa có tài khoản?
                 <span>
                   <Link className="font-bold text-blueCustom" to="/signup">
-                    {' '}
-                    Sign up
+                    Đăng ký
                   </Link>
                 </span>
               </h4>
@@ -153,11 +153,13 @@ export function SignUp() {
     e.preventDefault()
 
     if (!email || !password || !username) {
-      setError('Please fill all fields.')
+      setError('Vui lòng điền đầy đủ thông tin.')
       return
     }
     if (!checked) {
-      setError('You need to agree to the terms and conditions.')
+      setError(
+        'Vui lòng đồng ý với các điều khoản và chính sách của chúng tôi.'
+      )
       return
     }
 
@@ -168,7 +170,9 @@ export function SignUp() {
         option: { username },
       })
 
-      alert('Sign-up successful! Please check your email to confirm.')
+      alert(
+        'Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản của bạn.'
+      )
     } catch (error: any) {
       setError(error.message)
     }
@@ -178,7 +182,7 @@ export function SignUp() {
       <div className="mb-5 flex min-h-full flex-1 flex-col items-center justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mb-1 mt-10 text-left text-2xl/9 font-bold tracking-tight text-titleAuthor">
-            Sign Up for an Account
+            Đăng ký tài khoản
           </h2>
         </div>
 
@@ -224,7 +228,8 @@ export function SignUp() {
                 placeholder="Password"
               />
               <div className="text-sm text-gray-400">
-                Your password must have at least 8 characters
+                Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và
+                số.
               </div>
             </div>
             <div>
@@ -235,14 +240,15 @@ export function SignUp() {
                   checked={checked}
                   onChange={handleChange}
                 />
-                By creating an account means you agree to the{' '}
+                Bằng cách đăng ký, bạn đồng ý với{' '}
                 <span className="font-bold">
-                  <a href="#">Terms & Conditions</a>
+                  <a href="#">Điều khoản dịch vụ</a>
                 </span>{' '}
-                and our{' '}
+                và{' '}
                 <span className="font-bold">
-                  <a href="#">Privacy Policy</a>
+                  <a href="#">Chính sách bảo mật</a>{' '}
                 </span>
+                của chúng tôi.
               </label>
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
@@ -251,14 +257,13 @@ export function SignUp() {
                 type="submit"
                 className="hover:bg-blueCustom-500 focus-visible:outline-blueCustom-600 flex h-12 w-full justify-center rounded-md bg-blueCustom px-3 py-1.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
-                Sign Up
+                Đăng ký
               </Button>
               <h4 className="mt-3 text-center text-gray-600">
-                Already have an account?
+                Bạn đã có tài khoản?
                 <span>
                   <Link className="font-bold text-blueCustom" to="/signin">
-                    {' '}
-                    Log in
+                    Đăng nhập
                   </Link>
                 </span>
               </h4>
@@ -357,5 +362,3 @@ export function VerifyMail() {
     </>
   )
 }
-
-// export {SignIn, SignUp}

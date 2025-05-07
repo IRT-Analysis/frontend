@@ -11,6 +11,7 @@ import AverageDetails from './average-details'
 import { BarLineChart } from './bar-line-chart'
 import { LargeBarChart } from './barchart'
 import OverallData from './overall-data'
+import ScatteredChart from '@/components/chart/scatter-chart'
 
 const ChartTooltipContent = {
   discrimination:
@@ -48,15 +49,21 @@ const CTTAnalysis = () => {
   } as GetGeneralDetailsResType['data'])
 
   const histogramDataQuery = useGetHistogramQuery(projectId as any)
-  const { score, difficulty, discrimination, r_pbis } =
-    histogramDataQuery.data?.data ||
-    ({
-      score: [],
-      difficulty: [],
-      discrimination: [],
-      r_pbis: [],
-      infit_outfit: [],
-    } as GetHistogramResType['data'])
+  const {
+    score,
+    difficulty,
+    discrimination,
+    r_pbis,
+    scatter: scatter_plot,
+  } = histogramDataQuery.data?.data ||
+  ({
+    score: [],
+    difficulty: [],
+    discrimination: [],
+    r_pbis: [],
+    infit_outfit: [],
+    scatter: [],
+  } as GetHistogramResType['data'])
 
   return (
     <div className="m-10 grid grid-cols-12 gap-4">
@@ -104,6 +111,12 @@ const CTTAnalysis = () => {
           data={r_pbis}
           tootlTip={ChartTooltipContent.r_pbis}
           type="r_pbis"
+        />
+      </div>
+      <div className="col-span-12 rounded-lg bg-background">
+        <ScatteredChart
+          data={scatter_plot}
+          isLoading={histogramDataQuery.isLoading}
         />
       </div>
     </div>

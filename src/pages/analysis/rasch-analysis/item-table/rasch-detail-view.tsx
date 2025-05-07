@@ -40,6 +40,15 @@ const RaschItemDetailView = ({ item }: { item: RaschQuestionAnalysisType }) => {
           <RaschItemChart item={item} />
         </div>
       </div>
+
+      {item.evaluation && (
+        <div className="rounded-md border border-gray-300 p-4 shadow-sm">
+          <h3 className="mb-2 text-lg font-semibold text-gray-700">Đánh giá</h3>
+          <p className="whitespace-pre-line text-sm text-gray-800">
+            {item.evaluation}
+          </p>
+        </div>
+      )}
     </div>
   )
 }
