@@ -9,20 +9,23 @@ import {
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { CreateAnalysisForm } from './create-analysis-form'
 import banner from '/image.jpeg'
-import MockDescriptionImage from '/screen-01.png'
+import CTTQuestionDetails from '/ctt-question-details.png'
+import CTTQuestions from '/ctt-question.png'
 import { useState } from 'react'
 import { AnalyzeType } from '@/types/ctt-analysis.type'
 
 const CardData = [
   {
-    title: AnalyzeType.CTT,
+    title: 'Lý thuyết trắc nghiệm cổ điển (CTT)',
     comingSoon: false,
+    type: AnalyzeType.CTT,
     content:
       'Phân tích dựa trên lý thuyết trắc nghiệm cổ điển, tập trung vào đánh giá độ khó và độ phân cách của câu hỏi để đưa ra phân tích hiệu quả.',
   },
   {
-    title: AnalyzeType.RASCH,
+    title: 'Phương pháp Rasch',
     comingSoon: false,
+    type: AnalyzeType.RASCH,
     content:
       'Phân tích theo mô hình Rasch, đơn giản hơn IRT, chỉ xét mối quan hệ giữa năng lực và độ khó, không có các yếu tố đoán mò hay độ phân cách.',
   },
@@ -36,7 +39,7 @@ const CardData = [
 
 const DashBoard = () => {
   const [selectedType, setSelectedType] =
-    useState<(typeof CardData)[number]['title']>()
+    useState<(typeof CardData)[number]['type']>()
   return (
     <Dialog>
       <div className="flex flex-col items-center gap-[100px] p-[100px] 2xl:mx-auto 2xl:w-[1345px]">
@@ -72,7 +75,7 @@ const DashBoard = () => {
             {CardData.map((card, index) => (
               <Card key={index} className="basis-[360px]">
                 <CardHeader>
-                  <CardTitle className="text-[24px] font-bold leading-[1.25]">
+                  <CardTitle className="h-12 text-[24px] font-bold leading-[1.25]">
                     {card.title}
                   </CardTitle>
                   {/* <CardDescription>Card Description</CardDescription> */}
@@ -94,7 +97,7 @@ const DashBoard = () => {
                     ) : (
                       <Button
                         className="rounded-3 w-full bg-primary-600-base"
-                        onClick={() => setSelectedType(card.title)}
+                        onClick={() => setSelectedType(card.type)}
                       >
                         Phân tích
                       </Button>
@@ -121,36 +124,38 @@ const DashBoard = () => {
           <div className="flex items-center gap-[100px]">
             <div className="flex flex-col gap-8">
               <h3 className="text-[40px] font-bold leading-normal">
-                Automated Reports & Widget Alerts
+                Giao diện thân thiện, dễ sử dụng
               </h3>
               <p className="text-[18px] font-normal leading-[1.5] text-[#464646]">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Elementum nisi aliquet volutpat pellentesque volutpat est.
-                Sapien in etiam vitae nibh nunc mattis imperdiet sed nullam.
-                Vitae et, tortor pulvinar risus pulvinar sit amet.
+                Giao diện được thiết kế dễ sử dụng, cho phép tuỳ chỉnh theo cấu
+                trúc đề thi, mô hình phân tích và mục tiêu đánh giá của từng tổ
+                chức giáo dục. Người dùng có thể xem được các thông số như độ
+                khó, độ phân cách, độ tin cậy của câu hỏi, và các chỉ số thống
+                kê khác một cách trực quan và dễ hiểu.
               </p>
             </div>
             <img
-              src={MockDescriptionImage}
+              src={CTTQuestionDetails}
               alt="Mock Description Image"
-              className="h-auto max-w-[50%]"
+              className="h-auto max-w-[50%] rounded-2xl"
             />
           </div>
           <div className="flex items-center gap-[100px]">
             <img
-              src={MockDescriptionImage}
+              src={CTTQuestions}
               alt="Mock Description Image"
-              className="h-auto max-w-[50%]"
+              className="h-auto max-w-[50%] rounded-2xl"
             />
             <div className="flex flex-col gap-8">
               <h3 className="text-[40px] font-bold leading-normal">
-                Fully customizable to address your needs{' '}
+                Phân tích câu hỏi theo nhiều mô hình đánh giá{' '}
               </h3>
               <p className="text-[18px] font-normal leading-[1.5] text-[#464646]">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Elementum nisi aliquet volutpat pellentesque volutpat est.
-                Sapien in etiam vitae nibh nunc mattis imperdiet sed nullam.
-                Vitae et, tortor pulvinar risus pulvinar sit amet.
+                Hệ thống hỗ trợ phân tích câu hỏi theo nhiều mô hình như CTT,
+                Rasch, giúp người dùng linh hoạt lựa chọn phương pháp phù hợp
+                với mục tiêu đánh giá. Giao diện cho phép chuyển đổi giữa các mô
+                hình, theo dõi các chỉ số như độ khó, độ phân biệt, độ tin cậy,
+                infit, outfit,...
               </p>
             </div>
           </div>
