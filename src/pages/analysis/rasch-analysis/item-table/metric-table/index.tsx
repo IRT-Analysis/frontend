@@ -95,7 +95,7 @@ const RaschMetricsTable = ({ item }: { item: RaschQuestionAnalysisType }) => {
                 </HoverCardText>
               </TableCell>
               <TableCell className="text-center">
-                {typeof value === 'number' ? value.toFixed(4) : value}
+                {typeof value === 'number' ? value.toFixed(3) : value}
               </TableCell>
               <TableCell className={cn('text-center font-medium', textColor)}>
                 {assessment}

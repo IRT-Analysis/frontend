@@ -37,7 +37,7 @@ export default function ReviewQuestionsCard({
                 <HoverCard key={item.name}>
                   <HoverCardTrigger className="flex items-center justify-center">
                     <Badge variant="secondary" className="font-normal">
-                      {getStatsLabel(item.name)} - {item.value}
+                      {getStatsLabel(item.name)}: {item.value.toFixed(3)}
                     </Badge>
                   </HoverCardTrigger>
                   <HoverCardContent>{item.message}</HoverCardContent>

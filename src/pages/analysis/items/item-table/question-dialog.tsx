@@ -45,14 +45,14 @@ export const QuestionDialog = ({
   const optionsData = getOptionsAnalysisQuery.data?.data
   const isLoading =
     getOptionsAnalysisQuery.isLoading || getOptionsAnalysisQuery.isFetching
-  const correctOptionLetter =
-    optionsData && correct_option_id
-      ? Answers[
-          optionsData
-            .findIndex((opt) => opt.id === correct_option_id)
-            .toString() as keyof typeof Answers
-        ]
-      : undefined
+  let correctOptionLetter: Answers | undefined = undefined
+  const answerArr = [Answers.A, Answers.B, Answers.C, Answers.D]
+  if (optionsData && correct_option_id)
+    correctOptionLetter =
+      answerArr[optionsData.findIndex((opt) => opt.id === correct_option_id)]
+  console.log('optionsData', optionsData)
+  console.log('correct_option_id', correct_option_id)
+  console.log('correctOptionLetter', correctOptionLetter)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

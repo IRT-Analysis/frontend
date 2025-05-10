@@ -69,7 +69,12 @@ export enum DifficultyCategory {
   VeryDifficult = 'diff-very-difficult',
 }
 
-export enum FitStatCategory {
+export enum InfitStatCategory {
+  TooLow = 'fit-too-low',
+  Acceptable = 'fit-acceptable',
+  TooHigh = 'fit-too-high',
+}
+export enum OutfitStatCategory {
   TooLow = 'fit-too-low',
   Acceptable = 'fit-acceptable',
   TooHigh = 'fit-too-high',
@@ -172,20 +177,40 @@ export const DifficultyCategoryText: Record<DifficultyCategory, CategoryMap> = {
   },
 }
 
-export const FitStatCategoryText: Record<FitStatCategory, CategoryMap> = {
-  [FitStatCategory.TooLow]: {
+export const InfitStatCategoryText: Record<InfitStatCategory, CategoryMap> = {
+  [InfitStatCategory.TooLow]: {
     label: 'Quá thấp',
     color: 'var(--very-bad-text)',
     evaluation:
       'Giá trị quá thấp so với ngưỡng chấp nhận, cho thấy mức độ phù hợp yếu.',
   },
-  [FitStatCategory.Acceptable]: {
+  [InfitStatCategory.Acceptable]: {
     label: 'Chấp nhận được',
     color: 'var(--very-good-text)',
     evaluation:
       'Giá trị nằm trong khoảng chấp nhận được, có thể sử dụng trong đánh giá.',
   },
-  [FitStatCategory.TooHigh]: {
+  [InfitStatCategory.TooHigh]: {
+    label: 'Quá cao',
+    color: 'var(--very-bad-text)',
+    evaluation:
+      'Giá trị vượt quá giới hạn lý tưởng, cần xem xét kỹ hơn để đánh giá.',
+  },
+}
+export const OutfitStatCategoryText: Record<OutfitStatCategory, CategoryMap> = {
+  [OutfitStatCategory.TooLow]: {
+    label: 'Quá thấp',
+    color: 'var(--very-bad-text)',
+    evaluation:
+      'Giá trị quá thấp so với ngưỡng chấp nhận, cho thấy mức độ phù hợp yếu.',
+  },
+  [OutfitStatCategory.Acceptable]: {
+    label: 'Chấp nhận được',
+    color: 'var(--very-good-text)',
+    evaluation:
+      'Giá trị nằm trong khoảng chấp nhận được, có thể sử dụng trong đánh giá.',
+  },
+  [OutfitStatCategory.TooHigh]: {
     label: 'Quá cao',
     color: 'var(--very-bad-text)',
     evaluation:

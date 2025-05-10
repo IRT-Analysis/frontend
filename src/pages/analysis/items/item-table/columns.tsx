@@ -541,14 +541,14 @@ export const columns: ColumnDef<
         case FitLabelEnum.Considerable:
           variant = 'hard'
           if (violatedCategories.length) {
-            tooltip += `\nChỉ số cần cải thiện: ${violatedCategories.join(', ')}.`
+            tooltip += `\nChỉ số cần cải thiện: ${violatedCategories.map((item) => item.name).join(', ')}.`
           }
           break
         case FitLabelEnum.NotFit:
         default:
           variant = 'veryHard'
           if (violatedCategories.length) {
-            tooltip += `\nChỉ số vi phạm: ${violatedCategories.join(', ')}.`
+            tooltip += `\nChỉ số vi phạm: ${violatedCategories.map((item) => item.name).join(', ')}.`
           }
           break
       }

@@ -23,7 +23,7 @@ const groupColors = {
   'Very Bad': 'var(--very-bad-text)',
   Bad: 'var(--bad-text)',
   Average: 'var(--average-text)',
-  Good: 'var(--good-text)',
+  Good: '#2993FF',
   'Very Good': 'var(--very-good-text)',
 }
 

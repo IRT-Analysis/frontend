@@ -57,7 +57,7 @@ export function RaschItemFitChart({
             label={{ value: 'Giá trị', angle: -90, position: 'left' }}
           />
           <Tooltip
-            formatter={(value: number) => [value.toFixed(4), 'Giá trị']}
+            formatter={(value: number) => [value.toFixed(3), 'Giá trị']}
           />
           <Bar dataKey="value" fill="#8884d8" />
 

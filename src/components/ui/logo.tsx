@@ -37,9 +37,11 @@ export function Banner() {
         </div>
 
         <div className="text-center text-xl font-bold text-white">
-          MCQ Result Analysis System
+          Hệ thống phân tích kết quả trắc nghiệm
         </div>
-        <h4 className="text-center text-sm text-[#F8FAFC]">Provide sth....</h4>
+        <h4 className="text-center text-sm text-[#F8FAFC]">
+          Phân tích độ khó, độ phân biệt và hiệu quả câu hỏi một cách trực quan
+        </h4>
       </div>
     </>
   )
