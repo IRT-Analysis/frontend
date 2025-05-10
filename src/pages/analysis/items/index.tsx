@@ -1,21 +1,13 @@
+import { evaluateCTTItemFit } from '@/lib/utils'
 import { useGetAllQuestionsAnalysisQuery } from '@/queries/useAnalyze'
 import { QuestionAnalysisType } from '@/schema/analysis.schema'
+import { ReviewQuestion } from '@/types/ctt-analysis.type'
 import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ItemPieChart } from './item-pie-chart'
 import ItemTable from './item-table'
-import ReviewQuestionsCard from './review-question-card'
 import { QuestionDialog } from './item-table/question-dialog'
-import { ReviewQuestion } from '@/types/ctt-analysis.type'
-import { evaluateCTTItemFit } from '@/lib/utils'
-import {
-  DifficultyCategory,
-  DifficultyCategoryText,
-  DiscriminationCategory,
-  DiscriminationCategoryText,
-  RpbisCategory,
-  RpbisCategoryText,
-} from '@/constants'
+import ReviewQuestionsCard from './review-question-card'
 
 const Items = () => {
   const { projectId } = useParams()
@@ -50,6 +42,7 @@ const Items = () => {
   const getReviewQuestions = (
     questions: (QuestionAnalysisType & { questionNumber: number })[]
   ): ReviewQuestion[] => {
+    console.log('questions', questions)
     return questions
       .map((q) => {
         const violations = []
@@ -62,44 +55,32 @@ const Items = () => {
           discrimination: discrimination_index,
           rpbis,
         })
+        console.log('violatedCategories', violatedCategories)
 
         for (const category of violatedCategories) {
-          if (
-            Object.values(DiscriminationCategory).includes(
-              category as DiscriminationCategory
-            )
-          ) {
-            violations.push({
-              name: 'discrimination',
-              value: discrimination_index,
-              message:
-                DiscriminationCategoryText[category as DiscriminationCategory]
-                  .evaluation,
-            })
-          }
+          switch (category.name) {
+            case 'Độ khó':
+              violations.push({
+                name: 'discrimination',
+                value: discrimination_index,
+                message: category.evaluation,
+              })
+              break
 
-          if (
-            Object.values(DifficultyCategory).includes(
-              category as DifficultyCategory
-            )
-          ) {
-            violations.push({
-              name: 'difficulty',
-              value: difficulty_index,
-              message:
-                DifficultyCategoryText[category as DifficultyCategory]
-                  .evaluation,
-            })
-          }
+            case 'Độ p.cách':
+              violations.push({
+                name: 'difficulty',
+                value: difficulty_index,
+                message: category.evaluation,
+              })
+              break
 
-          if (
-            Object.values(RpbisCategory).includes(category as RpbisCategory)
-          ) {
-            violations.push({
-              name: 'R-pbis',
-              value: rpbis,
-              message: RpbisCategoryText[category as RpbisCategory].evaluation,
-            })
+            case 'R_PBIS':
+              violations.push({
+                name: 'r_pbis',
+                value: rpbis,
+                message: category.evaluation,
+              })
           }
         }
 

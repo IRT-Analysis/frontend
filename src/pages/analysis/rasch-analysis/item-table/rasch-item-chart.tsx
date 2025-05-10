@@ -130,7 +130,7 @@ export function RaschItemChart({ item }: { item: RaschQuestionAnalysisType }) {
               Năng lực: <strong>{hoverData.ability.toFixed(2)}</strong>
             </p>
             <p>
-              Xác suất đúng: <strong>{hoverData.probability.toFixed(4)}</strong>
+              Xác suất đúng: <strong>{hoverData.probability.toFixed(3)}</strong>
             </p>
           </div>
         </>

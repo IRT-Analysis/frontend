@@ -71,10 +71,10 @@ const CustomLegend = ({ data }: { data: Array<{ group: string }> }) => {
 }
 
 export default function ResponseAnalysisChart({
-  name = 'Phân tích câu hỏi',
+  name = 'Biểu đồ phân tán: độ khó và độ phân biệt',
   data,
   isLoading = false,
-  tooltipContent = 'Biểu đồ phân tích độ khó và độ phân cách của câu hỏi',
+  tooltipContent = 'Biểu đồ trực quan hóa mỗi câu hỏi dựa trên độ khó và độ phân biệt, giúp đánh giá mức độ phù hợp với đề kiểm tra, khả năng phân loại học sinh, và phát hiện các câu hỏi quá dễ, quá khó hoặc kém hiệu quả trong việc đo lường năng lực.',
 }: {
   name?: string
   data?: GetHistogramResType['data']['scatter']
@@ -266,7 +266,6 @@ export default function ResponseAnalysisChart({
                         cy={cy}
                         r={isActive ? 8 : 6}
                         fill={color}
-                        opacity={isActive ? 1 : 0.7}
                         onMouseEnter={() => {
                           setActiveQuestion(payload.question_id)
                           setActivePoint({

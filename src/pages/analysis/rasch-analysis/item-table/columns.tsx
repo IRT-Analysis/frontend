@@ -15,7 +15,7 @@ import {
   FitLabelText,
   getCategoryText,
 } from '@/lib/utils'
-import { FitStatCategoryText, ReliabilityCategoryText } from '@/constants'
+import { OutfitStatCategoryText, ReliabilityCategoryText } from '@/constants'
 
 export const raschColumns: ColumnDef<
   RaschQuestionAnalysisType & { questionNumber: number }
@@ -82,10 +82,10 @@ export const raschColumns: ColumnDef<
       return (
         <HoverCardText
           content={
-            <div>Độ khó Rasch của câu hỏi là {difficulty.toFixed(4)}</div>
+            <div>Độ khó Rasch của câu hỏi là {difficulty.toFixed(3)}</div>
           }
         >
-          <div className="text-center">{difficulty.toFixed(4)}</div>
+          <div className="text-center">{difficulty.toFixed(3)}</div>
         </HoverCardText>
       )
     },
@@ -127,9 +127,9 @@ export const raschColumns: ColumnDef<
       const logit = row.original.logit
       return (
         <HoverCardText
-          content={<div>Giá trị logit của câu hỏi là {logit.toFixed(4)}</div>}
+          content={<div>Giá trị logit của câu hỏi là {logit.toFixed(3)}</div>}
         >
-          <div className="text-center">{logit.toFixed(4)}</div>
+          <div className="text-center">{logit.toFixed(3)}</div>
         </HoverCardText>
       )
     },
@@ -173,13 +173,13 @@ export const raschColumns: ColumnDef<
       const category = evaluateOutfit(infit)
       const { evaluation, color } = getCategoryText(
         category,
-        FitStatCategoryText
+        OutfitStatCategoryText
       )
 
       return (
         <HoverCardText content={<div className="w-[300px]">{evaluation}</div>}>
           <div className={`text-center font-medium`} style={{ color }}>
-            {infit.toFixed(6)}
+            {infit.toFixed(3)}
           </div>
         </HoverCardText>
       )
@@ -225,13 +225,13 @@ export const raschColumns: ColumnDef<
       const category = evaluateOutfit(outfit)
       const { evaluation, color } = getCategoryText(
         category,
-        FitStatCategoryText
+        OutfitStatCategoryText
       )
 
       return (
         <HoverCardText content={<div className="w-[300px]">{evaluation}</div>}>
           <div className={`text-center font-medium`} style={{ color }}>
-            {outfit.toFixed(6)}
+            {outfit.toFixed(3)}
           </div>
         </HoverCardText>
       )
@@ -277,7 +277,7 @@ export const raschColumns: ColumnDef<
       return (
         <HoverCardText content={<div className="w-[300px]">{evaluation}</div>}>
           <div className={`text-center font-medium`} style={{ color }}>
-            {reliability.toFixed(6)}
+            {reliability.toFixed(3)}
           </div>
         </HoverCardText>
       )
@@ -330,12 +330,14 @@ export const raschColumns: ColumnDef<
       const outfit = row.original.outfit
       const ability = row.original.logit ?? 0
       const reliability = row.original.reliability ?? 0
+      const difficulty = row.original.difficulty ?? 0
 
       const { fit, violatedCategories } = evaluateRaschItemFit({
         infit,
         outfit,
         ability,
         reliability,
+        difficulty,
       })
 
       let variant: BadgeProps['variant']
@@ -348,14 +350,14 @@ export const raschColumns: ColumnDef<
         case FitLabelEnum.Considerable:
           variant = 'hard'
           if (violatedCategories.length) {
-            tooltip += `\nChỉ số cần cải thiện: ${violatedCategories.join(', ')}.`
+            tooltip += `\nChỉ số cần cải thiện: ${violatedCategories.map((item) => item.name).join(', ')}.`
           }
           break
         case FitLabelEnum.NotFit:
         default:
           variant = 'veryHard'
           if (violatedCategories.length) {
-            tooltip += `\nChỉ số vi phạm: ${violatedCategories.join(', ')}.`
+            tooltip += `\nChỉ số vi phạm: ${violatedCategories.map((item) => item.name).join(', ')}.`
           }
           break
       }

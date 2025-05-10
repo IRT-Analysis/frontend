@@ -244,7 +244,7 @@ export const getStudentTableColumns = (
       ),
       cell: ({ row }) => (
         <div className="text-center font-medium">
-          {row.original.ability?.toFixed(4) ?? '-'}
+          {row.original.ability?.toFixed(3) ?? '-'}
         </div>
       ),
       size: 120,

@@ -7,20 +7,22 @@ import {
   DifficultyCategoryText,
   DiscriminationCategory,
   DiscriminationCategoryText,
-  FitStatCategory,
-  FitStatCategoryText,
+  InfitStatCategory,
+  InfitStatCategoryText,
   MENU_ITEM,
+  OutfitStatCategory,
+  OutfitStatCategoryText,
   ReliabilityCategory,
   ReliabilityCategoryText,
   RpbisCategory,
   RpbisCategoryText,
 } from '@/constants'
+import { RaschQuestionAnalysisType } from '@/schema/analysis.schema'
 import { RelevantKeys } from '@/types/ctt-analysis.type'
 import { ItemData } from '@/types/response_data.type'
 import { TableData } from '@/types/table_data.type'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { RaschQuestionAnalysisType } from '@/schema/analysis.schema'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -62,15 +64,28 @@ export function formatBytes(
 }
 
 export const getStatsLabel = (
-  name: RelevantKeys | 'infit' | 'outfit' | 'reliability'
+  name: RelevantKeys | 'infit' | 'outfit' | 'reliability' | 'ability' | 'logit'
 ) => {
-  return name === 'difficulty'
-    ? 'Độ khó'
-    : name === 'discrimination'
-      ? 'Độ p.cách'
-      : name === 'r_pbis'
-        ? 'R_PBIS'
-        : name
+  switch (name) {
+    case 'discrimination':
+      return 'Độ p.cách'
+    case 'difficulty':
+      return 'Độ khó'
+    case 'r_pbis':
+      return 'R_PBIS'
+    case 'infit':
+      return 'Infit'
+    case 'outfit':
+      return 'Outfit'
+    case 'reliability':
+      return 'Độ tin cậy'
+    case 'ability':
+      return 'Năng lực'
+    case 'logit':
+      return 'Logit'
+    default:
+      return name
+  }
 }
 
 export const getActiveMenuItem = (pathname: string) => {
@@ -138,10 +153,14 @@ export function evaluateStatCategory(type: StatType, value: number) {
       return RpbisCategory.VeryHigh
 
     case 'infit':
+      if (value < 0.77) return InfitStatCategory.TooLow
+      if (value > 1.33) return InfitStatCategory.TooHigh
+      return InfitStatCategory.Acceptable
+
     case 'outfit':
-      if (value < 0.77) return FitStatCategory.TooLow
-      if (value > 1.33) return FitStatCategory.TooHigh
-      return FitStatCategory.Acceptable
+      if (value < 0.77) return OutfitStatCategory.TooLow
+      if (value > 1.33) return OutfitStatCategory.TooHigh
+      return OutfitStatCategory.Acceptable
 
     case 'cronbachAlpha':
       if (value < 0.5) return CronbachAlphaCategory.Unacceptable
@@ -258,16 +277,17 @@ export const _evaluateCronbachAlphaCategory = (
   cronbachAlpha: number
 ): CronbachAlphaCategory =>
   evaluateStatCategory('cronbachAlpha', cronbachAlpha) as CronbachAlphaCategory
-export const evaluateInfit = (value: number): FitStatCategory =>
-  evaluateStatCategory('infit', value) as FitStatCategory
-export const evaluateOutfit = (value: number): FitStatCategory =>
-  evaluateStatCategory('outfit', value) as FitStatCategory
+export const evaluateInfit = (value: number): InfitStatCategory =>
+  evaluateStatCategory('infit', value) as InfitStatCategory
+export const evaluateOutfit = (value: number): OutfitStatCategory =>
+  evaluateStatCategory('outfit', value) as OutfitStatCategory
 
 export function evaluateCTTItemFit(stat: CTTItemStat): {
   fit: FitLabelEnum
-  violatedCategories: Array<
-    DiscriminationCategory | DifficultyCategory | RpbisCategory
-  >
+  violatedCategories: Array<{
+    name: ReturnType<typeof getStatsLabel>
+    evaluation: string
+  }>
 } {
   const discriminationCategory = evaluateDiscriminationCategory(
     stat.discrimination
@@ -295,12 +315,25 @@ export function evaluateCTTItemFit(stat: CTTItemStat): {
     Boolean
   ).length
 
-  const violatedCategories: Array<
-    DiscriminationCategory | DifficultyCategory | RpbisCategory
-  > = []
-  if (!discriminationGood) violatedCategories.push(discriminationCategory)
-  if (!difficultyGood) violatedCategories.push(difficultyCategory)
-  if (!rpbisGood) violatedCategories.push(rpbisCategory)
+  const violatedCategories: Array<{
+    name: ReturnType<typeof getStatsLabel>
+    evaluation: string
+  }> = []
+  if (!discriminationGood)
+    violatedCategories.push({
+      name: getStatsLabel('discrimination'),
+      evaluation: DiscriminationCategoryText[discriminationCategory].evaluation,
+    })
+  if (!difficultyGood)
+    violatedCategories.push({
+      name: getStatsLabel('difficulty'),
+      evaluation: DifficultyCategoryText[difficultyCategory].evaluation,
+    })
+  if (!rpbisGood)
+    violatedCategories.push({
+      name: getStatsLabel('r_pbis'),
+      evaluation: RpbisCategoryText[rpbisCategory].evaluation,
+    })
   let fit: FitLabelEnum
   if (fitScore === 3) {
     fit = FitLabelEnum.Fit
@@ -318,27 +351,22 @@ export type RaschItemStat = {
   outfit: number
   ability: number
   reliability: number
+  difficulty: number
 }
 
 export function evaluateRaschItemFit(stat: RaschItemStat): {
   fit: FitLabelEnum
-  violatedCategories: Array<
-    ReliabilityCategory | AbilityCategory | FitStatCategory
-  >
+  violatedCategories: Array<{
+    name: ReturnType<typeof getStatsLabel>
+    evaluation: string
+  }>
 } {
   const infitCategory = evaluateInfit(stat.infit)
   const outfitCategory = evaluateOutfit(stat.outfit)
-  const abilityCategory = evaluateAbilityCategory(stat.ability)
   const reliabilityCategory = evaluateReliabilityCategory(stat.reliability)
 
-  const infitGood = infitCategory === FitStatCategory.Acceptable
-  const outfitGood = outfitCategory === FitStatCategory.Acceptable
-
-  const abilityGood = [
-    AbilityCategory.Normal,
-    AbilityCategory.AboveAverage,
-    AbilityCategory.ExtremelyHigh,
-  ].includes(abilityCategory)
+  const infitGood = infitCategory === InfitStatCategory.Acceptable
+  const outfitGood = outfitCategory === OutfitStatCategory.Acceptable
 
   const reliabilityGood = [
     ReliabilityCategory.Moderate,
@@ -346,19 +374,32 @@ export function evaluateRaschItemFit(stat: RaschItemStat): {
     ReliabilityCategory.VeryHigh,
   ].includes(reliabilityCategory)
 
-  const fitScore = [infitGood, outfitGood, abilityGood, reliabilityGood].filter(
+  const fitScore = [infitGood, outfitGood, reliabilityGood].filter(
     Boolean
   ).length
 
-  const violatedCategories: Array<
-    ReliabilityCategory | AbilityCategory | FitStatCategory
-  > = []
-  if (!infitGood) violatedCategories.push(infitCategory)
-  if (!abilityGood) violatedCategories.push(abilityCategory)
-  if (!reliabilityGood) violatedCategories.push(reliabilityCategory)
+  const violatedCategories: Array<{
+    name: ReturnType<typeof getStatsLabel>
+    evaluation: string
+  }> = []
+  if (!infitGood)
+    violatedCategories.push({
+      name: getStatsLabel('infit'),
+      evaluation: InfitStatCategoryText[infitCategory].evaluation,
+    })
+  if (!reliabilityGood)
+    violatedCategories.push({
+      name: getStatsLabel('reliability'),
+      evaluation: ReliabilityCategoryText[reliabilityCategory].evaluation,
+    })
+  if (!outfitGood)
+    violatedCategories.push({
+      name: getStatsLabel('outfit'),
+      evaluation: OutfitStatCategoryText[outfitCategory].evaluation,
+    })
 
   let fit: FitLabelEnum
-  if (fitScore === 4) {
+  if (fitScore === 3) {
     fit = FitLabelEnum.Fit
   } else if (fitScore === 0) {
     fit = FitLabelEnum.NotFit
@@ -372,7 +413,7 @@ export function evaluateRaschItemFit(stat: RaschItemStat): {
 export type CategoryText =
   | typeof DiscriminationCategoryText
   | typeof DifficultyCategoryText
-  | typeof FitStatCategoryText
+  | typeof OutfitStatCategoryText
   | typeof AbilityCategoryText
   | typeof ReliabilityCategoryText
   | typeof RpbisCategoryText
